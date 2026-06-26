@@ -201,4 +201,10 @@
     <string name="holiday_br_carnaval_segunda">Lunedì di Carnevale</string>
     <string name="holiday_br_carnaval_terca">Martedì di Carnevale</string>
     <string name="holiday_br_corpus_christi">Corpus Domini</string>
+
+    <!-- Open-source licenses screen -->
+    <string name="lic_intro">Questa app è basata su software open source. Ogni licenza viene mostrata una volta, seguita dai componenti che copre.</string>
+    <string name="lic_license_text">Testo della licenza</string>
+    <string name="lic_public_domain_note">Pubblico dominio — l\'attribuzione non è richiesta.</string>
+    <string name="lic_components">Componenti (%1$d)</string>
 </resources>

@@ -201,4 +201,10 @@
     <string name="holiday_br_carnaval_segunda">Carnavalsmaandag</string>
     <string name="holiday_br_carnaval_terca">Carnavalsdinsdag</string>
     <string name="holiday_br_corpus_christi">Sacramentsdag</string>
+
+    <!-- Open-source licenses screen -->
+    <string name="lic_intro">Deze app is gebouwd met opensourcesoftware. Elke licentie wordt één keer getoond, gevolgd door de componenten die eronder vallen.</string>
+    <string name="lic_license_text">Licentietekst</string>
+    <string name="lic_public_domain_note">Publiek domein — naamsvermelding is niet vereist.</string>
+    <string name="lic_components">Componenten (%1$d)</string>
 </resources>

@@ -202,4 +202,10 @@
     <string name="holiday_br_carnaval_segunda">Rosenmontag (Karneval)</string>
     <string name="holiday_br_carnaval_terca">Faschingsdienstag (Karneval)</string>
     <string name="holiday_br_corpus_christi">Fronleichnam</string>
+
+    <!-- Open-source licenses screen -->
+    <string name="lic_intro">Diese App basiert auf Open-Source-Software. Jede Lizenz wird einmal angezeigt, gefolgt von den Komponenten, die sie abdeckt.</string>
+    <string name="lic_license_text">Lizenztext</string>
+    <string name="lic_public_domain_note">Gemeinfrei — eine Namensnennung ist nicht erforderlich.</string>
+    <string name="lic_components">Komponenten (%1$d)</string>
 </resources>

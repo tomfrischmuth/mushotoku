@@ -234,7 +234,7 @@ class MeditationService : Service() {
         return Notification.Builder(this, CHANNEL_ID)
             .setContentTitle(title)
             .setContentText(body)
-            .setSmallIcon(android.R.drawable.ic_media_play)
+            .setSmallIcon(R.drawable.ic_meditation)
             .setContentIntent(pi)
             .addAction(Notification.Action.Builder(null, stop, stopPi).build())
             .setOngoing(true)

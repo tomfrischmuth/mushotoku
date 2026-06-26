@@ -1,0 +1,32 @@
+<!--
+  Mushotoku — a privacy-focused, offline productivity app.
+  Copyright (C) 2026 Tom Frischmuth
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="#FFFFFF">
+    <!-- Head -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12,3 a2.5,2.5 0 1,0 0,5 a2.5,2.5 0 1,0 0,-5z" />
+    <!-- Body in lotus pose -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12,9.2 C9.5,9.2 7.4,10.9 6.3,13.2 L4.7,16.2 C4.2,17.1 4.8,18 5.8,18 L18.2,18 C19.2,18 19.8,17.1 19.3,16.2 L17.7,13.2 C16.6,10.9 14.5,9.2 12,9.2 Z" />
+</vector>
