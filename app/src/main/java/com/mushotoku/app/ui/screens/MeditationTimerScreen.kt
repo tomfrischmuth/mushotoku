@@ -38,6 +38,7 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -173,6 +174,18 @@ fun MeditationTimerScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(colors.background)
+            // Modal overlay: this timer is drawn on top of the mindfulness page
+            // (with its gratitude text field). Swallow any pointer event not
+            // handled by the timer's own controls so taps can't reach a field
+            // on the screen behind it. Runs in the main pass (after children),
+            // so the timer's controls keep working.
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        awaitPointerEvent().changes.forEach { it.consume() }
+                    }
+                }
+            }
             .navigationBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
