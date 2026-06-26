@@ -16,7 +16,7 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string name="app_name">Mushotoku</string>
+    <string name="app_name" translatable="false">Mushotoku</string>
     <string name="notif_channel_appointments">Appointment reminders</string>
     <string name="notif_channel_appointments_desc">Reminders for calendar appointments</string>
 
@@ -206,7 +206,7 @@
 
     <string name="lic_intro">This app is built with open-source software. Each license is shown once, followed by the components it covers.</string>
     <string name="lic_license_text">License text</string>
-    <string name="lic_notice">NOTICE</string>
+    <string name="lic_notice" translatable="false">NOTICE</string>
     <string name="lic_public_domain_note">Public domain — attribution is not required.</string>
     <string name="lic_components">Components (%1$d)</string>
 </resources>

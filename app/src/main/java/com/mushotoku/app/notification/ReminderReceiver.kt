@@ -18,12 +18,16 @@
 
 package com.mushotoku.app.notification
 
+import android.Manifest
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.mushotoku.app.MainActivity
 import com.mushotoku.app.R
 
@@ -53,6 +57,15 @@ class ReminderReceiver : BroadcastReceiver() {
             .setAutoCancel(true)
             .setContentIntent(contentPi)
             .build()
+
+        // From API 33 posting notifications requires the runtime POST_NOTIFICATIONS
+        // permission; if the user denied it, drop the reminder silently.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
 
         NotificationManagerCompat.from(context).notify(id.toInt(), notification)
     }

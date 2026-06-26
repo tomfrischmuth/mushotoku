@@ -19,6 +19,8 @@
 package com.mushotoku.app
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.LocaleList
 import android.os.SystemClock
@@ -69,6 +71,10 @@ class MainActivity : FragmentActivity() {
     companion object {
         const val ACTION_ADD_TASK   = "com.mushotoku.app.ACTION_ADD_TASK"
         const val ACTION_OPEN_TODAY = "com.mushotoku.app.ACTION_OPEN_TODAY"
+
+        /** smallestScreenWidthDp at/above which the screen counts as "large"
+         *  (e.g. a foldable's unfolded inner display) and orientation is freed. */
+        const val LARGE_SCREEN_SW_DP = 600
     }
 
     private val securityController by lazy {
@@ -97,8 +103,28 @@ class MainActivity : FragmentActivity() {
         }
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        applyAdaptiveOrientation(newConfig)
+    }
+
+    /**
+     * Keep portrait locked on phone-sized screens — including a foldable's
+     * narrow cover/folded display — but allow free orientation once the screen
+     * is large (the unfolded inner display). Driven at runtime because the lock
+     * depends on the current configuration, not a static manifest value.
+     */
+    private fun applyAdaptiveOrientation(config: Configuration) {
+        requestedOrientation = if (config.smallestScreenWidthDp >= LARGE_SCREEN_SW_DP) {
+            ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        } else {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        applyAdaptiveOrientation(resources.configuration)
         when (intent?.action) {
             ACTION_ADD_TASK   -> _addTaskTrigger.tryEmit(Unit)
             ACTION_OPEN_TODAY -> _openTodayTrigger.tryEmit(Unit)

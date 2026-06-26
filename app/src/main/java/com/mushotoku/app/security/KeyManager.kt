@@ -19,6 +19,7 @@
 package com.mushotoku.app.security
 
 import android.content.Context
+import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyPermanentlyInvalidatedException
 import android.security.keystore.KeyProperties
@@ -238,7 +239,13 @@ class KeyManager(context: Context) {
         ).setKeySize(2048)
             .setDigests(KeyProperties.DIGEST_SHA256)
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
-            .setMgf1Digests(KeyProperties.DIGEST_SHA256)
+            // setMgf1Digests requires API 35; below that the Keystore only
+            // authorizes the default SHA-1 MGF1 digest (see oaepSpec()).
+            .apply {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                    setMgf1Digests(KeyProperties.DIGEST_SHA256)
+                }
+            }
             .setUserAuthenticationRequired(true)
             .setUserAuthenticationParameters(
                 0,
@@ -269,9 +276,17 @@ class KeyManager(context: Context) {
     private fun androidKeyStore(): KeyStore =
         KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
 
-    private fun oaepSpec() = OAEPParameterSpec(
-        "SHA-256", "MGF1", MGF1ParameterSpec.SHA256, PSource.PSpecified.DEFAULT,
-    )
+    // The OAEP MGF1 digest must match what the lock key authorizes: SHA-256 is
+    // only authorized from API 35 (setMgf1Digests in getOrCreateLockKey); on
+    // older devices the key only authorizes the default SHA-1 MGF1 digest. The
+    // main OAEP digest stays SHA-256 on every level. Keys never cross devices,
+    // so encrypt and decrypt always run on the same API level.
+    private fun oaepSpec(): OAEPParameterSpec {
+        val mgf1 =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) MGF1ParameterSpec.SHA256
+            else MGF1ParameterSpec.SHA1
+        return OAEPParameterSpec("SHA-256", "MGF1", mgf1, PSource.PSpecified.DEFAULT)
+    }
 
     private fun randomBytes(size: Int): ByteArray =
         ByteArray(size).also { secureRandom.nextBytes(it) }

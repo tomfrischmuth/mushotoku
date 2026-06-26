@@ -201,4 +201,10 @@
     <string name="holiday_br_carnaval_segunda">Poniedziałek karnawałowy</string>
     <string name="holiday_br_carnaval_terca">Wtorek karnawałowy</string>
     <string name="holiday_br_corpus_christi">Boże Ciało</string>
+
+    <!-- Open-source licenses screen -->
+    <string name="lic_intro">Ta aplikacja jest oparta na oprogramowaniu open source. Każda licencja jest wyświetlana raz, a po niej komponenty, których dotyczy.</string>
+    <string name="lic_license_text">Tekst licencji</string>
+    <string name="lic_public_domain_note">Domena publiczna — podawanie autorstwa nie jest wymagane.</string>
+    <string name="lic_components">Komponenty (%1$d)</string>
 </resources>

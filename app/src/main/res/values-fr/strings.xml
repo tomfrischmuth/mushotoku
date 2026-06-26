@@ -201,4 +201,10 @@
     <string name="holiday_br_carnaval_segunda">Lundi de Carnaval</string>
     <string name="holiday_br_carnaval_terca">Mardi de Carnaval</string>
     <string name="holiday_br_corpus_christi">Fête-Dieu</string>
+
+    <!-- Open-source licenses screen -->
+    <string name="lic_intro">Cette application repose sur des logiciels open source. Chaque licence est affichée une fois, suivie des composants qu\'elle couvre.</string>
+    <string name="lic_license_text">Texte de la licence</string>
+    <string name="lic_public_domain_note">Domaine public — l\'attribution n\'est pas requise.</string>
+    <string name="lic_components">Composants (%1$d)</string>
 </resources>
