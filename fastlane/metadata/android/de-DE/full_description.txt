@@ -1,0 +1,25 @@
+Mushotoku (無所得) ist ein Zen-Begriff für Handeln ohne Streben nach einem Ergebnis. Ein bewusst seltsamer Name für eine Produktivitäts-App — und genau das ist der Punkt.
+
+Die meisten Produktivitäts-Apps wollen, dass du jede Minute optimierst und jede Serie verteidigst. Mushotoku geht den anderen Weg: Finde die wenigen Dinge heraus, die heute wirklich zählen, erledige sie und lass den Rest los. Ein Werkzeug zum Fokussieren, nicht zum Füllen.
+
+Alles, was du schreibst, festhältst und planst, bleibt auf deinem Gerät. Mushotoku hat überhaupt keine INTERNET-Berechtigung und kann deine Daten daher physisch nirgendwohin senden — diese Möglichkeit wurde nie eingebaut. Deine Daten werden verschlüsselt auf dem Gerät gespeichert.
+
+Funktionen:
+
+Planen & organisieren
+* Kalender mit Terminen und Offline-Feiertagen
+* Aufgaben für deine To-dos
+* Gewohnheiten aufbauen und verfolgen
+
+Festhalten & reflektieren
+* Notizen mit Markdown-Editor, klarer Leseansicht und Papierkorb mit Wiederherstellung
+* Dankbarkeitstagebuch mit durchsuchbarem Archiv
+* Stimmungs-Tracking über die Zeit
+
+Wohlbefinden
+* Meditations-Timer mit drei Klangschalen und buddhistischen Zitaten
+* Koffeinkonsum erfassen und sehen, wie viel Koffein zur Schlafenszeit noch wirkt
+
+Geld
+* Finanz-Tracker mit eigenen Kategorien
+* Detaillierte Berichte und Sparpotenzial
