@@ -43,4 +43,7 @@ interface RecurringCostHistoryDao {
 
     @Query("DELETE FROM recurring_cost_history")
     suspend fun deleteAll()
+
+    @Query("DELETE FROM recurring_cost_history WHERE categoryId IN (SELECT id FROM categories WHERE isDefault = 0)")
+    suspend fun deleteForCustomCategories()
 }

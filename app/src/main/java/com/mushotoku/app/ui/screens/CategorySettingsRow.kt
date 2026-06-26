@@ -19,6 +19,8 @@
 package com.mushotoku.app.ui.screens
 import com.mushotoku.app.ui.components.soundClick
 import com.mushotoku.app.ui.components.soundCheck
+import com.mushotoku.app.ui.components.GlassAlertDialog
+import androidx.compose.material3.TextButton
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -116,6 +118,7 @@ internal fun CategorySettingsRow(
     val focusManager = LocalFocusManager.current
     var editText  by remember(category.id) { mutableStateOf("") }
     var isFocused by remember(category.id) { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -127,7 +130,7 @@ internal fun CategorySettingsRow(
                 modifier = Modifier.weight(1f)
             )
             if (onDelete != null) {
-                IconButton(onClick = soundClick(onDelete), modifier = Modifier.size(32.dp)) {
+                IconButton(onClick = soundClick { showDeleteDialog = true }, modifier = Modifier.size(32.dp)) {
                     Icon(Icons.Default.Delete, contentDescription = strings.delete, tint = Color(0xFFD32F2F), modifier = Modifier.size(18.dp))
                 }
             }
@@ -181,5 +184,21 @@ internal fun CategorySettingsRow(
             )
             Text(" ${strings.perMonth}", fontSize = 12.sp, color = colors.onSurfaceSecondary)
         }
+    }
+
+    if (showDeleteDialog) {
+        GlassAlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text(strings.deleteCategoryDialogTitle) },
+            text  = { Text(strings.deleteCategoryDialogText) },
+            confirmButton = {
+                TextButton(onClick = soundClick { showDeleteDialog = false; onDelete?.invoke() }) {
+                    Text(strings.delete, color = Color(0xFFD32F2F))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = soundClick { showDeleteDialog = false }) { Text(strings.cancel) }
+            }
+        )
     }
 }

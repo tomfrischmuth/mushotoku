@@ -92,7 +92,7 @@
     <string name="section_data">Manage Data</string>
     <string name="delete_finance_data">Delete All Finance Data</string>
     <string name="delete_finance_dialog_title">Delete Finance Data?</string>
-    <string name="delete_finance_dialog_text">All finance data will be permanently deleted.</string>
+    <string name="delete_finance_dialog_text">All finance data, including your custom categories, will be permanently deleted.</string>
     <string name="delete_all_tasks">Delete All Tasks</string>
     <string name="delete_all_tasks_dialog_title">Delete All Tasks?</string>
     <string name="delete_all_tasks_dialog_text">All tasks will be permanently deleted.</string>
@@ -662,4 +662,14 @@
         <item>Outstanding!</item>
         <item>Perfectly checked off!</item>
     </string-array>
+
+    <!-- Reset expense categories -->
+    <string name="reset_categories">Reset categories</string>
+    <string name="reset_categories_dialog_title">Reset categories?</string>
+    <string name="reset_categories_dialog_text">All your custom categories and their entries are deleted. The default categories are reset to factory settings; their entries are kept.</string>
+    <string name="reset_categories_confirm">Reset</string>
+
+    <!-- Delete custom category confirmation -->
+    <string name="delete_category_dialog_title">Delete category?</string>
+    <string name="delete_category_dialog_text">The category and all its entries will be deleted.</string>
 </resources>

@@ -92,7 +92,7 @@
     <string name="section_data">Daten verwalten</string>
     <string name="delete_finance_data">Alle Finanzdaten löschen</string>
     <string name="delete_finance_dialog_title">Finanzdaten löschen?</string>
-    <string name="delete_finance_dialog_text">Alle Finanzdaten werden unwiderruflich gelöscht.</string>
+    <string name="delete_finance_dialog_text">Alle Finanzdaten, einschließlich deiner eigenen Kategorien, werden unwiderruflich gelöscht.</string>
     <string name="delete_all_tasks">Alle Aufgaben löschen</string>
     <string name="delete_all_tasks_dialog_title">Alle Aufgaben löschen?</string>
     <string name="delete_all_tasks_dialog_text">Alle Aufgaben werden unwiderruflich gelöscht.</string>
@@ -662,4 +662,14 @@
         <item>Hervorragend!</item>
         <item>Tipp-topp abgehakt!</item>
     </string-array>
+
+    <!-- Reset expense categories -->
+    <string name="reset_categories">Kategorien zurücksetzen</string>
+    <string name="reset_categories_dialog_title">Kategorien zurücksetzen?</string>
+    <string name="reset_categories_dialog_text">Alle eigenen Kategorien und ihre Einträge werden gelöscht. Die Standard-Kategorien werden auf die Werkseinstellung zurückgesetzt; ihre Einträge bleiben erhalten.</string>
+    <string name="reset_categories_confirm">Zurücksetzen</string>
+
+    <!-- Delete custom category confirmation -->
+    <string name="delete_category_dialog_title">Kategorie löschen?</string>
+    <string name="delete_category_dialog_text">Die Kategorie und alle ihre Einträge werden gelöscht.</string>
 </resources>

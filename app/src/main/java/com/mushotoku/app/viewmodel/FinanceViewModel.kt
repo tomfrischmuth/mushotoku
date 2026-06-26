@@ -92,8 +92,13 @@ class FinanceViewModel(app: Application) : AndroidViewModel(app) {
     fun deleteAllExpenses() = viewModelScope.launch {
         repo.inTransaction {
             repo.deleteAllExpenses()
+            repo.deleteCustomCategories()
             repo.updateSettings(repo.getSettingsOnce().copy(salary = 0.0))
         }
+    }
+
+    fun resetCategoriesToDefault() = viewModelScope.launch {
+        repo.resetCategoriesToDefault()
     }
 
     fun addAdditionalIncome(label: String, amount: Double) = viewModelScope.launch {
@@ -188,6 +193,7 @@ class FinanceViewModel(app: Application) : AndroidViewModel(app) {
                 name      = name.trim(),
                 group     = group,
                 isDefault = false,
+                isEnabled = true,
                 sortOrder = maxOrder + 1
             )
         )
@@ -195,16 +201,10 @@ class FinanceViewModel(app: Application) : AndroidViewModel(app) {
 
     fun deleteCategory(category: Category) = viewModelScope.launch {
         repo.inTransaction {
-            if (category.recurringCost > 0.0) {
-                val now = YearMonth.now()
-                val currentMonthStr  = "%04d-%02d".format(now.year, now.monthValue)
-                val previousMonthStr = now.minusMonths(1).let { "%04d-%02d".format(it.year, it.monthValue) }
-                val active = repo.getActiveRecurringCostEntry(category.id)
-                if (active != null) {
-                    if (active.startMonth == currentMonthStr) repo.deleteRecurringCostEntry(active.id)
-                    else repo.updateRecurringCostEntry(active.copy(endMonth = previousMonthStr))
-                }
-            }
+            // Remove every trace of the category so it never resurfaces in the
+            // detailed report as an orphaned id.
+            repo.deleteExpensesForCategory(category.id)
+            repo.deleteRecurringCostHistoryForCategory(category.id)
             repo.deleteCategory(category)
         }
     }

@@ -90,6 +90,22 @@ class AppRepository(
     suspend fun insertCategory(category: Category) = categoryDao.insert(category)
     suspend fun updateCategory(category: Category) = categoryDao.update(category)
     suspend fun deleteCategory(category: Category) = categoryDao.delete(category)
+    suspend fun deleteCustomCategories() = categoryDao.deleteCustom()
+    suspend fun deleteExpensesForCategory(categoryId: String) = expenseDao.deleteForCategory(categoryId)
+
+    /** Factory reset of the expense categories: remove custom categories along
+     *  with their expenses and recurring costs, and restore the default
+     *  categories to their factory state (visibility, order, names). Expenses
+     *  and recurring costs on the default categories are kept. */
+    suspend fun resetCategoriesToDefault() = db.withTransaction {
+        expenseDao.deleteForCustomCategories()
+        recurringCostHistoryDao.deleteForCustomCategories()
+        val recurringCostById = categoryDao.getAllOnce().associate { it.id to it.recurringCost }
+        categoryDao.deleteAll()
+        categoryDao.insertAll(
+            DEFAULT_CATEGORIES.map { it.copy(recurringCost = recurringCostById[it.id] ?: 0.0) }
+        )
+    }
 
     fun getSettings(): Flow<AppSettings?> = settingsDao.observe()
     suspend fun getSettingsOnce(): AppSettings = settingsDao.getOnce() ?: AppSettings()
