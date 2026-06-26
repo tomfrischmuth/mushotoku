@@ -363,7 +363,7 @@ fun MushotokuApp(
                         defaultNoteType       = noteTypeFilter ?: NoteType.NOTE,
                         createRequested       = showNewNote,
                         onCreateConsumed      = { showNewNote = false },
-                        onAddNote             = { t, c, tp -> notesVm.addNote(t, c, tp) },
+                        onCreateNote          = { t, c, tp, cb -> notesVm.createNote(t, c, tp, cb) },
                         onUpdateNote          = { notesVm.updateNote(it) },
                         onDeleteNote             = { notesVm.deleteNote(it) },
                         onPinNote                = { notesVm.pinNote(it) },

@@ -45,9 +45,13 @@ class NotesViewModel(app: Application) : AndroidViewModel(app) {
         .map { it.toImmutableList() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), persistentListOf())
 
-    fun addNote(title: String, content: String, type: NoteType) = viewModelScope.launch {
+    /** Insert a new note and hand the persisted row (with its assigned id) back,
+     *  so the editor can switch from create- to update-mode and avoid duplicate
+     *  inserts on subsequent autosaves. */
+    fun createNote(title: String, content: String, type: NoteType, callback: (Note) -> Unit) = viewModelScope.launch {
         val now = System.currentTimeMillis()
-        repo.addNote(Note(title = title.trim(), content = content, type = type, createdAt = now, updatedAt = now))
+        val note = Note(title = title.trim(), content = content, type = type, createdAt = now, updatedAt = now)
+        callback(note.copy(id = repo.addNote(note)))
     }
 
     fun addNoteForLinking(title: String, type: NoteType, callback: (Long) -> Unit) = viewModelScope.launch {

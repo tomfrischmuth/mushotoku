@@ -68,7 +68,7 @@ fun NotesScreen(
     defaultNoteType: NoteType = NoteType.NOTE,
     createRequested: Boolean,
     onCreateConsumed: () -> Unit,
-    onAddNote: (String, String, NoteType) -> Unit,
+    onCreateNote: (String, String, NoteType, (Note) -> Unit) -> Unit,
     onUpdateNote: (Note) -> Unit,
     onDeleteNote: (Note) -> Unit,
     onPinNote: (Note) -> Unit,
@@ -134,7 +134,7 @@ fun NotesScreen(
         NoteEditor(
             note        = editingNote,
             defaultType = defaultNoteType,
-            onAdd       = { t, c, tp -> onAddNote(t, c, tp); creatingNote = false },
+            onCreate    = onCreateNote,
             onUpdate    = onUpdateNote,
             onDelete    = onDeleteNote,
             onClose     = { editingNote = null; creatingNote = false },

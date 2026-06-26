@@ -65,7 +65,7 @@ import kotlinx.coroutines.flow.drop
 internal fun NoteEditor(
     note: Note?,
     defaultType: NoteType = NoteType.NOTE,
-    onAdd: (String, String, NoteType) -> Unit,
+    onCreate: (String, String, NoteType, (Note) -> Unit) -> Unit,
     onUpdate: (Note) -> Unit,
     onDelete: (Note) -> Unit,
     onClose: () -> Unit,
@@ -81,6 +81,12 @@ internal fun NoteEditor(
     val keyboard = LocalSoftwareKeyboardController.current
     val context = LocalContext.current
     val isNew = note == null
+
+    // A brand-new note has no row yet; once autosave creates it we track the
+    // persisted note here and switch to update-mode. `creating` guards against a
+    // second insert while the first is still in flight (avoids duplicates).
+    var currentNote by remember(note?.id) { mutableStateOf(note) }
+    var creating    by remember(note?.id) { mutableStateOf(false) }
 
     var isEditing by remember { mutableStateOf(isNew) }
 
@@ -127,10 +133,17 @@ internal fun NoteEditor(
             saveContent = lines.drop(idx + 1).joinToString("\n")
         }
 
-        if (isNew) onAdd(saveTitle, saveContent, defaultType)
-        else {
-            if (saveTitle == note!!.title && saveContent == note.content) return
-            onUpdate(note.copy(title = saveTitle, content = saveContent))
+        val existing = currentNote
+        if (existing == null) {
+            if (creating) return
+            creating = true
+            onCreate(saveTitle, saveContent, defaultType) { created ->
+                currentNote = created
+                creating = false
+            }
+        } else {
+            if (saveTitle == existing.title && saveContent == existing.content) return
+            onUpdate(existing.copy(title = saveTitle, content = saveContent))
         }
     }
 
@@ -139,9 +152,10 @@ internal fun NoteEditor(
         val titleStripped = rawTitle
             .removePrefix("### ").removePrefix("## ").removePrefix("# ").trim()
         val effectiveTitle = titleStripped.ifBlank { content.lines().firstOrNull(String::isNotBlank) }
+        val existing = currentNote
         when {
-            effectiveTitle == null && !isNew -> onDelete(note!!)
-            effectiveTitle != null           -> persist(text.text)
+            effectiveTitle == null && existing != null -> onDelete(existing)
+            effectiveTitle != null                     -> persist(text.text)
         }
         onClose()
     }
@@ -165,13 +179,13 @@ internal fun NoteEditor(
 
     BackHandler { saveAndClose() }
 
-    if (!isNew) {
-        LaunchedEffect(note!!.id) {
-            snapshotFlow { text.text }
-                .drop(1)
-                .debounce(700)
-                .collect { persist(it) }
-        }
+    // Debounced autosave for new and existing notes alike. For a new note the
+    // first non-empty content promotes it to a real DB row (see persist()).
+    LaunchedEffect(note?.id) {
+        snapshotFlow { text.text }
+            .drop(1)
+            .debounce(700)
+            .collect { persist(it) }
     }
 
     val focusRequester = remember { FocusRequester() }
@@ -180,7 +194,7 @@ internal fun NoteEditor(
             try { focusRequester.requestFocus() } catch (_: Exception) {}
         } else {
             keyboard?.hide()
-            if (!isNew) persist(text.text)
+            persist(text.text)
         }
     }
 
