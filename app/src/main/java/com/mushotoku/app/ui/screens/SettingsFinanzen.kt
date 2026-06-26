@@ -32,6 +32,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
@@ -71,6 +72,7 @@ internal fun FinanzenSection(
     onSetCategoryRecurringCost: (Category, Double) -> Unit,
     onAddCategory: (name: String, group: String) -> Unit,
     onDeleteCategory: (Category) -> Unit,
+    onResetCategories: () -> Unit,
     onSetSalary: (Double) -> Unit,
     onSetSalaryDay: (String) -> Unit,
     onSetCurrency: (String) -> Unit,
@@ -79,6 +81,7 @@ internal fun FinanzenSection(
     val colors       = LocalAppColors.current
     val focusManager = LocalFocusManager.current
     var showAddDialog by remember { mutableStateOf(false) }
+    var showResetDialog by remember { mutableStateOf(false) }
     var currencyExpanded by remember { mutableStateOf(false) }
     val selectedCurrency = remember(settings.currency) { currencyByCode(settings.currency) }
     val expandedGroups = remember { mutableStateMapOf<String, Boolean>() }
@@ -296,6 +299,19 @@ internal fun FinanzenSection(
             Text(strings.addCategory)
         }
 
+        Spacer(Modifier.height(12.dp))
+
+        OutlinedButton(
+            onClick = soundClick { showResetDialog = true },
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = colors.accent)
+        ) {
+            Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(18.dp))
+            Spacer(Modifier.width(8.dp))
+            Text(strings.resetCategories)
+        }
+
         Spacer(Modifier.height(24.dp))
     }
 
@@ -303,6 +319,22 @@ internal fun FinanzenSection(
         AddCategoryDialog(
             onConfirm = { name, group -> onAddCategory(name, group); showAddDialog = false },
             onDismiss = { showAddDialog = false }
+        )
+    }
+
+    if (showResetDialog) {
+        GlassAlertDialog(
+            onDismissRequest = { showResetDialog = false },
+            title = { Text(strings.resetCategoriesDialogTitle) },
+            text  = { Text(strings.resetCategoriesDialogText) },
+            confirmButton = {
+                TextButton(onClick = soundClick { showResetDialog = false; onResetCategories() }) {
+                    Text(strings.resetCategoriesConfirm, color = Color(0xFFD32F2F))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = soundClick { showResetDialog = false }) { Text(strings.cancel) }
+            }
         )
     }
 }

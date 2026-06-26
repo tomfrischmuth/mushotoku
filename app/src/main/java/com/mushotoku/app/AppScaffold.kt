@@ -520,6 +520,7 @@ fun MushotokuApp(
                     onSetCategoryRecurringCost = { cat, cost -> financeVm.setCategoryRecurringCost(cat, cost) },
                     onAddCategory              = { name, group -> financeVm.addCustomCategory(name, group) },
                     onDeleteCategory           = { financeVm.deleteCategory(it) },
+                    onResetCategories          = { financeVm.resetCategoriesToDefault() },
                     onDeleteFinanceData      = { financeVm.deleteAllExpenses() },
                     onDeleteAllTasks         = { tasksVm.deleteAllTasks() },
                     onDeleteAllAppointments  = { tasksVm.deleteAllAppointments() },

@@ -46,4 +46,10 @@ interface ExpenseDao {
 
     @Query("DELETE FROM expenses")
     suspend fun deleteAll()
+
+    @Query("DELETE FROM expenses WHERE category IN (SELECT id FROM categories WHERE isDefault = 0)")
+    suspend fun deleteForCustomCategories()
+
+    @Query("DELETE FROM expenses WHERE category = :categoryId")
+    suspend fun deleteForCategory(categoryId: String)
 }

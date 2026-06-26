@@ -92,7 +92,7 @@
     <string name="section_data">Zarządzaj danymi</string>
     <string name="delete_finance_data">Usuń wszystkie dane finansowe</string>
     <string name="delete_finance_dialog_title">Usunąć dane finansowe?</string>
-    <string name="delete_finance_dialog_text">Wszystkie dane finansowe zostaną trwale usunięte.</string>
+    <string name="delete_finance_dialog_text">Wszystkie dane finansowe, w tym własne kategorie, zostaną trwale usunięte.</string>
     <string name="delete_all_tasks">Usuń wszystkie zadania</string>
     <string name="delete_all_tasks_dialog_title">Usunąć wszystkie zadania?</string>
     <string name="delete_all_tasks_dialog_text">Wszystkie zadania zostaną trwale usunięte.</string>
@@ -684,4 +684,14 @@
         <item>Znakomicie!</item>
         <item>Idealnie odhaczone!</item>
     </string-array>
+
+    <!-- Reset expense categories -->
+    <string name="reset_categories">Resetuj kategorie</string>
+    <string name="reset_categories_dialog_title">Zresetować kategorie?</string>
+    <string name="reset_categories_dialog_text">Wszystkie własne kategorie i ich wpisy zostaną usunięte. Domyślne kategorie zostaną przywrócone do ustawień fabrycznych; ich wpisy zostaną zachowane.</string>
+    <string name="reset_categories_confirm">Resetuj</string>
+
+    <!-- Delete custom category confirmation -->
+    <string name="delete_category_dialog_title">Usunąć kategorię?</string>
+    <string name="delete_category_dialog_text">Kategoria i wszystkie jej wpisy zostaną usunięte.</string>
 </resources>

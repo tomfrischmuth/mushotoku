@@ -92,7 +92,7 @@
     <string name="section_data">Gegevens beheren</string>
     <string name="delete_finance_data">Alle financiële gegevens wissen</string>
     <string name="delete_finance_dialog_title">Financiële gegevens wissen?</string>
-    <string name="delete_finance_dialog_text">Alle financiële gegevens worden definitief verwijderd.</string>
+    <string name="delete_finance_dialog_text">Alle financiële gegevens, inclusief je eigen categorieën, worden permanent verwijderd.</string>
     <string name="delete_all_tasks">Alle taken wissen</string>
     <string name="delete_all_tasks_dialog_title">Alle taken wissen?</string>
     <string name="delete_all_tasks_dialog_text">Alle taken worden definitief verwijderd.</string>
@@ -662,4 +662,14 @@
         <item>Uitstekend!</item>
         <item>Perfect afgevinkt!</item>
     </string-array>
+
+    <!-- Reset expense categories -->
+    <string name="reset_categories">Categorieën herstellen</string>
+    <string name="reset_categories_dialog_title">Categorieën herstellen?</string>
+    <string name="reset_categories_dialog_text">Al je eigen categorieën en hun vermeldingen worden verwijderd. De standaardcategorieën worden teruggezet naar de fabrieksinstellingen; hun vermeldingen blijven behouden.</string>
+    <string name="reset_categories_confirm">Herstellen</string>
+
+    <!-- Delete custom category confirmation -->
+    <string name="delete_category_dialog_title">Categorie verwijderen?</string>
+    <string name="delete_category_dialog_text">De categorie en al haar vermeldingen worden verwijderd.</string>
 </resources>

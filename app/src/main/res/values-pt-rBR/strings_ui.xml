@@ -92,7 +92,7 @@
     <string name="section_data">Gerenciar dados</string>
     <string name="delete_finance_data">Excluir todos os dados financeiros</string>
     <string name="delete_finance_dialog_title">Excluir dados financeiros?</string>
-    <string name="delete_finance_dialog_text">Todos os dados financeiros serão excluídos permanentemente.</string>
+    <string name="delete_finance_dialog_text">Todos os dados financeiros, incluindo suas categorias personalizadas, serão excluídos permanentemente.</string>
     <string name="delete_all_tasks">Excluir todas as tarefas</string>
     <string name="delete_all_tasks_dialog_title">Excluir todas as tarefas?</string>
     <string name="delete_all_tasks_dialog_text">Todas as tarefas serão excluídas permanentemente.</string>
@@ -662,4 +662,14 @@
         <item>Excelente!</item>
         <item>Riscado com perfeição!</item>
     </string-array>
+
+    <!-- Reset expense categories -->
+    <string name="reset_categories">Redefinir categorias</string>
+    <string name="reset_categories_dialog_title">Redefinir categorias?</string>
+    <string name="reset_categories_dialog_text">Todas as suas categorias personalizadas e suas entradas são excluídas. As categorias padrão são redefinidas para as configurações de fábrica; suas entradas são mantidas.</string>
+    <string name="reset_categories_confirm">Redefinir</string>
+
+    <!-- Delete custom category confirmation -->
+    <string name="delete_category_dialog_title">Excluir categoria?</string>
+    <string name="delete_category_dialog_text">A categoria e todas as suas entradas serão excluídas.</string>
 </resources>
