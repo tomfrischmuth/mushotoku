@@ -38,6 +38,16 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
         .map { it ?: AppSettings() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AppSettings())
 
+    /**
+     * The persisted language, or null until the real value has loaded. Unlike
+     * [settings] (whose placeholder initial value is the "AUTO" default), this
+     * never emits a transient default — so applying the per-app locale from it
+     * won't briefly reset the app to the system language on startup.
+     */
+    val appliedLanguage: StateFlow<String?> = repo.getSettings()
+        .map { (it ?: AppSettings()).language }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
     fun setFinanceTabEnabled(enabled: Boolean) = viewModelScope.launch {
         repo.updateSettings(settings.value.copy(financeTabEnabled = enabled))
     }
