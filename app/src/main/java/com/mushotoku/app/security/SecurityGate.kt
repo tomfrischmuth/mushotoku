@@ -42,9 +42,19 @@ object SecurityGate {
     @Volatile var relocked: Boolean = false
         private set
 
+    /**
+     * True while a system auth prompt (BiometricPrompt) is in front. The
+     * device-credential (PIN/password) confirmation runs in a *separate* system
+     * activity, which takes us through onStop/onStart. That is not the user
+     * backgrounding the app, so we must not record it as a relock trigger — doing
+     * so relocks mid-authentication and fights the unlock that's in progress.
+     */
+    @Volatile var authInProgress: Boolean = false
+
     private fun gateReady(): Boolean = ::keyManager.isInitialized && keyManager.isInitialized()
 
     fun onAppBackgrounded() {
+        if (authInProgress) return
         if (!relocked) backgroundedAt = SystemClock.elapsedRealtime()
     }
 
