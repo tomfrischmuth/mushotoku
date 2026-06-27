@@ -1,0 +1,665 @@
+<!--
+  Mushotoku — a privacy-focused, offline productivity app.
+  Copyright (C) 2026 Tom Frischmuth
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tab_today">Today</string>
+    <string name="tab_finance">Finance</string>
+    <string name="tab_notes">Notes</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="all_day">All day</string>
+    <string name="add">Add</string>
+    <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="close">Close</string>
+    <string name="export">Export</string>
+
+    <string name="settings">Settings</string>
+    <string name="menu_display">Display</string>
+    <string name="menu_display_subtitle">Theme, font size, language</string>
+    <string name="menu_finance">Finance</string>
+    <string name="menu_finance_subtitle">Salary, categories, fixed costs</string>
+    <string name="menu_export">Export</string>
+    <string name="menu_export_subtitle">Calendar, journal &amp; notes</string>
+    <string name="menu_data">Data</string>
+    <string name="menu_data_subtitle">Delete &amp; reset data</string>
+    <string name="menu_licenses">Open-source licenses</string>
+    <string name="menu_licenses_subtitle">Libraries &amp; licenses used</string>
+    <string name="menu_calendar">Calendar</string>
+    <string name="menu_calendar_subtitle">Appointment reminders &amp; holidays</string>
+    <string name="menu_security">Security</string>
+    <string name="menu_security_subtitle">App lock, passphrase, backup</string>
+
+    <string name="section_appearance">Appearance</string>
+    <string name="mode_label">Mode</string>
+    <string name="mode_light">Light</string>
+    <string name="mode_dark">Dark</string>
+    <string name="mode_system">System</string>
+    <string name="font_size_label">Font Size</string>
+    <string name="font_small">Small</string>
+    <string name="font_normal">Normal</string>
+    <string name="font_large">Large</string>
+    <string name="language_label">Language</string>
+    <string name="lang_auto">Automatic</string>
+    <string name="lang_german">German</string>
+    <string name="lang_english">English</string>
+    <string name="lang_spanish">Spanish</string>
+    <string name="lang_french">French</string>
+    <string name="lang_italian">Italian</string>
+    <string name="lang_portuguese_pt">Portuguese (Portugal)</string>
+    <string name="lang_portuguese_br">Portuguese (Brazil)</string>
+    <string name="lang_dutch">Dutch</string>
+    <string name="lang_polish">Polish</string>
+    <string name="confirm_delete_label">Confirm deletion</string>
+    <string name="haptic_feedback_label">Vibrate on check-off</string>
+
+    <string name="app_icon_label">App Icon</string>
+    <string name="icon_original">Original</string>
+    <string name="icon_inverse">Inverse</string>
+    <string name="icon_warm_ember">Ember</string>
+    <string name="icon_blue">Blue</string>
+    <string name="icon_rainbow">Rainbow</string>
+    <string name="icon_retro">Retro</string>
+    <string name="icon_minimalist">Minimalist</string>
+    <string name="icon_playful">Playful</string>
+
+    <string name="section_finance_tab">Finance Tab</string>
+    <string name="show_finance_tab">Show Finance Tab</string>
+    <string name="section_categories">Categories &amp; Recurring Costs</string>
+    <string name="recurring_costs_label">Recurring Costs:</string>
+    <string name="per_month">/ month</string>
+    <string name="add_category">Add Category</string>
+    <string name="category_name_hint">Name</string>
+    <string name="category_group_hint">Group</string>
+
+    <string name="section_data">Manage Data</string>
+    <string name="delete_finance_data">Delete All Finance Data</string>
+    <string name="delete_finance_dialog_title">Delete Finance Data?</string>
+    <string name="delete_finance_dialog_text">All finance data will be permanently deleted.</string>
+    <string name="delete_all_tasks">Delete All Tasks</string>
+    <string name="delete_all_tasks_dialog_title">Delete All Tasks?</string>
+    <string name="delete_all_tasks_dialog_text">All tasks will be permanently deleted.</string>
+    <string name="delete_all_appointments">Delete All Appointments</string>
+    <string name="delete_all_appointments_dialog_title">Delete All Appointments?</string>
+    <string name="delete_all_appointments_dialog_text">All appointments will be permanently deleted.</string>
+    <string name="delete_all_habits">Delete All Habits</string>
+    <string name="delete_all_habits_dialog_title">Delete All Habits?</string>
+    <string name="delete_all_habits_dialog_text">All habits and their history will be permanently deleted.</string>
+    <string name="delete_all_notes">Delete All Notes</string>
+    <string name="delete_all_notes_dialog_title">Delete All Notes?</string>
+    <string name="delete_all_notes_dialog_text">All notes will be moved to the trash.</string>
+
+    <string name="currency_label">Currency</string>
+    <string name="section_salary">Salary</string>
+    <string name="salary_amount_label">Monthly Net Salary</string>
+    <string name="salary_day_label">Salary Day</string>
+    <string name="salary_day_first">Beginning of month (1st)</string>
+    <string name="salary_day_fifteenth">Mid-month (15th)</string>
+
+    <string name="budget_dialog_title">Available Budget</string>
+    <string name="budget_period_label">Period</string>
+    <string name="budget_salary_row">Salary</string>
+    <string name="budget_recurring_row">Recurring Costs</string>
+    <string name="budget_spent_row">Expenses</string>
+    <string name="budget_remaining_row">Remaining Budget</string>
+    <string name="budget_per_day_row">Budget per Day</string>
+    <string name="budget_no_salary">No salary set. Please enter it in settings.</string>
+    <string name="budget_additional_income_row">+ Additional Income</string>
+    <plurals name="budget_days_left">
+        <item quantity="one">%d day left</item>
+        <item quantity="other">%d days left</item>
+    </plurals>
+
+    <string name="total_label">Total</string>
+    <string name="add_custom_amount_title">Add Amount</string>
+    <string name="one_time_expense_btn">One-time Expense</string>
+    <string name="one_time_expenses_section">One-time Expenses</string>
+    <string name="select_group_hint">Select Group</string>
+    <string name="select_category_hint">Select Category</string>
+    <string name="monthly_overview_title">Monthly Overview</string>
+    <string name="current_month_fallback">Current Month</string>
+    <string name="no_expenses_this_month">No expenses this month</string>
+    <string name="incl_recurring_costs">incl. %1$s recurring costs</string>
+    <string name="previous_months">Previous Months</string>
+
+    <string name="in_detail_btn">Details</string>
+    <string name="savings_potential_btn">Potential</string>
+    <string name="savings_potential_title">Savings Potential</string>
+    <string name="savings_potential_subtitle">How much could I save?</string>
+    <string name="savings_up_to_per_year">up to %1$s per year</string>
+    <string name="savings_range_per_year">%1$s – %2$s per year</string>
+    <string name="savings_breakdown_section">Breakdown</string>
+    <string name="savings_confidence_hint">Estimate improves the longer you track.</string>
+    <string name="savings_no_data">Savings potential highlights small, recurring expenses – like cafés, subscriptions, or leisure. Categories appear here once you have at least 7 entries recorded.</string>
+
+    <string name="detailed_report_title">Detailed Report</string>
+    <string name="create_report_btn">Detailed Report</string>
+    <string name="report_month_label">Month</string>
+    <string name="report_from_1st">From 1st</string>
+    <string name="report_from_15th">From 15th</string>
+    <string name="no_data_for_period">No data for this period</string>
+    <string name="export_report">Export</string>
+
+    <string name="trash">Trash</string>
+    <string name="trash_empty">Trash is empty</string>
+    <string name="trash_delete_all">Delete all</string>
+    <string name="trash_delete_all_dialog_title">Empty trash?</string>
+    <string name="trash_delete_all_dialog_text">All notes in the trash will be permanently deleted.</string>
+    <string name="trash_restore">Restore</string>
+
+    <string name="no_notes_yet">No note yet. Tap + to add one.</string>
+    <string name="no_routines_yet">No routine yet. Tap + to add one.</string>
+    <string name="no_lists_yet">No list yet. Tap + to add one.</string>
+    <string name="delete_note_dialog_title">Delete Note?</string>
+    <string name="delete_note_dialog_text">\"%1$s\" will be moved to the trash.</string>
+    <string name="add_content_hint">Add content...</string>
+    <string name="note_type_note">Note</string>
+    <string name="note_type_list">List</string>
+    <string name="note_type_routine">Routine</string>
+    <string name="note_type_filter_notes">Notes</string>
+    <string name="note_type_filter_lists">Lists</string>
+    <string name="note_type_filter_routines">Routines</string>
+    <string name="no_notes">No notes</string>
+    <plurals name="notes_count">
+        <item quantity="one">%d Note</item>
+        <item quantity="other">%d Notes</item>
+    </plurals>
+    <plurals name="notes_count_routine">
+        <item quantity="one">%d Routine</item>
+        <item quantity="other">%d Routines</item>
+    </plurals>
+    <plurals name="notes_count_list">
+        <item quantity="one">%d List</item>
+        <item quantity="other">%d Lists</item>
+    </plurals>
+    <plurals name="notes_count_note">
+        <item quantity="one">%d Note</item>
+        <item quantity="other">%d Notes</item>
+    </plurals>
+    <string name="notes_pinned_section">Pinned</string>
+    <string name="notes_filter_all">All</string>
+    <string name="notes_search_hint">Search …</string>
+    <string name="notes_content_hint">Start writing …</string>
+    <string name="notes_no_results">No results</string>
+    <string name="notes_done">Done</string>
+    <string name="notes_edit">Edit</string>
+    <string name="notes_selected">%1$d selected</string>
+    <string name="notes_delete_selected">Move selected to trash</string>
+    <string name="notes_pin_action">Pin</string>
+    <string name="notes_unpin_action">Unpin</string>
+    <string name="notes_checklist_hint">Add item</string>
+
+    <string name="dialog_new_appointment">New Appointment</string>
+    <string name="dialog_new_task">New Task</string>
+    <string name="chip_task">Task</string>
+    <string name="chip_appointment">Appointment</string>
+    <string name="placeholder_appointment">Appointment description</string>
+    <string name="placeholder_task">What needs to be done?</string>
+    <string name="set_time_btn">Set time</string>
+    <string name="set_date_btn">Date</string>
+    <string name="dialog_new_note">New Note</string>
+    <string name="placeholder_title">Title</string>
+    <string name="placeholder_content">Content (optional)</string>
+
+    <string name="delete_appointment_dialog_title">Delete Appointment?</string>
+    <string name="delete_task_dialog_title">Delete Task?</string>
+    <string name="delete_task_dialog_text">\"%1$s\" will be permanently deleted.</string>
+    <string name="appointments_section">Appointments</string>
+    <string name="tasks_section">Tasks</string>
+    <string name="task_done">done</string>
+    <string name="task_missed">missed</string>
+
+    <string name="habits_section">Habits</string>
+    <string name="dialog_new_habit">New Habit</string>
+    <string name="add_habit">Habit</string>
+    <string name="habit_name_hint">Habit name</string>
+    <string name="delete_habit_dialog_title">Delete Habit?</string>
+    <string name="delete_habit_dialog_text">\"%1$s\" will be permanently deleted.</string>
+    <string name="recurrence_label">Recurrence</string>
+    <string name="recurrence_daily">daily</string>
+    <string name="recurrence_every_other_day">every other day</string>
+    <string name="recurrence_weekly">weekly</string>
+    <string name="recurrence_biweekly">biweekly</string>
+    <string name="recurrence_monthly">monthly</string>
+    <string name="streak_history_title">History</string>
+
+    <string name="calendar_title">Calendar</string>
+    <string name="go_to_date">Go to date</string>
+    <string-array name="week_days">
+        <item>Mo</item>
+        <item>Tu</item>
+        <item>We</item>
+        <item>Th</item>
+        <item>Fr</item>
+        <item>Sa</item>
+        <item>Su</item>
+    </string-array>
+
+    <string name="meditation_title">Welcome to the Now.</string>
+    <string name="meditation_timer_card">Meditation Timer</string>
+    <string name="meditation_gratitude_card">Gratitude Journal</string>
+    <string name="meditation_mood_card">Mood</string>
+    <string name="meditation_highlights_week">This Week</string>
+    <string name="meditation_highlights_month">This Month</string>
+    <string name="meditation_duration_label">Duration</string>
+    <string name="meditation_bell_label">Bowl Interval</string>
+    <string name="meditation_bell_none">None</string>
+    <string name="meditation_start">Begin</string>
+    <string name="meditation_stop">End</string>
+    <string name="meditation_pause">Pause</string>
+    <string name="meditation_resume">Resume</string>
+    <string name="meditation_archive">Archive</string>
+    <string name="meditation_archive_empty">No entries in the archive yet.</string>
+    <string name="meditation_breathing">Breathe in and out gently …</string>
+    <string name="meditation_session_complete">Session complete.</string>
+    <string name="meditation_gratitude_today">Today</string>
+    <string name="meditation_gratitude_hint">Gratitude %1$d of 3 …</string>
+    <string name="meditation_gratitude_save">Save</string>
+    <string name="meditation_no_gratitude_today">Nothing entered today yet.</string>
+    <string name="meditation_mood_question">How are you feeling today?</string>
+    <string name="meditation_week_days">%1$d of 7 days</string>
+    <string name="meditation_month_days">%1$d of 30 days</string>
+    <plurals name="meditation_minutes">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d min</item>
+    </plurals>
+    <plurals name="meditation_week_entries">
+        <item quantity="one">%d entry</item>
+        <item quantity="other">%d entries</item>
+    </plurals>
+    <plurals name="meditation_streak">
+        <item quantity="one">%d day in a row</item>
+        <item quantity="other">%d days in a row</item>
+    </plurals>
+    <plurals name="meditation_best_streak">
+        <item quantity="one">Best streak: %d day</item>
+        <item quantity="other">Best streak: %d days</item>
+    </plurals>
+    <string name="meditation_avg_mood">Avg mood</string>
+    <string name="meditation_minutes_label">min</string>
+    <string name="meditation_journal_singular">Entry</string>
+    <string name="meditation_journal_plural">Entries</string>
+    <string name="meditation_mood_all">Ø Overall</string>
+    <string name="meditation_mood_month">Ø 30 days</string>
+    <string name="meditation_mood_week">Ø 7 days</string>
+    <string name="delete_all_mindfulness">Delete All Mindfulness Data</string>
+    <string name="delete_all_mindfulness_dialog_title">Delete mindfulness data?</string>
+    <string name="delete_all_mindfulness_dialog_text">All gratitude entries and mood history will be permanently deleted.</string>
+    <string name="meditation_hint">Tip: Long-press today\'s date to open the mindfulness functions.</string>
+    <string name="meditation_notif_remaining">%1$02d:%2$02d remaining</string>
+    <string name="meditation_notif_stop">Stop</string>
+    <string name="meditation_sound_label">Sound</string>
+    <string name="meditation_sound_warm">Warm</string>
+    <string name="meditation_sound_bright">Bright</string>
+
+    <string name="sleep_lab_card">Sleep &amp; Caffeine</string>
+    <string name="sleep_lab_card_subtitle">Protect your sleep from caffeine</string>
+    <string name="sleep_lab_title">Sleep &amp; Caffeine</string>
+    <string name="sleep_lab_hint">Protect your rest – a calm hint on when the last coffee still serves you.</string>
+    <string name="sleep_lab_protect_title">Protect your rest</string>
+    <string name="sleep_lab_caffeine_title">Caffeine</string>
+    <string name="sleep_lab_active_at_bed">≈%1$d mg caffeine still active at %2$s</string>
+    <string name="sleep_lab_enough_title">Enough caffeine for today</string>
+    <string name="sleep_lab_cutoff">For calm sleep: last caffeinated drink before %1$s</string>
+    <string name="sleep_lab_no_more">For calm sleep, no more caffeinated drinks now.</string>
+    <string name="sleep_lab_ruhe_geschuetzt">No caffeine today – your rest is protected.</string>
+    <string name="sleep_lab_anchor">Caffeine up to 6 h before bed disrupts sleep (Drake et al., 2013).</string>
+    <string name="sleep_lab_no_caffeine">No caffeine logged today yet.</string>
+    <string name="sleep_lab_add_caffeine">Add caffeine</string>
+    <string name="sleep_lab_preset_coffee">Coffee</string>
+    <string name="sleep_lab_preset_espresso">Espresso</string>
+    <string name="sleep_lab_preset_tea">Tea</string>
+    <string name="sleep_lab_preset_energy">Energy</string>
+    <string name="sleep_lab_preset_cola">Cola</string>
+    <string name="sleep_lab_mg">%1$d mg</string>
+    <string name="sleep_lab_bedtime_label">Desired bedtime</string>
+    <string name="sleep_lab_metabolism">Caffeine clearance</string>
+    <string name="sleep_lab_metab_fast">Fast (3.5 h)</string>
+    <string name="sleep_lab_metab_normal">Normal (5 h)</string>
+    <string name="sleep_lab_metab_slow">Slow (7 h)</string>
+    <string name="sleep_lab_personalization">Personalization</string>
+
+    <string name="additional_income_section">Income</string>
+    <string name="add_income_btn">Add income</string>
+    <string name="add_income_title">Add Income</string>
+    <string name="income_label_hint">Description (e.g. side job)</string>
+
+    <string name="note_link_section">Link note</string>
+    <string name="note_link_existing">Select</string>
+    <string name="note_link_new">New note</string>
+    <string name="note_link_title_hint">Note title …</string>
+    <string name="note_link_picker_title">Select note</string>
+    <string name="note_link_linked_to">Appointment: %1$s</string>
+    <string name="note_link_go_to_appointment">Go to appointment</string>
+
+    <string name="lock_title">App locked</string>
+    <string name="lock_biometric_hint">Unlock the app with biometrics or your device PIN.</string>
+    <string name="lock_passphrase_hint">Enter your passphrase to decrypt your data.</string>
+    <string name="lock_passphrase_label">Passphrase</string>
+    <string name="lock_unlock">Unlock</string>
+    <string name="lock_invalidated_message">The biometric key has been invalidated (new biometrics enrolled?). Your data stays encrypted but can no longer be opened with this key.</string>
+    <string name="lock_reset_action">Reset &amp; restore from backup</string>
+
+    <string name="bio_unlock_title">Unlock app</string>
+    <string name="bio_confirm_title">Confirmation required</string>
+    <string name="bio_confirm_subtitle">Confirm with biometrics or device PIN</string>
+    <string name="wrong_passphrase">Wrong passphrase</string>
+
+    <string name="export_section_title">Export</string>
+    <string name="export_calendar_title">Calendar</string>
+    <string name="export_calendar_desc">All appointments as PDF</string>
+    <string name="export_journal_title">Journal</string>
+    <string name="export_journal_desc">Gratitude entries as PDF</string>
+    <string name="export_notes_title">Notes</string>
+    <string name="export_notes_desc">As a ZIP of text or PDF files</string>
+    <string name="export_finance_title">Finance report</string>
+    <string name="export_finance_desc">Monthly detailed report as PDF</string>
+    <string name="export_format_dialog_title">Choose format</string>
+    <string name="export_format_pdf">As PDF</string>
+    <string name="export_format_zip_txt">As ZIP (text files)</string>
+    <string name="export_format_zip_pdf">As ZIP (PDF files)</string>
+    <string name="export_include_mood_label">Include mood history</string>
+    <string name="export_action">Export</string>
+    <string name="export_cancel_action">Cancel</string>
+    <string name="export_progress_generic">Exporting …</string>
+    <string name="export_progress_notes_prefix">Note</string>
+    <string-array name="export_success_phrases">
+        <item>Export done.</item>
+        <item>All exported.</item>
+        <item>Done.</item>
+        <item>Packed and ready.</item>
+    </string-array>
+    <string name="export_share_action">Share</string>
+    <string name="export_error_generic">Export failed.</string>
+    <string name="export_empty_data">There is no data to export.</string>
+    <string name="export_base_calendar">Calendar</string>
+    <string name="export_base_journal">Journal</string>
+    <string name="export_base_notes">Notes</string>
+    <string name="export_base_finance">FinanceReport</string>
+    <string name="export_pdf_created_on">Created on</string>
+    <string name="export_pdf_all_day">all day</string>
+    <string name="export_pdf_note_fallback">Note</string>
+    <string-array name="export_mood_labels">
+        <item>Very bad</item>
+        <item>Bad</item>
+        <item>Neutral</item>
+        <item>Good</item>
+        <item>Very good</item>
+    </string-array>
+    <string name="export_finance_report_heading">Detailed report</string>
+    <string name="export_finance_month_total">Total</string>
+    <string name="export_finance_incl_recurring">incl. recurring costs %1$s</string>
+
+    <string name="holiday_settings_menu">Holidays</string>
+    <string name="holiday_settings_menu_subtitle">Public holidays in the calendar</string>
+    <string name="holiday_settings_section">Holidays</string>
+    <string name="holiday_settings_show_label">Show holidays</string>
+    <string name="holiday_settings_show_hint">Offline – no internet, no GPS</string>
+    <string name="holiday_settings_country_label">Country</string>
+    <string name="holiday_settings_region_label">Region</string>
+    <string name="holiday_settings_export_label">Include in export</string>
+    <string name="holiday_settings_export_hint">Add holidays to the calendar PDF</string>
+
+    <string name="notif_menu">Notifications</string>
+    <string name="notif_menu_subtitle">Appointment reminders</string>
+    <string name="notif_section">Appointment reminders</string>
+    <string name="notif_enable_label">Notifications</string>
+    <string name="notif_enable_hint">Reminder for appointments with a time</string>
+    <string name="notif_lead_label">Remind</string>
+    <string name="notif_permission_hint">Notifications are disabled for the app at system level. Please allow them in the Android settings.</string>
+    <string name="notif_lead_at_time">At time</string>
+    <string name="notif_lead_5min">5 min</string>
+    <string name="notif_lead_10min">10 min</string>
+    <string name="notif_lead_15min">15 min</string>
+    <string name="notif_lead_30min">30 min</string>
+    <string name="notif_lead_1hour">1 hr</string>
+    <string name="reminder_now">Now · %1$s</string>
+    <plurals name="reminder_in_hours">
+        <item quantity="one">In %1$d hour · %2$s</item>
+        <item quantity="other">In %1$d hours · %2$s</item>
+    </plurals>
+    <plurals name="reminder_in_minutes">
+        <item quantity="one">In %1$d minute · %2$s</item>
+        <item quantity="other">In %1$d minutes · %2$s</item>
+    </plurals>
+
+    <string name="sec_section_app_lock">App lock</string>
+    <string name="sec_app_lock_title">Lock app on open</string>
+    <string name="sec_app_lock_hint">Recommended, since the app lets you record financial and mood data. Without app lock your data stays encrypted but is visible to anyone holding your unlocked device.</string>
+    <string name="sec_protection_level">Current protection level</string>
+    <string name="sec_level_no_lock">No lock (data encrypted, no gate)</string>
+    <string name="sec_level_biometric">Biometrics / device PIN</string>
+    <string name="sec_level_passphrase">Passphrase</string>
+    <string name="sec_timeout_title">App-lock timeout</string>
+    <string name="sec_timeout_immediate">Immediate</string>
+    <string name="sec_timeout_one_min">1 min</string>
+    <string name="sec_timeout_five_min">5 min</string>
+    <string name="sec_setup_passphrase">Switch to passphrase</string>
+    <string name="sec_setup_passphrase_hint">Use your own password instead of biometrics</string>
+    <string name="sec_change_passphrase">Change passphrase</string>
+    <string name="sec_enable_warn_title">Enable app lock?</string>
+    <string name="sec_enable_warn_message">Next time you open the app, biometrics or the device PIN will be required. Create an encrypted backup so you can regain access in an emergency (e.g. lost device).</string>
+    <string name="sec_activate">Enable</string>
+    <string name="sec_cancel">Cancel</string>
+    <string name="sec_confirm">Confirm</string>
+    <string name="sec_save">Save</string>
+    <string name="sec_passphrase_no_reset_warning">Warning: there is no passphrase reset without data loss. Don\'t forget it.</string>
+    <string name="sec_new_passphrase">New passphrase</string>
+    <string name="sec_confirm_passphrase">Confirm passphrase</string>
+    <string name="sec_current_passphrase">Current passphrase</string>
+    <string name="sec_too_short">At least 8 characters.</string>
+    <string name="sec_mismatch">Passphrases do not match.</string>
+    <string name="sec_disable_lock_title">Disable app lock</string>
+    <string name="sec_disable_via_passphrase">Enter your current passphrase to disable the app lock.</string>
+    <string name="sec_lock_busy_title">Setting up…</string>
+    <string name="sec_lock_busy_hint">Generating security keys in the secure element. This can take a few seconds – please wait.</string>
+    <string name="sec_section_screen">Screen</string>
+    <string name="sec_block_screenshots_title">Block screenshots</string>
+    <string name="sec_block_screenshots_hint">Prevents screenshots, screen recording and the preview in the app switcher. Some keyboards and tools can then no longer read content from the app.</string>
+    <string name="sec_section_backup">Backup</string>
+    <string name="sec_create_backup">Create backup</string>
+    <string name="sec_create_backup_hint">Export an encrypted file with all your data</string>
+    <string name="sec_restore_backup">Restore backup</string>
+    <string name="sec_restore_backup_hint">Import from an .appbackup file</string>
+    <string name="sec_backup_password_title">Set backup password</string>
+    <string name="sec_backup_password_warning">This password protects the backup and is independent of the app lock. Without it the backup cannot be restored.</string>
+    <string name="sec_backup_password">Backup password</string>
+    <string name="sec_confirm_backup_password">Confirm password</string>
+    <string name="sec_enter_backup_password">Enter backup password</string>
+    <string name="sec_import_mode_title">Restore</string>
+    <string name="sec_import_mode_message">Replace existing data or merge it with the backup?</string>
+    <string name="sec_replace_data">Replace</string>
+    <string name="sec_merge_data">Merge</string>
+    <string name="sec_backup_exported">Backup saved.</string>
+    <string name="sec_backup_imported">Backup restored.</string>
+    <string name="sec_backup_export_failed">Backup failed.</string>
+    <string name="sec_wrong_backup_password">Wrong password or corrupted file.</string>
+    <string name="sec_corrupt_backup">Corrupted file or not a valid backup.</string>
+    <string name="sec_incompatible_backup">Backup is from a newer app version.</string>
+
+    <string name="group_wohnen">Housing</string>
+    <string name="group_lebensmittel">Groceries</string>
+    <string name="group_essen_trinken">Food &amp; Drink</string>
+    <string name="group_transport">Transport</string>
+    <string name="group_gesundheit_koerper">Health &amp; Body</string>
+    <string name="group_kleidung_accessoires">Clothing &amp; Accessories</string>
+    <string name="group_freizeit">Leisure</string>
+    <string name="group_sport">Sports</string>
+    <string name="group_reisen">Travel</string>
+    <string name="group_digitales">Digital</string>
+    <string name="group_bildung">Education</string>
+    <string name="group_soziales">Social</string>
+    <string name="group_haustiere">Pets</string>
+    <string name="group_finanzen_vorsorge">Finance &amp; Provision</string>
+    <string name="group_familie_kinder">Family &amp; Children</string>
+    <string name="group_beruf_buero">Work &amp; Office</string>
+    <string name="group_sonstiges">Other</string>
+
+    <string name="category_miete">Rent</string>
+    <string name="category_nebenkosten">Utilities</string>
+    <string name="category_strom">Electricity</string>
+    <string name="category_wasser">Water</string>
+    <string name="category_heizung">Heating</string>
+    <string name="category_internet">Internet / Phone</string>
+    <string name="category_reparaturen">Repairs</string>
+    <string name="category_haushalt">Household</string>
+    <string name="category_gartenarbeit">Gardening</string>
+    <string name="category_supermarkt">Supermarket</string>
+    <string name="category_wochenmarkt">Farmers Market</string>
+    <string name="category_bio_laden">Organic Store</string>
+    <string name="category_getraenke">Beverages</string>
+    <string name="category_snacks">Snacks</string>
+    <string name="category_restaurant">Restaurant</string>
+    <string name="category_cafe">Café</string>
+    <string name="category_takeaway">Takeaway</string>
+    <string name="category_lieferdienst">Delivery</string>
+    <string name="category_kantine">Canteen</string>
+    <string name="category_bar">Bar</string>
+    <string name="category_fahrzeugleasing">Vehicle Leasing</string>
+    <string name="category_tanken">Fuel / Charging</string>
+    <string name="category_parkgebuehren">Parking</string>
+    <string name="category_kfz_versicherung">Car Insurance</string>
+    <string name="category_kfz_steuer">Vehicle Tax</string>
+    <string name="category_werkstatt">Workshop</string>
+    <string name="category_oepnv">Public Transit</string>
+    <string name="category_fahrdienste">Ride Services</string>
+    <string name="category_fahrrad">Bicycle</string>
+    <string name="category_escooter">E-Scooter</string>
+    <string name="category_medikamente">Medication</string>
+    <string name="category_arztbesuch">Doctor Visit</string>
+    <string name="category_zahnarzt">Dentist</string>
+    <string name="category_krankenkasse">Health Insurance</string>
+    <string name="category_brille">Glasses / Contacts</string>
+    <string name="category_koerperpflege">Personal Care</string>
+    <string name="category_kosmetik">Cosmetics</string>
+    <string name="category_friseur">Hairdresser</string>
+    <string name="category_wellness">Wellness</string>
+    <string name="category_kleidung">Clothing</string>
+    <string name="category_schuhe">Shoes</string>
+    <string name="category_taschen">Bags</string>
+    <string name="category_accessoires">Accessories</string>
+    <string name="category_sportkleidung">Sportswear</string>
+    <string name="category_reinigung">Dry Cleaning</string>
+    <string name="category_events">Events</string>
+    <string name="category_ausstellungen">Exhibitions</string>
+    <string name="category_sportveranstalt">Sports Events</string>
+    <string name="category_lesestoff">Books</string>
+    <string name="category_kulturveranstalt">Cultural Events</string>
+    <string name="category_fitnessstudio">Gym</string>
+    <string name="category_sportkurse">Sports Classes</string>
+    <string name="category_sportverein">Sports Club</string>
+    <string name="category_sportausruestung">Sports Equipment</string>
+    <string name="category_schwimmbad">Swimming Pool</string>
+    <string name="category_outdoor_sport">Outdoor Sports</string>
+    <string name="category_indoor_sport">Indoor Sports</string>
+    <string name="category_fluege">Flights</string>
+    <string name="category_unterkunft">Accommodation</string>
+    <string name="category_mietwagen">Car Rental</string>
+    <string name="category_reiseversicherung">Travel Insurance</string>
+    <string name="category_aktivitaeten">Local Activities</string>
+    <string name="category_souvenirs">Souvenirs</string>
+    <string name="category_reisegepaeck">Travel Luggage</string>
+    <string name="category_smartphone">Smartphone / Tablet</string>
+    <string name="category_computer">Computer / Accessories</string>
+    <string name="category_mobilfunk">Mobile Contract</string>
+    <string name="category_software">Software / Apps</string>
+    <string name="category_abonnements">Subscriptions</string>
+    <string name="category_streaming">Streaming</string>
+    <string name="category_gaming">Gaming</string>
+    <string name="category_fachliteratur">Professional Literature</string>
+    <string name="category_schule_uni">School / University</string>
+    <string name="category_seminare">Seminars / Workshops</string>
+    <string name="category_sprachen">Language Learning</string>
+    <string name="category_online_kurse">Online Courses</string>
+    <string name="category_spenden">Donations</string>
+    <string name="category_geschenke">Gifts</string>
+    <string name="category_vereinsbeitraege">Club Memberships</string>
+    <string name="category_hochzeiten">Weddings / Celebrations</string>
+    <string name="category_tierfutter">Pet Food</string>
+    <string name="category_tierarzt">Vet</string>
+    <string name="category_tier_zubehoer">Pet Accessories</string>
+    <string name="category_tierpension">Pet Hotel / Sitter</string>
+    <string name="category_tierversicherung">Pet Insurance</string>
+    <string name="category_hundesteuer">Dog Tax</string>
+    <string name="category_krankenversicherung">Health Insurance</string>
+    <string name="category_lebensversicherung">Life Insurance</string>
+    <string name="category_haftpflicht">Liability Insurance</string>
+    <string name="category_altersvorsorge">Pension / Retirement</string>
+    <string name="category_investitionen">Investments / ETFs</string>
+    <string name="category_sparbetrag">Savings</string>
+    <string name="category_kredit">Loan Repayment</string>
+    <string name="category_steuernachzahlung">Tax Payment</string>
+    <string name="category_steuerberater">Tax Advisor</string>
+    <string name="category_kinderbetreuung">Childcare</string>
+    <string name="category_schulbedarf">School Supplies</string>
+    <string name="category_essensgeld">Lunch Money</string>
+    <string name="category_nachhilfe">Tutoring</string>
+    <string name="category_vereine_kinder">Clubs</string>
+    <string name="category_spielzeug">Toys</string>
+    <string name="category_freizeitaktivit">Leisure Activities</string>
+    <string name="category_kinderkleidung">Children\'s Clothing</string>
+    <string name="category_windeln">Diapers / Care</string>
+    <string name="category_babynahrung">Baby Food</string>
+    <string name="category_babymoebel">Baby Furniture</string>
+    <string name="category_babysitter">Babysitter</string>
+    <string name="category_taschengeld">Pocket Money</string>
+    <string name="category_unterhalt">Alimony</string>
+    <string name="category_arbeitsmaterial">Work Supplies</string>
+    <string name="category_homeoffice">Home Office Setup</string>
+    <string name="category_berufskleidung">Work Clothing</string>
+    <string name="category_weiterbildung">Professional Training</string>
+    <string name="category_bussgelder">Fees / Fines</string>
+    <string name="category_rechtsanwalt">Lawyer / Notary</string>
+    <string name="category_sonstiges">Other</string>
+
+    <string-array name="appointment_done_expressions">
+        <item>Done!</item>
+        <item>Nailed it!</item>
+        <item>Crushed it!</item>
+        <item>Mastered!</item>
+        <item>Conquered!</item>
+        <item>Checked off!</item>
+        <item>Accomplished!</item>
+        <item>With flying colors!</item>
+        <item>Effortlessly handled!</item>
+        <item>Flawlessly done!</item>
+        <item>Brilliantly completed!</item>
+        <item>Magnificent!</item>
+        <item>In no time!</item>
+        <item>Like a pro!</item>
+        <item>Without breaking a sweat!</item>
+        <item>Masterfully!</item>
+        <item>Right on target!</item>
+        <item>Smooth sailing!</item>
+        <item>Easy as pie!</item>
+        <item>Spotless!</item>
+        <item>Top-notch!</item>
+        <item>Brilliantly closed!</item>
+        <item>Bullseye!</item>
+        <item>Clean sweep!</item>
+        <item>Effortlessly mastered!</item>
+        <item>First try!</item>
+        <item>Solidly done!</item>
+        <item>Exemplary!</item>
+        <item>Like clockwork!</item>
+        <item>Outstanding!</item>
+        <item>Perfectly checked off!</item>
+    </string-array>
+</resources>

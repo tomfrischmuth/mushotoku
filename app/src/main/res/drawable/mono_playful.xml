@@ -1,0 +1,27 @@
+<!--
+  Mushotoku — a privacy-focused, offline productivity app.
+  Copyright (C) 2026 Tom Frischmuth
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <path android:pathData="M42.85,33.88 A23,23 0 0 1 57.60,31.28" android:strokeColor="#FFFFFFFF" android:strokeWidth="4.9" android:strokeLineCap="round" android:fillColor="#00000000" />
+    <path android:pathData="M62.24,32.53 A23,23 0 0 1 73.71,42.15" android:strokeColor="#FFFFFFFF" android:strokeWidth="4.9" android:strokeLineCap="round" android:fillColor="#00000000" />
+    <path android:pathData="M75.75,46.51 A23,23 0 0 1 75.75,61.49" android:strokeColor="#FFFFFFFF" android:strokeWidth="4.9" android:strokeLineCap="round" android:fillColor="#00000000" />
+    <path android:pathData="M73.71,65.85 A23,23 0 0 1 62.24,75.47" android:strokeColor="#FFFFFFFF" android:strokeWidth="4.9" android:strokeLineCap="round" android:fillColor="#00000000" />
+    <path android:pathData="M57.60,76.72 A23,23 0 0 1 42.85,74.12" android:strokeColor="#FFFFFFFF" android:strokeWidth="4.9" android:strokeLineCap="round" android:fillColor="#00000000" />
+    <path android:pathData="M38.91,71.36 A23,23 0 0 1 31.42,58.39" android:strokeColor="#FFFFFFFF" android:strokeWidth="4.9" android:strokeLineCap="round" android:fillColor="#00000000" />
+</vector>
