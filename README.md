@@ -95,7 +95,7 @@ Some things are missing on purpose. Mushotoku will never:
 Grab the latest signed APK from the [**Releases**](https://github.com/tomfrischmuth/mushotoku/releases) page.
 
 ### Requirements
-- Android 16+ (minSdk **36**)
+- Android 13+ (minSdk **33**)
 
 ---
 
@@ -142,7 +142,7 @@ For a debug build:
 - **Persistence:** Room over SQLCipher
 - **Crypto:** Android Keystore, AndroidX Biometric, Argon2kt
 - **Serialization:** kotlinx.serialization
-- **Min SDK:** 36 (Android 16) · **Target SDK:** 37
+- **Min SDK:** 33 (Android 13) · **Target SDK:** 37
 
 ---
 
