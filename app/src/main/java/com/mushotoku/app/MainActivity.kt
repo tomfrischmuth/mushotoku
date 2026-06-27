@@ -148,14 +148,14 @@ class MainActivity : FragmentActivity() {
         enableEdgeToEdge()
         setContent {
             SideEffect { contentReady = true }
-            AppLockGate {
-                UnlockedRoot()
+            AppLockGate { showBrandSplash ->
+                UnlockedRoot(showBrandSplash = showBrandSplash)
             }
         }
     }
 
     @Composable
-    private fun UnlockedRoot() {
+    private fun UnlockedRoot(showBrandSplash: Boolean) {
         val vm: AppViewModel = viewModel()
         val meditationVm: MeditationViewModel = viewModel()
         val settingsVm: SettingsViewModel = viewModel()
@@ -183,12 +183,17 @@ class MainActivity : FragmentActivity() {
                         openTodayTrigger = _openTodayTrigger
                     )
 
-                    var showBrandSplash by remember { mutableStateOf(true) }
+                    // Skip the post-unlock brand splash when the user already
+                    // passed through the lock screen — it would be a redundant
+                    // second wordmark after the gate's own splash + LockScreen.
+                    var brandSplashVisible by remember { mutableStateOf(showBrandSplash) }
                     LaunchedEffect(Unit) {
-                        delay(1100)
-                        showBrandSplash = false
+                        if (brandSplashVisible) {
+                            delay(1100)
+                            brandSplashVisible = false
+                        }
                     }
-                    AnimatedVisibility(visible = showBrandSplash, exit = fadeOut()) {
+                    AnimatedVisibility(visible = brandSplashVisible, exit = fadeOut()) {
                         BrandSplash()
                     }
 
@@ -251,11 +256,14 @@ class MainActivity : FragmentActivity() {
     }
 
     @Composable
-    private fun AppLockGate(content: @Composable () -> Unit) {
+    private fun AppLockGate(content: @Composable (showBrandSplash: Boolean) -> Unit) {
         val context = LocalContext.current
         var gate by remember { mutableStateOf<GateState>(GateState.Loading) }
         var error by remember { mutableStateOf<String?>(null) }
         var invalidated by remember { mutableStateOf(false) }
+        // True once a lock screen has been shown — used to suppress the otherwise
+        // redundant post-unlock brand splash.
+        var lockEngaged by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
 
         LaunchedEffect(Unit) {
@@ -263,8 +271,8 @@ class MainActivity : FragmentActivity() {
                 .map {
                     when (it) {
                         SecurityGate.StartGate.UNLOCKED -> GateState.Unlocked
-                        SecurityGate.StartGate.NEEDS_BIOMETRIC -> GateState.Locked(KeyMode.KEYSTORE_LOCK)
-                        SecurityGate.StartGate.NEEDS_PASSPHRASE -> GateState.Locked(KeyMode.PASSPHRASE)
+                        SecurityGate.StartGate.NEEDS_BIOMETRIC -> { lockEngaged = true; GateState.Locked(KeyMode.KEYSTORE_LOCK) }
+                        SecurityGate.StartGate.NEEDS_PASSPHRASE -> { lockEngaged = true; GateState.Locked(KeyMode.PASSPHRASE) }
                     }
                 }
                 .getOrElse { GateState.Failed(it.message) }
@@ -272,7 +280,7 @@ class MainActivity : FragmentActivity() {
 
         when (val g = gate) {
             GateState.Loading -> MushotokuTheme(themeMode = "DARK") { BrandSplash() }
-            GateState.Unlocked -> content()
+            GateState.Unlocked -> content(!lockEngaged)
             is GateState.Failed -> MushotokuTheme(themeMode = "DARK") { BrandSplash() }
             is GateState.Locked -> MushotokuTheme(themeMode = "DARK") {
                 LockScreen(
