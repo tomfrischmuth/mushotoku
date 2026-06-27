@@ -136,9 +136,11 @@ fun MushotokuApp(
     LaunchedEffect(calendarMonth) { tasksVm.setMonth(calendarMonth) }
 
     val appContext = LocalContext.current
-    LaunchedEffect(settings.language) {
+    val appliedLanguage by settingsVm.appliedLanguage.collectAsStateWithLifecycle()
+    LaunchedEffect(appliedLanguage) {
+        val lang = appliedLanguage ?: return@LaunchedEffect
         val lm = appContext.getSystemService(LocaleManager::class.java)
-        val desired = localeListForSetting(settings.language)
+        val desired = localeListForSetting(lang)
         if (lm != null && lm.applicationLocales != desired) {
             lm.applicationLocales = desired
         }
