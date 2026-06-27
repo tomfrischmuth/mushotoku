@@ -1,0 +1,204 @@
+<!--
+  Mushotoku — a privacy-focused, offline productivity app.
+  Copyright (C) 2026 Tom Frischmuth
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="notif_channel_appointments">Promemoria appuntamenti</string>
+    <string name="notif_channel_appointments_desc">Promemoria per gli appuntamenti del calendario</string>
+
+    <string name="country_de">Germania</string>
+    <string name="country_at">Austria</string>
+    <string name="country_ch">Svizzera</string>
+    <string name="country_fr">Francia</string>
+    <string name="country_it">Italia</string>
+    <string name="country_es">Spagna</string>
+    <string name="country_nl">Paesi Bassi</string>
+    <string name="country_pl">Polonia</string>
+    <string name="country_gb">Regno Unito</string>
+    <string name="country_us">Stati Uniti</string>
+    <string name="country_pt">Portogallo</string>
+    <string name="country_br">Brasile</string>
+
+    <string name="holiday_pdf_section">Festività</string>
+
+    <string name="region_nationwide">Tutto il paese</string>
+    <string name="region_de_bw">Baden-Württemberg</string>
+    <string name="region_de_by">Baviera</string>
+    <string name="region_de_be">Berlino</string>
+    <string name="region_de_bb">Brandeburgo</string>
+    <string name="region_de_hb">Brema</string>
+    <string name="region_de_hh">Amburgo</string>
+    <string name="region_de_he">Assia</string>
+    <string name="region_de_mv">Meclemburgo-Pomerania Anteriore</string>
+    <string name="region_de_ni">Bassa Sassonia</string>
+    <string name="region_de_nw">Renania Settentrionale-Vestfalia</string>
+    <string name="region_de_rp">Renania-Palatinato</string>
+    <string name="region_de_sl">Saarland</string>
+    <string name="region_de_sn">Sassonia</string>
+    <string name="region_de_st">Sassonia-Anhalt</string>
+    <string name="region_de_sh">Schleswig-Holstein</string>
+    <string name="region_de_th">Turingia</string>
+
+    <string name="holiday_de_neujahr">Capodanno</string>
+    <string name="holiday_de_karfreitag">Venerdì santo</string>
+    <string name="holiday_de_ostermontag">Lunedì dell\'Angelo</string>
+    <string name="holiday_de_tag_der_arbeit">Festa del Lavoro</string>
+    <string name="holiday_de_christi_himmelfahrt">Ascensione</string>
+    <string name="holiday_de_pfingstmontag">Lunedì di Pentecoste</string>
+    <string name="holiday_de_einheit">Giorno dell\'Unità tedesca</string>
+    <string name="holiday_de_weihnachten_1">Natale</string>
+    <string name="holiday_de_weihnachten_2">Santo Stefano</string>
+    <string name="holiday_de_dreikoenige">Epifania</string>
+    <string name="holiday_de_frauentag">Giornata internazionale della donna</string>
+    <string name="holiday_de_fronleichnam">Corpus Domini</string>
+    <string name="holiday_de_mariae_himmelfahrt">Assunzione</string>
+    <string name="holiday_de_weltkindertag">Giornata mondiale dell\'infanzia</string>
+    <string name="holiday_de_reformationstag">Giorno della Riforma</string>
+    <string name="holiday_de_allerheiligen">Ognissanti</string>
+    <string name="holiday_de_buss_und_bettag">Giorno di penitenza e preghiera</string>
+
+    <string name="holiday_at_neujahr">Capodanno</string>
+    <string name="holiday_at_dreikoenige">Epifania</string>
+    <string name="holiday_at_ostermontag">Lunedì dell\'Angelo</string>
+    <string name="holiday_at_staatsfeiertag">Festa nazionale</string>
+    <string name="holiday_at_himmelfahrt">Ascensione</string>
+    <string name="holiday_at_pfingstmontag">Lunedì di Pentecoste</string>
+    <string name="holiday_at_fronleichnam">Corpus Domini</string>
+    <string name="holiday_at_mariae_himmelfahrt">Assunzione</string>
+    <string name="holiday_at_nationalfeiertag">Festa nazionale austriaca</string>
+    <string name="holiday_at_allerheiligen">Ognissanti</string>
+    <string name="holiday_at_mariae_empfaengnis">Immacolata Concezione</string>
+    <string name="holiday_at_christtag">Natale</string>
+    <string name="holiday_at_stefanitag">Santo Stefano</string>
+
+    <string name="holiday_ch_neujahr">Capodanno</string>
+    <string name="holiday_ch_karfreitag">Venerdì santo</string>
+    <string name="holiday_ch_ostermontag">Lunedì dell\'Angelo</string>
+    <string name="holiday_ch_auffahrt">Ascensione</string>
+    <string name="holiday_ch_pfingstmontag">Lunedì di Pentecoste</string>
+    <string name="holiday_ch_bundesfeier">Festa nazionale svizzera</string>
+    <string name="holiday_ch_weihnachten">Natale</string>
+    <string name="holiday_ch_stephanstag">Santo Stefano</string>
+
+    <string name="holiday_fr_jour_de_lan">Capodanno</string>
+    <string name="holiday_fr_lundi_paques">Lunedì dell\'Angelo</string>
+    <string name="holiday_fr_fete_du_travail">Festa del Lavoro</string>
+    <string name="holiday_fr_victoire_1945">Giorno della Vittoria 1945</string>
+    <string name="holiday_fr_ascension">Ascensione</string>
+    <string name="holiday_fr_lundi_pentecote">Lunedì di Pentecoste</string>
+    <string name="holiday_fr_fete_nationale">Festa nazionale francese</string>
+    <string name="holiday_fr_assomption">Assunzione</string>
+    <string name="holiday_fr_toussaint">Ognissanti</string>
+    <string name="holiday_fr_armistice">Armistizio 1918</string>
+    <string name="holiday_fr_noel">Natale</string>
+
+    <string name="holiday_it_capodanno">Capodanno</string>
+    <string name="holiday_it_epifania">Epifania</string>
+    <string name="holiday_it_pasquetta">Lunedì dell\'Angelo</string>
+    <string name="holiday_it_liberazione">Festa della Liberazione</string>
+    <string name="holiday_it_lavoro">Festa del Lavoro</string>
+    <string name="holiday_it_repubblica">Festa della Repubblica</string>
+    <string name="holiday_it_ferragosto">Ferragosto</string>
+    <string name="holiday_it_ognissanti">Ognissanti</string>
+    <string name="holiday_it_immacolata">Immacolata Concezione</string>
+    <string name="holiday_it_natale">Natale</string>
+    <string name="holiday_it_santo_stefano">Santo Stefano</string>
+
+    <string name="holiday_es_ano_nuevo">Capodanno</string>
+    <string name="holiday_es_reyes">Epifania</string>
+    <string name="holiday_es_viernes_santo">Venerdì santo</string>
+    <string name="holiday_es_trabajo">Festa del Lavoro</string>
+    <string name="holiday_es_asuncion">Assunzione</string>
+    <string name="holiday_es_fiesta_nacional">Festa nazionale spagnola</string>
+    <string name="holiday_es_todos_los_santos">Ognissanti</string>
+    <string name="holiday_es_constitucion">Giorno della Costituzione</string>
+    <string name="holiday_es_inmaculada">Immacolata Concezione</string>
+    <string name="holiday_es_navidad">Natale</string>
+
+    <string name="holiday_nl_nieuwjaar">Capodanno</string>
+    <string name="holiday_nl_goede_vrijdag">Venerdì santo</string>
+    <string name="holiday_nl_eerste_paasdag">Domenica di Pasqua</string>
+    <string name="holiday_nl_tweede_paasdag">Lunedì dell\'Angelo</string>
+    <string name="holiday_nl_koningsdag">Giorno del Re</string>
+    <string name="holiday_nl_hemelvaart">Ascensione</string>
+    <string name="holiday_nl_eerste_pinksterdag">Domenica di Pentecoste</string>
+    <string name="holiday_nl_tweede_pinksterdag">Lunedì di Pentecoste</string>
+    <string name="holiday_nl_eerste_kerstdag">Natale</string>
+    <string name="holiday_nl_tweede_kerstdag">Santo Stefano</string>
+
+    <string name="holiday_pl_nowy_rok">Capodanno</string>
+    <string name="holiday_pl_trzech_kroli">Epifania</string>
+    <string name="holiday_pl_wielkanoc">Domenica di Pasqua</string>
+    <string name="holiday_pl_poniedzialek_wielkanocny">Lunedì dell\'Angelo</string>
+    <string name="holiday_pl_swieto_pracy">Festa del Lavoro</string>
+    <string name="holiday_pl_konstytucji">Giorno della Costituzione</string>
+    <string name="holiday_pl_zielone_swiatki">Domenica di Pentecoste</string>
+    <string name="holiday_pl_boze_cialo">Corpus Domini</string>
+    <string name="holiday_pl_wniebowziecie">Assunzione</string>
+    <string name="holiday_pl_wszystkich_swietych">Ognissanti</string>
+    <string name="holiday_pl_niepodleglosci">Giorno dell\'Indipendenza</string>
+    <string name="holiday_pl_boze_narodzenie_1">Natale</string>
+    <string name="holiday_pl_boze_narodzenie_2">Santo Stefano</string>
+
+    <string name="holiday_gb_new_year">Capodanno</string>
+    <string name="holiday_gb_good_friday">Venerdì santo</string>
+    <string name="holiday_gb_easter_monday">Lunedì dell\'Angelo</string>
+    <string name="holiday_gb_early_may">Festività di inizio maggio</string>
+    <string name="holiday_gb_spring_bank">Festività di primavera</string>
+    <string name="holiday_gb_summer_bank">Festività d\'estate</string>
+    <string name="holiday_gb_christmas">Natale</string>
+    <string name="holiday_gb_boxing_day">Santo Stefano</string>
+
+    <string name="holiday_us_new_year">Capodanno</string>
+    <string name="holiday_us_mlk">Giorno di Martin Luther King</string>
+    <string name="holiday_us_presidents">Giorno dei Presidenti</string>
+    <string name="holiday_us_memorial">Memorial Day</string>
+    <string name="holiday_us_juneteenth">Juneteenth</string>
+    <string name="holiday_us_independence">Giorno dell\'Indipendenza</string>
+    <string name="holiday_us_labor">Festa del Lavoro</string>
+    <string name="holiday_us_columbus">Columbus Day</string>
+    <string name="holiday_us_veterans">Giorno dei Veterani</string>
+    <string name="holiday_us_thanksgiving">Giorno del Ringraziamento</string>
+    <string name="holiday_us_christmas">Natale</string>
+
+    <string name="holiday_pt_ano_novo">Capodanno</string>
+    <string name="holiday_pt_sexta_feira_santa">Venerdì santo</string>
+    <string name="holiday_pt_pascoa">Domenica di Pasqua</string>
+    <string name="holiday_pt_dia_da_liberdade">Giorno della Libertà</string>
+    <string name="holiday_pt_dia_do_trabalhador">Festa del Lavoro</string>
+    <string name="holiday_pt_corpo_de_deus">Corpus Domini</string>
+    <string name="holiday_pt_dia_de_portugal">Giorno del Portogallo</string>
+    <string name="holiday_pt_assuncao">Assunzione</string>
+    <string name="holiday_pt_implantacao_republica">Giorno della Repubblica</string>
+    <string name="holiday_pt_todos_os_santos">Ognissanti</string>
+    <string name="holiday_pt_restauracao_independencia">Restaurazione dell\'Indipendenza</string>
+    <string name="holiday_pt_imaculada_conceicao">Immacolata Concezione</string>
+    <string name="holiday_pt_natal">Natale</string>
+
+    <string name="holiday_br_confraternizacao">Capodanno</string>
+    <string name="holiday_br_sexta_feira_santa">Venerdì santo</string>
+    <string name="holiday_br_tiradentes">Giorno di Tiradentes</string>
+    <string name="holiday_br_dia_do_trabalho">Festa del Lavoro</string>
+    <string name="holiday_br_independencia">Giorno dell\'Indipendenza</string>
+    <string name="holiday_br_aparecida">Nostra Signora di Aparecida</string>
+    <string name="holiday_br_finados">Giorno dei Morti</string>
+    <string name="holiday_br_proclamacao_republica">Proclamazione della Repubblica</string>
+    <string name="holiday_br_consciencia_negra">Giornata della coscienza nera</string>
+    <string name="holiday_br_natal">Natale</string>
+    <string name="holiday_br_carnaval_segunda">Lunedì di Carnevale</string>
+    <string name="holiday_br_carnaval_terca">Martedì di Carnevale</string>
+    <string name="holiday_br_corpus_christi">Corpus Domini</string>
+</resources>

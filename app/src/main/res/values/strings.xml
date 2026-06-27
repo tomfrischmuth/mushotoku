@@ -1,0 +1,212 @@
+<!--
+  Mushotoku — a privacy-focused, offline productivity app.
+  Copyright (C) 2026 Tom Frischmuth
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="app_name">Mushotoku</string>
+    <string name="notif_channel_appointments">Appointment reminders</string>
+    <string name="notif_channel_appointments_desc">Reminders for calendar appointments</string>
+
+    <string name="country_de">Germany</string>
+    <string name="country_at">Austria</string>
+    <string name="country_ch">Switzerland</string>
+    <string name="country_fr">France</string>
+    <string name="country_it">Italy</string>
+    <string name="country_es">Spain</string>
+    <string name="country_nl">Netherlands</string>
+    <string name="country_pl">Poland</string>
+    <string name="country_gb">United Kingdom</string>
+    <string name="country_us">United States</string>
+    <string name="country_pt">Portugal</string>
+    <string name="country_br">Brazil</string>
+
+    <string name="holiday_pdf_section">Holidays</string>
+
+    <string name="region_nationwide">Nationwide</string>
+    <string name="region_de_bw">Baden-Württemberg</string>
+    <string name="region_de_by">Bavaria</string>
+    <string name="region_de_be">Berlin</string>
+    <string name="region_de_bb">Brandenburg</string>
+    <string name="region_de_hb">Bremen</string>
+    <string name="region_de_hh">Hamburg</string>
+    <string name="region_de_he">Hesse</string>
+    <string name="region_de_mv">Mecklenburg-Vorpommern</string>
+    <string name="region_de_ni">Lower Saxony</string>
+    <string name="region_de_nw">North Rhine-Westphalia</string>
+    <string name="region_de_rp">Rhineland-Palatinate</string>
+    <string name="region_de_sl">Saarland</string>
+    <string name="region_de_sn">Saxony</string>
+    <string name="region_de_st">Saxony-Anhalt</string>
+    <string name="region_de_sh">Schleswig-Holstein</string>
+    <string name="region_de_th">Thuringia</string>
+
+    <string name="holiday_de_neujahr">New Year\'s Day</string>
+    <string name="holiday_de_karfreitag">Good Friday</string>
+    <string name="holiday_de_ostermontag">Easter Monday</string>
+    <string name="holiday_de_tag_der_arbeit">Labour Day</string>
+    <string name="holiday_de_christi_himmelfahrt">Ascension Day</string>
+    <string name="holiday_de_pfingstmontag">Whit Monday</string>
+    <string name="holiday_de_einheit">German Unity Day</string>
+    <string name="holiday_de_weihnachten_1">Christmas Day</string>
+    <string name="holiday_de_weihnachten_2">Boxing Day</string>
+    <string name="holiday_de_dreikoenige">Epiphany</string>
+    <string name="holiday_de_frauentag">International Women\'s Day</string>
+    <string name="holiday_de_fronleichnam">Corpus Christi</string>
+    <string name="holiday_de_mariae_himmelfahrt">Assumption Day</string>
+    <string name="holiday_de_weltkindertag">World Children\'s Day</string>
+    <string name="holiday_de_reformationstag">Reformation Day</string>
+    <string name="holiday_de_allerheiligen">All Saints\' Day</string>
+    <string name="holiday_de_buss_und_bettag">Repentance and Prayer Day</string>
+
+    <string name="holiday_at_neujahr">New Year\'s Day</string>
+    <string name="holiday_at_dreikoenige">Epiphany</string>
+    <string name="holiday_at_ostermontag">Easter Monday</string>
+    <string name="holiday_at_staatsfeiertag">State Holiday</string>
+    <string name="holiday_at_himmelfahrt">Ascension Day</string>
+    <string name="holiday_at_pfingstmontag">Whit Monday</string>
+    <string name="holiday_at_fronleichnam">Corpus Christi</string>
+    <string name="holiday_at_mariae_himmelfahrt">Assumption Day</string>
+    <string name="holiday_at_nationalfeiertag">National Day</string>
+    <string name="holiday_at_allerheiligen">All Saints\' Day</string>
+    <string name="holiday_at_mariae_empfaengnis">Immaculate Conception</string>
+    <string name="holiday_at_christtag">Christmas Day</string>
+    <string name="holiday_at_stefanitag">St. Stephen\'s Day</string>
+
+    <string name="holiday_ch_neujahr">New Year\'s Day</string>
+    <string name="holiday_ch_karfreitag">Good Friday</string>
+    <string name="holiday_ch_ostermontag">Easter Monday</string>
+    <string name="holiday_ch_auffahrt">Ascension Day</string>
+    <string name="holiday_ch_pfingstmontag">Whit Monday</string>
+    <string name="holiday_ch_bundesfeier">Swiss National Day</string>
+    <string name="holiday_ch_weihnachten">Christmas Day</string>
+    <string name="holiday_ch_stephanstag">St. Stephen\'s Day</string>
+
+    <string name="holiday_fr_jour_de_lan">New Year\'s Day</string>
+    <string name="holiday_fr_lundi_paques">Easter Monday</string>
+    <string name="holiday_fr_fete_du_travail">Labour Day</string>
+    <string name="holiday_fr_victoire_1945">Victory in Europe Day</string>
+    <string name="holiday_fr_ascension">Ascension Day</string>
+    <string name="holiday_fr_lundi_pentecote">Whit Monday</string>
+    <string name="holiday_fr_fete_nationale">Bastille Day</string>
+    <string name="holiday_fr_assomption">Assumption Day</string>
+    <string name="holiday_fr_toussaint">All Saints\' Day</string>
+    <string name="holiday_fr_armistice">Armistice Day</string>
+    <string name="holiday_fr_noel">Christmas Day</string>
+
+    <string name="holiday_it_capodanno">New Year\'s Day</string>
+    <string name="holiday_it_epifania">Epiphany</string>
+    <string name="holiday_it_pasquetta">Easter Monday</string>
+    <string name="holiday_it_liberazione">Liberation Day</string>
+    <string name="holiday_it_lavoro">Labour Day</string>
+    <string name="holiday_it_repubblica">Republic Day</string>
+    <string name="holiday_it_ferragosto">Assumption Day</string>
+    <string name="holiday_it_ognissanti">All Saints\' Day</string>
+    <string name="holiday_it_immacolata">Immaculate Conception</string>
+    <string name="holiday_it_natale">Christmas Day</string>
+    <string name="holiday_it_santo_stefano">St. Stephen\'s Day</string>
+
+    <string name="holiday_es_ano_nuevo">New Year\'s Day</string>
+    <string name="holiday_es_reyes">Epiphany</string>
+    <string name="holiday_es_viernes_santo">Good Friday</string>
+    <string name="holiday_es_trabajo">Labour Day</string>
+    <string name="holiday_es_asuncion">Assumption Day</string>
+    <string name="holiday_es_fiesta_nacional">National Day</string>
+    <string name="holiday_es_todos_los_santos">All Saints\' Day</string>
+    <string name="holiday_es_constitucion">Constitution Day</string>
+    <string name="holiday_es_inmaculada">Immaculate Conception</string>
+    <string name="holiday_es_navidad">Christmas Day</string>
+
+    <string name="holiday_nl_nieuwjaar">New Year\'s Day</string>
+    <string name="holiday_nl_goede_vrijdag">Good Friday</string>
+    <string name="holiday_nl_eerste_paasdag">Easter Sunday</string>
+    <string name="holiday_nl_tweede_paasdag">Easter Monday</string>
+    <string name="holiday_nl_koningsdag">King\'s Day</string>
+    <string name="holiday_nl_hemelvaart">Ascension Day</string>
+    <string name="holiday_nl_eerste_pinksterdag">Whit Sunday</string>
+    <string name="holiday_nl_tweede_pinksterdag">Whit Monday</string>
+    <string name="holiday_nl_eerste_kerstdag">Christmas Day</string>
+    <string name="holiday_nl_tweede_kerstdag">Boxing Day</string>
+
+    <string name="holiday_pl_nowy_rok">New Year\'s Day</string>
+    <string name="holiday_pl_trzech_kroli">Epiphany</string>
+    <string name="holiday_pl_wielkanoc">Easter Sunday</string>
+    <string name="holiday_pl_poniedzialek_wielkanocny">Easter Monday</string>
+    <string name="holiday_pl_swieto_pracy">Labour Day</string>
+    <string name="holiday_pl_konstytucji">Constitution Day</string>
+    <string name="holiday_pl_zielone_swiatki">Whit Sunday</string>
+    <string name="holiday_pl_boze_cialo">Corpus Christi</string>
+    <string name="holiday_pl_wniebowziecie">Assumption Day</string>
+    <string name="holiday_pl_wszystkich_swietych">All Saints\' Day</string>
+    <string name="holiday_pl_niepodleglosci">Independence Day</string>
+    <string name="holiday_pl_boze_narodzenie_1">Christmas Day</string>
+    <string name="holiday_pl_boze_narodzenie_2">Boxing Day</string>
+
+    <string name="holiday_gb_new_year">New Year\'s Day</string>
+    <string name="holiday_gb_good_friday">Good Friday</string>
+    <string name="holiday_gb_easter_monday">Easter Monday</string>
+    <string name="holiday_gb_early_may">Early May Bank Holiday</string>
+    <string name="holiday_gb_spring_bank">Spring Bank Holiday</string>
+    <string name="holiday_gb_summer_bank">Summer Bank Holiday</string>
+    <string name="holiday_gb_christmas">Christmas Day</string>
+    <string name="holiday_gb_boxing_day">Boxing Day</string>
+
+    <string name="holiday_us_new_year">New Year\'s Day</string>
+    <string name="holiday_us_mlk">Martin Luther King Jr. Day</string>
+    <string name="holiday_us_presidents">Presidents\' Day</string>
+    <string name="holiday_us_memorial">Memorial Day</string>
+    <string name="holiday_us_juneteenth">Juneteenth</string>
+    <string name="holiday_us_independence">Independence Day</string>
+    <string name="holiday_us_labor">Labor Day</string>
+    <string name="holiday_us_columbus">Columbus Day</string>
+    <string name="holiday_us_veterans">Veterans Day</string>
+    <string name="holiday_us_thanksgiving">Thanksgiving</string>
+    <string name="holiday_us_christmas">Christmas Day</string>
+
+    <string name="holiday_pt_ano_novo">New Year\'s Day</string>
+    <string name="holiday_pt_sexta_feira_santa">Good Friday</string>
+    <string name="holiday_pt_pascoa">Easter Sunday</string>
+    <string name="holiday_pt_dia_da_liberdade">Freedom Day</string>
+    <string name="holiday_pt_dia_do_trabalhador">Labour Day</string>
+    <string name="holiday_pt_corpo_de_deus">Corpus Christi</string>
+    <string name="holiday_pt_dia_de_portugal">Portugal Day</string>
+    <string name="holiday_pt_assuncao">Assumption Day</string>
+    <string name="holiday_pt_implantacao_republica">Republic Day</string>
+    <string name="holiday_pt_todos_os_santos">All Saints\' Day</string>
+    <string name="holiday_pt_restauracao_independencia">Restoration of Independence</string>
+    <string name="holiday_pt_imaculada_conceicao">Immaculate Conception</string>
+    <string name="holiday_pt_natal">Christmas Day</string>
+
+    <string name="holiday_br_confraternizacao">New Year\'s Day</string>
+    <string name="holiday_br_sexta_feira_santa">Good Friday</string>
+    <string name="holiday_br_tiradentes">Tiradentes\' Day</string>
+    <string name="holiday_br_dia_do_trabalho">Labour Day</string>
+    <string name="holiday_br_independencia">Independence Day</string>
+    <string name="holiday_br_aparecida">Our Lady of Aparecida</string>
+    <string name="holiday_br_finados">All Souls\' Day</string>
+    <string name="holiday_br_proclamacao_republica">Republic Proclamation Day</string>
+    <string name="holiday_br_consciencia_negra">Black Awareness Day</string>
+    <string name="holiday_br_natal">Christmas Day</string>
+
+    <string name="holiday_br_carnaval_segunda">Carnival Monday</string>
+    <string name="holiday_br_carnaval_terca">Carnival Tuesday</string>
+    <string name="holiday_br_corpus_christi">Corpus Christi</string>
+
+    <string name="lic_intro">This app is built with open-source software. Each license is shown once, followed by the components it covers.</string>
+    <string name="lic_license_text">License text</string>
+    <string name="lic_notice">NOTICE</string>
+    <string name="lic_public_domain_note">Public domain — attribution is not required.</string>
+    <string name="lic_components">Components (%1$d)</string>
+</resources>

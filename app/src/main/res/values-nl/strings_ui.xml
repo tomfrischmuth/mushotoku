@@ -1,0 +1,665 @@
+<!--
+  Mushotoku — a privacy-focused, offline productivity app.
+  Copyright (C) 2026 Tom Frischmuth
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tab_today">Vandaag</string>
+    <string name="tab_finance">Financiën</string>
+    <string name="tab_notes">Notities</string>
+    <string name="today">Vandaag</string>
+    <string name="tomorrow">Morgen</string>
+    <string name="yesterday">Gisteren</string>
+    <string name="all_day">Hele dag</string>
+    <string name="add">Toevoegen</string>
+    <string name="back">Terug</string>
+    <string name="cancel">Annuleren</string>
+    <string name="delete">Verwijderen</string>
+    <string name="close">Sluiten</string>
+    <string name="export">Exporteren</string>
+
+    <string name="settings">Instellingen</string>
+    <string name="menu_display">Weergave</string>
+    <string name="menu_display_subtitle">Thema, tekstgrootte, taal</string>
+    <string name="menu_finance">Financiën</string>
+    <string name="menu_finance_subtitle">Salaris, categorieën, vaste lasten</string>
+    <string name="menu_export">Exporteren</string>
+    <string name="menu_export_subtitle">Agenda, dagboek en notities</string>
+    <string name="menu_data">Gegevens</string>
+    <string name="menu_data_subtitle">Gegevens wissen en resetten</string>
+    <string name="menu_licenses">Opensourcelicenties</string>
+    <string name="menu_licenses_subtitle">Gebruikte bibliotheken en licenties</string>
+    <string name="menu_calendar">Agenda</string>
+    <string name="menu_calendar_subtitle">Afspraakherinneringen en feestdagen</string>
+    <string name="menu_security">Beveiliging</string>
+    <string name="menu_security_subtitle">Slot, wachtwoordzin, back-up</string>
+
+    <string name="section_appearance">Uiterlijk</string>
+    <string name="mode_label">Modus</string>
+    <string name="mode_light">Licht</string>
+    <string name="mode_dark">Donker</string>
+    <string name="mode_system">Systeem</string>
+    <string name="font_size_label">Tekstgrootte</string>
+    <string name="font_small">Klein</string>
+    <string name="font_normal">Normaal</string>
+    <string name="font_large">Groot</string>
+    <string name="language_label">Taal</string>
+    <string name="lang_auto">Automatisch</string>
+    <string name="lang_german">Duits</string>
+    <string name="lang_english">Engels</string>
+    <string name="lang_spanish">Spaans</string>
+    <string name="lang_french">Frans</string>
+    <string name="lang_italian">Italiaans</string>
+    <string name="lang_portuguese_pt">Portugees (Portugal)</string>
+    <string name="lang_portuguese_br">Portugees (Brazilië)</string>
+    <string name="lang_dutch">Nederlands</string>
+    <string name="lang_polish">Pools</string>
+    <string name="confirm_delete_label">Verwijderen bevestigen</string>
+    <string name="haptic_feedback_label">Trillen bij afvinken</string>
+
+    <string name="app_icon_label">App-icoon</string>
+    <string name="icon_original">Origineel</string>
+    <string name="icon_inverse">Omgekeerd</string>
+    <string name="icon_warm_ember">Gloed</string>
+    <string name="icon_blue">Blauw</string>
+    <string name="icon_rainbow">Regenboog</string>
+    <string name="icon_retro">Retro</string>
+    <string name="icon_minimalist">Minimalistisch</string>
+    <string name="icon_playful">Speels</string>
+
+    <string name="section_finance_tab">Tabblad Financiën</string>
+    <string name="show_finance_tab">Tabblad Financiën tonen</string>
+    <string name="section_categories">Categorieën en vaste lasten</string>
+    <string name="recurring_costs_label">Vaste lasten:</string>
+    <string name="per_month">/ maand</string>
+    <string name="add_category">Categorie toevoegen</string>
+    <string name="category_name_hint">Naam</string>
+    <string name="category_group_hint">Groep</string>
+
+    <string name="section_data">Gegevens beheren</string>
+    <string name="delete_finance_data">Alle financiële gegevens wissen</string>
+    <string name="delete_finance_dialog_title">Financiële gegevens wissen?</string>
+    <string name="delete_finance_dialog_text">Alle financiële gegevens worden definitief verwijderd.</string>
+    <string name="delete_all_tasks">Alle taken wissen</string>
+    <string name="delete_all_tasks_dialog_title">Alle taken wissen?</string>
+    <string name="delete_all_tasks_dialog_text">Alle taken worden definitief verwijderd.</string>
+    <string name="delete_all_appointments">Alle afspraken wissen</string>
+    <string name="delete_all_appointments_dialog_title">Alle afspraken wissen?</string>
+    <string name="delete_all_appointments_dialog_text">Alle afspraken worden definitief verwijderd.</string>
+    <string name="delete_all_habits">Alle gewoontes wissen</string>
+    <string name="delete_all_habits_dialog_title">Alle gewoontes wissen?</string>
+    <string name="delete_all_habits_dialog_text">Alle gewoontes en hun geschiedenis worden definitief verwijderd.</string>
+    <string name="delete_all_notes">Alle notities wissen</string>
+    <string name="delete_all_notes_dialog_title">Alle notities wissen?</string>
+    <string name="delete_all_notes_dialog_text">Alle notities worden naar de prullenbak verplaatst.</string>
+
+    <string name="currency_label">Valuta</string>
+    <string name="section_salary">Salaris</string>
+    <string name="salary_amount_label">Maandelijks nettosalaris</string>
+    <string name="salary_day_label">Salarisdag</string>
+    <string name="salary_day_first">Begin van de maand (1e)</string>
+    <string name="salary_day_fifteenth">Midden van de maand (15e)</string>
+
+    <string name="budget_dialog_title">Beschikbaar budget</string>
+    <string name="budget_period_label">Periode</string>
+    <string name="budget_salary_row">Salaris</string>
+    <string name="budget_recurring_row">Vaste lasten</string>
+    <string name="budget_spent_row">Uitgaven</string>
+    <string name="budget_remaining_row">Resterend saldo</string>
+    <string name="budget_per_day_row">Budget per dag</string>
+    <string name="budget_no_salary">Geen salaris ingesteld. Vul het in bij de instellingen.</string>
+    <string name="budget_additional_income_row">+ Extra inkomsten</string>
+    <plurals name="budget_days_left">
+        <item quantity="one">Nog %d dag</item>
+        <item quantity="other">Nog %d dagen</item>
+    </plurals>
+
+    <string name="total_label">Totaal</string>
+    <string name="add_custom_amount_title">Bedrag toevoegen</string>
+    <string name="one_time_expense_btn">Eenmalige uitgave</string>
+    <string name="one_time_expenses_section">Eenmalige uitgaven</string>
+    <string name="select_group_hint">Groep kiezen</string>
+    <string name="select_category_hint">Categorie kiezen</string>
+    <string name="monthly_overview_title">Maandoverzicht</string>
+    <string name="current_month_fallback">Huidige maand</string>
+    <string name="no_expenses_this_month">Geen uitgaven deze maand</string>
+    <string name="incl_recurring_costs">incl. %1$s vaste lasten</string>
+    <string name="previous_months">Vorige maanden</string>
+
+    <string name="in_detail_btn">Details</string>
+    <string name="savings_potential_btn">Potentieel</string>
+    <string name="savings_potential_title">Bespaarpotentieel</string>
+    <string name="savings_potential_subtitle">Hoeveel zou ik kunnen besparen?</string>
+    <string name="savings_up_to_per_year">tot %1$s per jaar</string>
+    <string name="savings_range_per_year">%1$s – %2$s per jaar</string>
+    <string name="savings_breakdown_section">Uitsplitsing</string>
+    <string name="savings_confidence_hint">De schatting wordt nauwkeuriger naarmate je langer bijhoudt.</string>
+    <string name="savings_no_data">Het bespaarpotentieel belicht kleine, terugkerende uitgaven, zoals koffie, abonnementen of vrije tijd. Een categorie verschijnt hier zodra je er minstens 7 vermeldingen hebt.</string>
+
+    <string name="detailed_report_title">Gedetailleerd rapport</string>
+    <string name="create_report_btn">Gedetailleerd rapport</string>
+    <string name="report_month_label">Maand</string>
+    <string name="report_from_1st">Vanaf de 1e</string>
+    <string name="report_from_15th">Vanaf de 15e</string>
+    <string name="no_data_for_period">Geen gegevens voor deze periode</string>
+    <string name="export_report">Exporteren</string>
+
+    <string name="trash">Prullenbak</string>
+    <string name="trash_empty">De prullenbak is leeg</string>
+    <string name="trash_delete_all">Alles wissen</string>
+    <string name="trash_delete_all_dialog_title">Prullenbak legen?</string>
+    <string name="trash_delete_all_dialog_text">Alle notities in de prullenbak worden definitief verwijderd.</string>
+    <string name="trash_restore">Herstellen</string>
+
+    <string name="no_notes_yet">Nog geen notitie. Tik op + om er een toe te voegen.</string>
+    <string name="no_routines_yet">Nog geen routine. Tik op + om er een toe te voegen.</string>
+    <string name="no_lists_yet">Nog geen lijst. Tik op + om er een toe te voegen.</string>
+    <string name="delete_note_dialog_title">Notitie verwijderen?</string>
+    <string name="delete_note_dialog_text">\"%1$s\" wordt naar de prullenbak verplaatst.</string>
+    <string name="add_content_hint">Inhoud toevoegen...</string>
+    <string name="note_type_note">Notitie</string>
+    <string name="note_type_list">Lijst</string>
+    <string name="note_type_routine">Routine</string>
+    <string name="note_type_filter_notes">Notities</string>
+    <string name="note_type_filter_lists">Lijsten</string>
+    <string name="note_type_filter_routines">Routines</string>
+    <string name="no_notes">Geen notities</string>
+    <plurals name="notes_count">
+        <item quantity="one">%d notitie</item>
+        <item quantity="other">%d notities</item>
+    </plurals>
+    <plurals name="notes_count_routine">
+        <item quantity="one">%d routine</item>
+        <item quantity="other">%d routines</item>
+    </plurals>
+    <plurals name="notes_count_list">
+        <item quantity="one">%d lijst</item>
+        <item quantity="other">%d lijsten</item>
+    </plurals>
+    <plurals name="notes_count_note">
+        <item quantity="one">%d notitie</item>
+        <item quantity="other">%d notities</item>
+    </plurals>
+    <string name="notes_pinned_section">Vastgezet</string>
+    <string name="notes_filter_all">Alle</string>
+    <string name="notes_search_hint">Zoeken …</string>
+    <string name="notes_content_hint">Begin met schrijven …</string>
+    <string name="notes_no_results">Geen resultaten</string>
+    <string name="notes_done">Klaar</string>
+    <string name="notes_edit">Bewerken</string>
+    <string name="notes_selected">%1$d geselecteerd</string>
+    <string name="notes_delete_selected">Selectie naar prullenbak</string>
+    <string name="notes_pin_action">Vastzetten</string>
+    <string name="notes_unpin_action">Losmaken</string>
+    <string name="notes_checklist_hint">Item toevoegen</string>
+
+    <string name="dialog_new_appointment">Nieuwe afspraak</string>
+    <string name="dialog_new_task">Nieuwe taak</string>
+    <string name="chip_task">Taak</string>
+    <string name="chip_appointment">Afspraak</string>
+    <string name="placeholder_appointment">Beschrijving van de afspraak</string>
+    <string name="placeholder_task">Wat moet er gebeuren?</string>
+    <string name="set_time_btn">Tijd instellen</string>
+    <string name="set_date_btn">Datum</string>
+    <string name="dialog_new_note">Nieuwe notitie</string>
+    <string name="placeholder_title">Titel</string>
+    <string name="placeholder_content">Inhoud (optioneel)</string>
+
+    <string name="delete_appointment_dialog_title">Afspraak verwijderen?</string>
+    <string name="delete_task_dialog_title">Taak verwijderen?</string>
+    <string name="delete_task_dialog_text">\"%1$s\" wordt definitief verwijderd.</string>
+    <string name="appointments_section">Afspraken</string>
+    <string name="tasks_section">Taken</string>
+    <string name="task_done">gedaan</string>
+    <string name="task_missed">gemist</string>
+
+    <string name="habits_section">Gewoontes</string>
+    <string name="dialog_new_habit">Nieuwe gewoonte</string>
+    <string name="add_habit">Gewoonte</string>
+    <string name="habit_name_hint">Naam van de gewoonte</string>
+    <string name="delete_habit_dialog_title">Gewoonte verwijderen?</string>
+    <string name="delete_habit_dialog_text">\"%1$s\" wordt definitief verwijderd.</string>
+    <string name="recurrence_label">Herhaling</string>
+    <string name="recurrence_daily">dagelijks</string>
+    <string name="recurrence_every_other_day">om de dag</string>
+    <string name="recurrence_weekly">wekelijks</string>
+    <string name="recurrence_biweekly">tweewekelijks</string>
+    <string name="recurrence_monthly">maandelijks</string>
+    <string name="streak_history_title">Geschiedenis</string>
+
+    <string name="calendar_title">Agenda</string>
+    <string name="go_to_date">Ga naar datum</string>
+    <string-array name="week_days">
+        <item>Ma</item>
+        <item>Di</item>
+        <item>Wo</item>
+        <item>Do</item>
+        <item>Vr</item>
+        <item>Za</item>
+        <item>Zo</item>
+    </string-array>
+
+    <string name="meditation_title">Welkom in het nu.</string>
+    <string name="meditation_timer_card">Meditatietimer</string>
+    <string name="meditation_gratitude_card">Dankbaarheidsdagboek</string>
+    <string name="meditation_mood_card">Stemming</string>
+    <string name="meditation_highlights_week">Deze week</string>
+    <string name="meditation_highlights_month">Deze maand</string>
+    <string name="meditation_duration_label">Duur</string>
+    <string name="meditation_bell_label">Klankschaal-interval</string>
+    <string name="meditation_bell_none">Geen</string>
+    <string name="meditation_start">Beginnen</string>
+    <string name="meditation_stop">Stoppen</string>
+    <string name="meditation_pause">Pauze</string>
+    <string name="meditation_resume">Hervatten</string>
+    <string name="meditation_archive">Archief</string>
+    <string name="meditation_archive_empty">Nog geen vermeldingen in het archief.</string>
+    <string name="meditation_breathing">Adem rustig in en uit …</string>
+    <string name="meditation_session_complete">Sessie voltooid.</string>
+    <string name="meditation_gratitude_today">Vandaag</string>
+    <string name="meditation_gratitude_hint">Dankbaarheid %1$d van 3 …</string>
+    <string name="meditation_gratitude_save">Opslaan</string>
+    <string name="meditation_no_gratitude_today">Vandaag nog niets genoteerd.</string>
+    <string name="meditation_mood_question">Hoe voel je je vandaag?</string>
+    <string name="meditation_week_days">%1$d van 7 dagen</string>
+    <string name="meditation_month_days">%1$d van 30 dagen</string>
+    <plurals name="meditation_minutes">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d min</item>
+    </plurals>
+    <plurals name="meditation_week_entries">
+        <item quantity="one">%d vermelding</item>
+        <item quantity="other">%d vermeldingen</item>
+    </plurals>
+    <plurals name="meditation_streak">
+        <item quantity="one">%d dag op rij</item>
+        <item quantity="other">%d dagen op rij</item>
+    </plurals>
+    <plurals name="meditation_best_streak">
+        <item quantity="one">Beste reeks: %d dag</item>
+        <item quantity="other">Beste reeks: %d dagen</item>
+    </plurals>
+    <string name="meditation_avg_mood">Gem. stemming</string>
+    <string name="meditation_minutes_label">min</string>
+    <string name="meditation_journal_singular">Vermelding</string>
+    <string name="meditation_journal_plural">Vermeldingen</string>
+    <string name="meditation_mood_all">Ø Totaal</string>
+    <string name="meditation_mood_month">Ø 30 dagen</string>
+    <string name="meditation_mood_week">Ø 7 dagen</string>
+    <string name="delete_all_mindfulness">Alle mindfulness-gegevens wissen</string>
+    <string name="delete_all_mindfulness_dialog_title">Mindfulness-gegevens wissen?</string>
+    <string name="delete_all_mindfulness_dialog_text">Alle dankbaarheidsvermeldingen en stemmingsgeschiedenis worden definitief verwijderd.</string>
+    <string name="meditation_hint">Tip: houd de datum van vandaag ingedrukt om de mindfulness-functies te openen.</string>
+    <string name="meditation_notif_remaining">%1$02d:%2$02d resterend</string>
+    <string name="meditation_notif_stop">Stoppen</string>
+    <string name="meditation_sound_label">Geluid</string>
+    <string name="meditation_sound_warm">Warm</string>
+    <string name="meditation_sound_bright">Helder</string>
+
+    <string name="sleep_lab_card">Slaap en cafeïne</string>
+    <string name="sleep_lab_card_subtitle">Bescherm je slaap tegen cafeïne</string>
+    <string name="sleep_lab_title">Slaap en cafeïne</string>
+    <string name="sleep_lab_hint">Bescherm je rust: een rustige tip over wanneer de laatste koffie je nog goed doet.</string>
+    <string name="sleep_lab_protect_title">Bescherm je rust</string>
+    <string name="sleep_lab_caffeine_title">Cafeïne</string>
+    <string name="sleep_lab_active_at_bed">≈%1$d mg cafeïne nog actief om %2$s</string>
+    <string name="sleep_lab_enough_title">Genoeg cafeïne voor vandaag</string>
+    <string name="sleep_lab_cutoff">Voor een rustige slaap: laatste cafeïnehoudende drank vóór %1$s</string>
+    <string name="sleep_lab_no_more">Voor een rustige slaap nu geen cafeïnehoudende drank meer.</string>
+    <string name="sleep_lab_ruhe_geschuetzt">Vandaag nog geen cafeïne: je rust is beschermd.</string>
+    <string name="sleep_lab_anchor">Cafeïne tot 6 u voor het slapengaan verstoort de slaap (Drake et al., 2013).</string>
+    <string name="sleep_lab_no_caffeine">Vandaag nog geen cafeïne geregistreerd.</string>
+    <string name="sleep_lab_add_caffeine">Cafeïne toevoegen</string>
+    <string name="sleep_lab_preset_coffee">Koffie</string>
+    <string name="sleep_lab_preset_espresso">Espresso</string>
+    <string name="sleep_lab_preset_tea">Thee</string>
+    <string name="sleep_lab_preset_energy">Energie</string>
+    <string name="sleep_lab_preset_cola">Cola</string>
+    <string name="sleep_lab_mg">%1$d mg</string>
+    <string name="sleep_lab_bedtime_label">Gewenste bedtijd</string>
+    <string name="sleep_lab_metabolism">Cafeïne-afbraak</string>
+    <string name="sleep_lab_metab_fast">Snel (3,5 u)</string>
+    <string name="sleep_lab_metab_normal">Normaal (5 u)</string>
+    <string name="sleep_lab_metab_slow">Langzaam (7 u)</string>
+    <string name="sleep_lab_personalization">Personalisatie</string>
+
+    <string name="additional_income_section">Inkomsten</string>
+    <string name="add_income_btn">Inkomsten toevoegen</string>
+    <string name="add_income_title">Inkomsten toevoegen</string>
+    <string name="income_label_hint">Omschrijving (bijv. bijbaan)</string>
+
+    <string name="note_link_section">Notitie koppelen</string>
+    <string name="note_link_existing">Selecteren</string>
+    <string name="note_link_new">Nieuwe notitie</string>
+    <string name="note_link_title_hint">Notitietitel …</string>
+    <string name="note_link_picker_title">Notitie selecteren</string>
+    <string name="note_link_linked_to">Afspraak: %1$s</string>
+    <string name="note_link_go_to_appointment">Naar afspraak</string>
+
+    <string name="lock_title">App vergrendeld</string>
+    <string name="lock_biometric_hint">Ontgrendel de app met biometrie of je apparaatpincode.</string>
+    <string name="lock_passphrase_hint">Voer je wachtwoordzin in om je gegevens te ontsleutelen.</string>
+    <string name="lock_passphrase_label">Wachtwoordzin</string>
+    <string name="lock_unlock">Ontgrendelen</string>
+    <string name="lock_invalidated_message">De biometrische sleutel is ongeldig geworden (nieuwe biometrie geregistreerd?). Je gegevens blijven versleuteld, maar kunnen niet meer met deze sleutel worden geopend.</string>
+    <string name="lock_reset_action">Resetten en herstellen uit back-up</string>
+
+    <string name="bio_unlock_title">App ontgrendelen</string>
+    <string name="bio_confirm_title">Bevestiging vereist</string>
+    <string name="bio_confirm_subtitle">Bevestig met biometrie of apparaatpincode</string>
+    <string name="wrong_passphrase">Onjuiste wachtwoordzin</string>
+
+    <string name="export_section_title">Exporteren</string>
+    <string name="export_calendar_title">Agenda</string>
+    <string name="export_calendar_desc">Alle afspraken als pdf</string>
+    <string name="export_journal_title">Dagboek</string>
+    <string name="export_journal_desc">Dankbaarheidsvermeldingen als pdf</string>
+    <string name="export_notes_title">Notities</string>
+    <string name="export_notes_desc">Als zip met tekst- of pdf-bestanden</string>
+    <string name="export_finance_title">Financieel rapport</string>
+    <string name="export_finance_desc">Maandelijks gedetailleerd rapport als pdf</string>
+    <string name="export_format_dialog_title">Formaat kiezen</string>
+    <string name="export_format_pdf">Als pdf</string>
+    <string name="export_format_zip_txt">Als zip (tekstbestanden)</string>
+    <string name="export_format_zip_pdf">Als zip (pdf-bestanden)</string>
+    <string name="export_include_mood_label">Stemmingsgeschiedenis opnemen</string>
+    <string name="export_action">Exporteren</string>
+    <string name="export_cancel_action">Annuleren</string>
+    <string name="export_progress_generic">Exporteren …</string>
+    <string name="export_progress_notes_prefix">Notitie</string>
+    <string-array name="export_success_phrases">
+        <item>Export voltooid.</item>
+        <item>Alles geëxporteerd.</item>
+        <item>Klaar.</item>
+        <item>Ingepakt en klaar.</item>
+    </string-array>
+    <string name="export_share_action">Delen</string>
+    <string name="export_error_generic">Export mislukt.</string>
+    <string name="export_empty_data">Er zijn geen gegevens om te exporteren.</string>
+    <string name="export_base_calendar">Agenda</string>
+    <string name="export_base_journal">Dagboek</string>
+    <string name="export_base_notes">Notities</string>
+    <string name="export_base_finance">FinancieelRapport</string>
+    <string name="export_pdf_created_on">Gemaakt op</string>
+    <string name="export_pdf_all_day">hele dag</string>
+    <string name="export_pdf_note_fallback">Notitie</string>
+    <string-array name="export_mood_labels">
+        <item>Heel slecht</item>
+        <item>Slecht</item>
+        <item>Neutraal</item>
+        <item>Goed</item>
+        <item>Heel goed</item>
+    </string-array>
+    <string name="export_finance_report_heading">Gedetailleerd rapport</string>
+    <string name="export_finance_month_total">Totaal</string>
+    <string name="export_finance_incl_recurring">incl. vaste lasten %1$s</string>
+
+    <string name="holiday_settings_menu">Feestdagen</string>
+    <string name="holiday_settings_menu_subtitle">Officiële feestdagen in de agenda</string>
+    <string name="holiday_settings_section">Feestdagen</string>
+    <string name="holiday_settings_show_label">Feestdagen tonen</string>
+    <string name="holiday_settings_show_hint">Offline – zonder internet, zonder GPS</string>
+    <string name="holiday_settings_country_label">Land</string>
+    <string name="holiday_settings_region_label">Regio</string>
+    <string name="holiday_settings_export_label">Opnemen in export</string>
+    <string name="holiday_settings_export_hint">Feestdagen toevoegen aan de agenda-pdf</string>
+
+    <string name="notif_menu">Meldingen</string>
+    <string name="notif_menu_subtitle">Afspraakherinneringen</string>
+    <string name="notif_section">Afspraakherinneringen</string>
+    <string name="notif_enable_label">Meldingen</string>
+    <string name="notif_enable_hint">Herinnering voor afspraken met een tijd</string>
+    <string name="notif_lead_label">Herinneren</string>
+    <string name="notif_permission_hint">Meldingen zijn voor de app op systeemniveau uitgeschakeld. Sta ze toe in de Android-instellingen.</string>
+    <string name="notif_lead_at_time">Op het tijdstip</string>
+    <string name="notif_lead_5min">5 min</string>
+    <string name="notif_lead_10min">10 min</string>
+    <string name="notif_lead_15min">15 min</string>
+    <string name="notif_lead_30min">30 min</string>
+    <string name="notif_lead_1hour">1 u</string>
+    <string name="reminder_now">Nu · %1$s</string>
+    <plurals name="reminder_in_hours">
+        <item quantity="one">Over %1$d uur · %2$s</item>
+        <item quantity="other">Over %1$d uur · %2$s</item>
+    </plurals>
+    <plurals name="reminder_in_minutes">
+        <item quantity="one">Over %1$d minuut · %2$s</item>
+        <item quantity="other">Over %1$d minuten · %2$s</item>
+    </plurals>
+
+    <string name="sec_section_app_lock">App-slot</string>
+    <string name="sec_app_lock_title">App vergrendelen bij openen</string>
+    <string name="sec_app_lock_hint">Aanbevolen, omdat de app het invoeren van financiële en stemmingsgegevens toelaat. Zonder app-slot blijven je gegevens versleuteld, maar zichtbaar voor iedereen die je ontgrendelde apparaat vasthoudt.</string>
+    <string name="sec_protection_level">Huidig beschermingsniveau</string>
+    <string name="sec_level_no_lock">Geen slot (gegevens versleuteld, geen drempel)</string>
+    <string name="sec_level_biometric">Biometrie / apparaatpincode</string>
+    <string name="sec_level_passphrase">Wachtwoordzin</string>
+    <string name="sec_timeout_title">Time-out app-slot</string>
+    <string name="sec_timeout_immediate">Direct</string>
+    <string name="sec_timeout_one_min">1 min</string>
+    <string name="sec_timeout_five_min">5 min</string>
+    <string name="sec_setup_passphrase">Overschakelen naar wachtwoordzin</string>
+    <string name="sec_setup_passphrase_hint">Gebruik je eigen wachtwoord in plaats van biometrie</string>
+    <string name="sec_change_passphrase">Wachtwoordzin wijzigen</string>
+    <string name="sec_enable_warn_title">App-slot inschakelen?</string>
+    <string name="sec_enable_warn_message">De volgende keer dat je de app opent, wordt biometrie of de apparaatpincode gevraagd. Maak een versleutelde back-up zodat je in noodgevallen (bijv. verlies van het apparaat) weer toegang krijgt.</string>
+    <string name="sec_activate">Inschakelen</string>
+    <string name="sec_cancel">Annuleren</string>
+    <string name="sec_confirm">Bevestigen</string>
+    <string name="sec_save">Opslaan</string>
+    <string name="sec_passphrase_no_reset_warning">Let op: er is geen manier om de wachtwoordzin te resetten zonder gegevensverlies. Vergeet hem niet.</string>
+    <string name="sec_new_passphrase">Nieuwe wachtwoordzin</string>
+    <string name="sec_confirm_passphrase">Wachtwoordzin bevestigen</string>
+    <string name="sec_current_passphrase">Huidige wachtwoordzin</string>
+    <string name="sec_too_short">Minstens 8 tekens.</string>
+    <string name="sec_mismatch">De wachtwoordzinnen komen niet overeen.</string>
+    <string name="sec_disable_lock_title">App-slot uitschakelen</string>
+    <string name="sec_disable_via_passphrase">Voer je huidige wachtwoordzin in om het app-slot uit te schakelen.</string>
+    <string name="sec_lock_busy_title">Bezig met instellen…</string>
+    <string name="sec_lock_busy_hint">Beveiligingssleutels worden in het beveiligde element aangemaakt. Dit kan een paar seconden duren; even geduld.</string>
+    <string name="sec_section_screen">Scherm</string>
+    <string name="sec_block_screenshots_title">Schermafbeeldingen blokkeren</string>
+    <string name="sec_block_screenshots_hint">Voorkomt schermafbeeldingen, schermopnames en de voorvertoning in de app-wisselaar. Sommige toetsenborden en tools kunnen dan niets meer uit de app uitlezen.</string>
+    <string name="sec_section_backup">Back-up</string>
+    <string name="sec_create_backup">Back-up maken</string>
+    <string name="sec_create_backup_hint">Exporteer een versleuteld bestand met al je gegevens</string>
+    <string name="sec_restore_backup">Back-up herstellen</string>
+    <string name="sec_restore_backup_hint">Importeren uit een .appbackup-bestand</string>
+    <string name="sec_backup_password_title">Back-upwachtwoord instellen</string>
+    <string name="sec_backup_password_warning">Dit wachtwoord beschermt de back-up en staat los van het app-slot. Zonder dit wachtwoord kan de back-up niet worden hersteld.</string>
+    <string name="sec_backup_password">Back-upwachtwoord</string>
+    <string name="sec_confirm_backup_password">Wachtwoord bevestigen</string>
+    <string name="sec_enter_backup_password">Back-upwachtwoord invoeren</string>
+    <string name="sec_import_mode_title">Herstellen</string>
+    <string name="sec_import_mode_message">Bestaande gegevens vervangen of samenvoegen met de back-up?</string>
+    <string name="sec_replace_data">Vervangen</string>
+    <string name="sec_merge_data">Samenvoegen</string>
+    <string name="sec_backup_exported">Back-up opgeslagen.</string>
+    <string name="sec_backup_imported">Back-up hersteld.</string>
+    <string name="sec_backup_export_failed">Back-up mislukt.</string>
+    <string name="sec_wrong_backup_password">Onjuist wachtwoord of beschadigd bestand.</string>
+    <string name="sec_corrupt_backup">Beschadigd bestand of geen geldige back-up.</string>
+    <string name="sec_incompatible_backup">De back-up komt van een nieuwere versie van de app.</string>
+
+    <string name="group_wohnen">Wonen</string>
+    <string name="group_lebensmittel">Boodschappen</string>
+    <string name="group_essen_trinken">Eten en drinken</string>
+    <string name="group_transport">Vervoer</string>
+    <string name="group_gesundheit_koerper">Gezondheid en lichaam</string>
+    <string name="group_kleidung_accessoires">Kleding en accessoires</string>
+    <string name="group_freizeit">Vrije tijd</string>
+    <string name="group_sport">Sport</string>
+    <string name="group_reisen">Reizen</string>
+    <string name="group_digitales">Digitaal</string>
+    <string name="group_bildung">Onderwijs</string>
+    <string name="group_soziales">Sociaal</string>
+    <string name="group_haustiere">Huisdieren</string>
+    <string name="group_finanzen_vorsorge">Financiën en voorzieningen</string>
+    <string name="group_familie_kinder">Gezin en kinderen</string>
+    <string name="group_beruf_buero">Werk en kantoor</string>
+    <string name="group_sonstiges">Overig</string>
+
+    <string name="category_miete">Huur</string>
+    <string name="category_nebenkosten">Servicekosten</string>
+    <string name="category_strom">Elektriciteit</string>
+    <string name="category_wasser">Water</string>
+    <string name="category_heizung">Verwarming</string>
+    <string name="category_internet">Internet / Telefoon</string>
+    <string name="category_reparaturen">Reparaties</string>
+    <string name="category_haushalt">Huishouden</string>
+    <string name="category_gartenarbeit">Tuinieren</string>
+    <string name="category_supermarkt">Supermarkt</string>
+    <string name="category_wochenmarkt">Markt</string>
+    <string name="category_bio_laden">Biowinkel</string>
+    <string name="category_getraenke">Dranken</string>
+    <string name="category_snacks">Snacks</string>
+    <string name="category_restaurant">Restaurant</string>
+    <string name="category_cafe">Café</string>
+    <string name="category_takeaway">Afhalen</string>
+    <string name="category_lieferdienst">Bezorging</string>
+    <string name="category_kantine">Kantine</string>
+    <string name="category_bar">Bar</string>
+    <string name="category_fahrzeugleasing">Autolease</string>
+    <string name="category_tanken">Brandstof / Laden</string>
+    <string name="category_parkgebuehren">Parkeren</string>
+    <string name="category_kfz_versicherung">Autoverzekering</string>
+    <string name="category_kfz_steuer">Wegenbelasting</string>
+    <string name="category_werkstatt">Garage</string>
+    <string name="category_oepnv">Openbaar vervoer</string>
+    <string name="category_fahrdienste">Vervoersdiensten</string>
+    <string name="category_fahrrad">Fiets</string>
+    <string name="category_escooter">E-step</string>
+    <string name="category_medikamente">Medicijnen</string>
+    <string name="category_arztbesuch">Doktersbezoek</string>
+    <string name="category_zahnarzt">Tandarts</string>
+    <string name="category_krankenkasse">Zorgverzekering</string>
+    <string name="category_brille">Bril / Lenzen</string>
+    <string name="category_koerperpflege">Persoonlijke verzorging</string>
+    <string name="category_kosmetik">Cosmetica</string>
+    <string name="category_friseur">Kapper</string>
+    <string name="category_wellness">Wellness</string>
+    <string name="category_kleidung">Kleding</string>
+    <string name="category_schuhe">Schoenen</string>
+    <string name="category_taschen">Tassen</string>
+    <string name="category_accessoires">Accessoires</string>
+    <string name="category_sportkleidung">Sportkleding</string>
+    <string name="category_reinigung">Stomerij</string>
+    <string name="category_events">Evenementen</string>
+    <string name="category_ausstellungen">Tentoonstellingen</string>
+    <string name="category_sportveranstalt">Sportevenementen</string>
+    <string name="category_lesestoff">Boeken</string>
+    <string name="category_kulturveranstalt">Culturele evenementen</string>
+    <string name="category_fitnessstudio">Sportschool</string>
+    <string name="category_sportkurse">Sportlessen</string>
+    <string name="category_sportverein">Sportclub</string>
+    <string name="category_sportausruestung">Sportuitrusting</string>
+    <string name="category_schwimmbad">Zwembad</string>
+    <string name="category_outdoor_sport">Buitensport</string>
+    <string name="category_indoor_sport">Binnensport</string>
+    <string name="category_fluege">Vluchten</string>
+    <string name="category_unterkunft">Accommodatie</string>
+    <string name="category_mietwagen">Huurauto</string>
+    <string name="category_reiseversicherung">Reisverzekering</string>
+    <string name="category_aktivitaeten">Activiteiten ter plaatse</string>
+    <string name="category_souvenirs">Souvenirs</string>
+    <string name="category_reisegepaeck">Reisbagage</string>
+    <string name="category_smartphone">Smartphone / Tablet</string>
+    <string name="category_computer">Computer / Accessoires</string>
+    <string name="category_mobilfunk">Mobiel abonnement</string>
+    <string name="category_software">Software / Apps</string>
+    <string name="category_abonnements">Abonnementen</string>
+    <string name="category_streaming">Streaming</string>
+    <string name="category_gaming">Gaming</string>
+    <string name="category_fachliteratur">Vakliteratuur</string>
+    <string name="category_schule_uni">School / Universiteit</string>
+    <string name="category_seminare">Seminars / Workshops</string>
+    <string name="category_sprachen">Talen leren</string>
+    <string name="category_online_kurse">Online cursussen</string>
+    <string name="category_spenden">Donaties</string>
+    <string name="category_geschenke">Cadeaus</string>
+    <string name="category_vereinsbeitraege">Lidmaatschappen</string>
+    <string name="category_hochzeiten">Bruiloften / Feesten</string>
+    <string name="category_tierfutter">Dierenvoer</string>
+    <string name="category_tierarzt">Dierenarts</string>
+    <string name="category_tier_zubehoer">Dierenaccessoires</string>
+    <string name="category_tierpension">Dierenpension / Oppas</string>
+    <string name="category_tierversicherung">Dierenverzekering</string>
+    <string name="category_hundesteuer">Hondenbelasting</string>
+    <string name="category_krankenversicherung">Zorgverzekering</string>
+    <string name="category_lebensversicherung">Levensverzekering</string>
+    <string name="category_haftpflicht">Aansprakelijkheidsverzekering</string>
+    <string name="category_altersvorsorge">Pensioen / Oudedagsvoorziening</string>
+    <string name="category_investitionen">Beleggingen / ETF\'s</string>
+    <string name="category_sparbetrag">Sparen</string>
+    <string name="category_kredit">Lening aflossen</string>
+    <string name="category_steuernachzahlung">Belasting betalen</string>
+    <string name="category_steuerberater">Belastingadviseur</string>
+    <string name="category_kinderbetreuung">Kinderopvang</string>
+    <string name="category_schulbedarf">Schoolspullen</string>
+    <string name="category_essensgeld">Lunchgeld</string>
+    <string name="category_nachhilfe">Bijles</string>
+    <string name="category_vereine_kinder">Clubs</string>
+    <string name="category_spielzeug">Speelgoed</string>
+    <string name="category_freizeitaktivit">Vrijetijdsactiviteiten</string>
+    <string name="category_kinderkleidung">Kinderkleding</string>
+    <string name="category_windeln">Luiers / Verzorging</string>
+    <string name="category_babynahrung">Babyvoeding</string>
+    <string name="category_babymoebel">Babymeubels</string>
+    <string name="category_babysitter">Oppas</string>
+    <string name="category_taschengeld">Zakgeld</string>
+    <string name="category_unterhalt">Alimentatie</string>
+    <string name="category_arbeitsmaterial">Werkmateriaal</string>
+    <string name="category_homeoffice">Thuiswerkplek</string>
+    <string name="category_berufskleidung">Werkkleding</string>
+    <string name="category_weiterbildung">Bijscholing</string>
+    <string name="category_bussgelder">Kosten / Boetes</string>
+    <string name="category_rechtsanwalt">Advocaat / Notaris</string>
+    <string name="category_sonstiges">Overig</string>
+
+    <string-array name="appointment_done_expressions">
+        <item>Gedaan!</item>
+        <item>Raak!</item>
+        <item>Geklaard!</item>
+        <item>Onder de knie!</item>
+        <item>Overwonnen!</item>
+        <item>Afgevinkt!</item>
+        <item>Volbracht!</item>
+        <item>Met vlag en wimpel!</item>
+        <item>Moeiteloos!</item>
+        <item>Vlekkeloos!</item>
+        <item>Briljant afgerond!</item>
+        <item>Schitterend!</item>
+        <item>In een wip!</item>
+        <item>Als een prof!</item>
+        <item>Zonder te knipperen!</item>
+        <item>Meesterlijk!</item>
+        <item>Recht in de roos!</item>
+        <item>Soepeltjes!</item>
+        <item>Fluitje van een cent!</item>
+        <item>Smetteloos!</item>
+        <item>Eersteklas!</item>
+        <item>Briljant afgesloten!</item>
+        <item>In de roos!</item>
+        <item>Helemaal netjes!</item>
+        <item>Moeiteloos beheerst!</item>
+        <item>In één keer goed!</item>
+        <item>Degelijk gedaan!</item>
+        <item>Voorbeeldig!</item>
+        <item>Als een klok!</item>
+        <item>Uitstekend!</item>
+        <item>Perfect afgevinkt!</item>
+    </string-array>
+</resources>

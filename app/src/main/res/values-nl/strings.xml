@@ -1,0 +1,204 @@
+<!--
+  Mushotoku — a privacy-focused, offline productivity app.
+  Copyright (C) 2026 Tom Frischmuth
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="notif_channel_appointments">Afspraakherinneringen</string>
+    <string name="notif_channel_appointments_desc">Herinneringen voor afspraken in de agenda</string>
+
+    <string name="country_de">Duitsland</string>
+    <string name="country_at">Oostenrijk</string>
+    <string name="country_ch">Zwitserland</string>
+    <string name="country_fr">Frankrijk</string>
+    <string name="country_it">Italië</string>
+    <string name="country_es">Spanje</string>
+    <string name="country_nl">Nederland</string>
+    <string name="country_pl">Polen</string>
+    <string name="country_gb">Verenigd Koninkrijk</string>
+    <string name="country_us">Verenigde Staten</string>
+    <string name="country_pt">Portugal</string>
+    <string name="country_br">Brazilië</string>
+
+    <string name="holiday_pdf_section">Feestdagen</string>
+
+    <string name="region_nationwide">Heel het land</string>
+    <string name="region_de_bw">Baden-Württemberg</string>
+    <string name="region_de_by">Beieren</string>
+    <string name="region_de_be">Berlijn</string>
+    <string name="region_de_bb">Brandenburg</string>
+    <string name="region_de_hb">Bremen</string>
+    <string name="region_de_hh">Hamburg</string>
+    <string name="region_de_he">Hessen</string>
+    <string name="region_de_mv">Mecklenburg-Voor-Pommeren</string>
+    <string name="region_de_ni">Nedersaksen</string>
+    <string name="region_de_nw">Noordrijn-Westfalen</string>
+    <string name="region_de_rp">Rijnland-Palts</string>
+    <string name="region_de_sl">Saarland</string>
+    <string name="region_de_sn">Saksen</string>
+    <string name="region_de_st">Saksen-Anhalt</string>
+    <string name="region_de_sh">Sleeswijk-Holstein</string>
+    <string name="region_de_th">Thüringen</string>
+
+    <string name="holiday_de_neujahr">Nieuwjaarsdag</string>
+    <string name="holiday_de_karfreitag">Goede Vrijdag</string>
+    <string name="holiday_de_ostermontag">Tweede paasdag</string>
+    <string name="holiday_de_tag_der_arbeit">Dag van de Arbeid</string>
+    <string name="holiday_de_christi_himmelfahrt">Hemelvaartsdag</string>
+    <string name="holiday_de_pfingstmontag">Tweede pinksterdag</string>
+    <string name="holiday_de_einheit">Dag van de Duitse Eenheid</string>
+    <string name="holiday_de_weihnachten_1">Eerste kerstdag</string>
+    <string name="holiday_de_weihnachten_2">Tweede kerstdag</string>
+    <string name="holiday_de_dreikoenige">Driekoningen</string>
+    <string name="holiday_de_frauentag">Internationale Vrouwendag</string>
+    <string name="holiday_de_fronleichnam">Sacramentsdag</string>
+    <string name="holiday_de_mariae_himmelfahrt">Maria-Tenhemelopneming</string>
+    <string name="holiday_de_weltkindertag">Werelddag van het Kind</string>
+    <string name="holiday_de_reformationstag">Hervormingsdag</string>
+    <string name="holiday_de_allerheiligen">Allerheiligen</string>
+    <string name="holiday_de_buss_und_bettag">Boete- en bededag</string>
+
+    <string name="holiday_at_neujahr">Nieuwjaarsdag</string>
+    <string name="holiday_at_dreikoenige">Driekoningen</string>
+    <string name="holiday_at_ostermontag">Tweede paasdag</string>
+    <string name="holiday_at_staatsfeiertag">Nationale feestdag</string>
+    <string name="holiday_at_himmelfahrt">Hemelvaartsdag</string>
+    <string name="holiday_at_pfingstmontag">Tweede pinksterdag</string>
+    <string name="holiday_at_fronleichnam">Sacramentsdag</string>
+    <string name="holiday_at_mariae_himmelfahrt">Maria-Tenhemelopneming</string>
+    <string name="holiday_at_nationalfeiertag">Oostenrijkse nationale feestdag</string>
+    <string name="holiday_at_allerheiligen">Allerheiligen</string>
+    <string name="holiday_at_mariae_empfaengnis">Onbevlekte Ontvangenis</string>
+    <string name="holiday_at_christtag">Eerste kerstdag</string>
+    <string name="holiday_at_stefanitag">Tweede kerstdag</string>
+
+    <string name="holiday_ch_neujahr">Nieuwjaarsdag</string>
+    <string name="holiday_ch_karfreitag">Goede Vrijdag</string>
+    <string name="holiday_ch_ostermontag">Tweede paasdag</string>
+    <string name="holiday_ch_auffahrt">Hemelvaartsdag</string>
+    <string name="holiday_ch_pfingstmontag">Tweede pinksterdag</string>
+    <string name="holiday_ch_bundesfeier">Zwitserse nationale feestdag</string>
+    <string name="holiday_ch_weihnachten">Eerste kerstdag</string>
+    <string name="holiday_ch_stephanstag">Tweede kerstdag</string>
+
+    <string name="holiday_fr_jour_de_lan">Nieuwjaarsdag</string>
+    <string name="holiday_fr_lundi_paques">Tweede paasdag</string>
+    <string name="holiday_fr_fete_du_travail">Dag van de Arbeid</string>
+    <string name="holiday_fr_victoire_1945">Dag van de Overwinning 1945</string>
+    <string name="holiday_fr_ascension">Hemelvaartsdag</string>
+    <string name="holiday_fr_lundi_pentecote">Tweede pinksterdag</string>
+    <string name="holiday_fr_fete_nationale">Franse nationale feestdag</string>
+    <string name="holiday_fr_assomption">Maria-Tenhemelopneming</string>
+    <string name="holiday_fr_toussaint">Allerheiligen</string>
+    <string name="holiday_fr_armistice">Wapenstilstand 1918</string>
+    <string name="holiday_fr_noel">Eerste kerstdag</string>
+
+    <string name="holiday_it_capodanno">Nieuwjaarsdag</string>
+    <string name="holiday_it_epifania">Driekoningen</string>
+    <string name="holiday_it_pasquetta">Tweede paasdag</string>
+    <string name="holiday_it_liberazione">Bevrijdingsdag</string>
+    <string name="holiday_it_lavoro">Dag van de Arbeid</string>
+    <string name="holiday_it_repubblica">Dag van de Republiek</string>
+    <string name="holiday_it_ferragosto">Maria-Tenhemelopneming</string>
+    <string name="holiday_it_ognissanti">Allerheiligen</string>
+    <string name="holiday_it_immacolata">Onbevlekte Ontvangenis</string>
+    <string name="holiday_it_natale">Eerste kerstdag</string>
+    <string name="holiday_it_santo_stefano">Tweede kerstdag</string>
+
+    <string name="holiday_es_ano_nuevo">Nieuwjaarsdag</string>
+    <string name="holiday_es_reyes">Driekoningen</string>
+    <string name="holiday_es_viernes_santo">Goede Vrijdag</string>
+    <string name="holiday_es_trabajo">Dag van de Arbeid</string>
+    <string name="holiday_es_asuncion">Maria-Tenhemelopneming</string>
+    <string name="holiday_es_fiesta_nacional">Spaanse nationale feestdag</string>
+    <string name="holiday_es_todos_los_santos">Allerheiligen</string>
+    <string name="holiday_es_constitucion">Dag van de Grondwet</string>
+    <string name="holiday_es_inmaculada">Onbevlekte Ontvangenis</string>
+    <string name="holiday_es_navidad">Eerste kerstdag</string>
+
+    <string name="holiday_nl_nieuwjaar">Nieuwjaarsdag</string>
+    <string name="holiday_nl_goede_vrijdag">Goede Vrijdag</string>
+    <string name="holiday_nl_eerste_paasdag">Eerste paasdag</string>
+    <string name="holiday_nl_tweede_paasdag">Tweede paasdag</string>
+    <string name="holiday_nl_koningsdag">Koningsdag</string>
+    <string name="holiday_nl_hemelvaart">Hemelvaartsdag</string>
+    <string name="holiday_nl_eerste_pinksterdag">Eerste pinksterdag</string>
+    <string name="holiday_nl_tweede_pinksterdag">Tweede pinksterdag</string>
+    <string name="holiday_nl_eerste_kerstdag">Eerste kerstdag</string>
+    <string name="holiday_nl_tweede_kerstdag">Tweede kerstdag</string>
+
+    <string name="holiday_pl_nowy_rok">Nieuwjaarsdag</string>
+    <string name="holiday_pl_trzech_kroli">Driekoningen</string>
+    <string name="holiday_pl_wielkanoc">Eerste paasdag</string>
+    <string name="holiday_pl_poniedzialek_wielkanocny">Tweede paasdag</string>
+    <string name="holiday_pl_swieto_pracy">Dag van de Arbeid</string>
+    <string name="holiday_pl_konstytucji">Dag van de Grondwet</string>
+    <string name="holiday_pl_zielone_swiatki">Eerste pinksterdag</string>
+    <string name="holiday_pl_boze_cialo">Sacramentsdag</string>
+    <string name="holiday_pl_wniebowziecie">Maria-Tenhemelopneming</string>
+    <string name="holiday_pl_wszystkich_swietych">Allerheiligen</string>
+    <string name="holiday_pl_niepodleglosci">Onafhankelijkheidsdag</string>
+    <string name="holiday_pl_boze_narodzenie_1">Eerste kerstdag</string>
+    <string name="holiday_pl_boze_narodzenie_2">Tweede kerstdag</string>
+
+    <string name="holiday_gb_new_year">Nieuwjaarsdag</string>
+    <string name="holiday_gb_good_friday">Goede Vrijdag</string>
+    <string name="holiday_gb_easter_monday">Tweede paasdag</string>
+    <string name="holiday_gb_early_may">Bankvrijdag begin mei</string>
+    <string name="holiday_gb_spring_bank">Voorjaarsbankdag</string>
+    <string name="holiday_gb_summer_bank">Zomerbankdag</string>
+    <string name="holiday_gb_christmas">Eerste kerstdag</string>
+    <string name="holiday_gb_boxing_day">Tweede kerstdag</string>
+
+    <string name="holiday_us_new_year">Nieuwjaarsdag</string>
+    <string name="holiday_us_mlk">Martin Luther King-dag</string>
+    <string name="holiday_us_presidents">Presidentsdag</string>
+    <string name="holiday_us_memorial">Memorial Day</string>
+    <string name="holiday_us_juneteenth">Juneteenth</string>
+    <string name="holiday_us_independence">Onafhankelijkheidsdag</string>
+    <string name="holiday_us_labor">Dag van de Arbeid</string>
+    <string name="holiday_us_columbus">Columbus Day</string>
+    <string name="holiday_us_veterans">Veteranendag</string>
+    <string name="holiday_us_thanksgiving">Thanksgiving</string>
+    <string name="holiday_us_christmas">Eerste kerstdag</string>
+
+    <string name="holiday_pt_ano_novo">Nieuwjaarsdag</string>
+    <string name="holiday_pt_sexta_feira_santa">Goede Vrijdag</string>
+    <string name="holiday_pt_pascoa">Eerste paasdag</string>
+    <string name="holiday_pt_dia_da_liberdade">Dag van de Vrijheid</string>
+    <string name="holiday_pt_dia_do_trabalhador">Dag van de Arbeid</string>
+    <string name="holiday_pt_corpo_de_deus">Sacramentsdag</string>
+    <string name="holiday_pt_dia_de_portugal">Dag van Portugal</string>
+    <string name="holiday_pt_assuncao">Maria-Tenhemelopneming</string>
+    <string name="holiday_pt_implantacao_republica">Dag van de Republiek</string>
+    <string name="holiday_pt_todos_os_santos">Allerheiligen</string>
+    <string name="holiday_pt_restauracao_independencia">Herstel van de Onafhankelijkheid</string>
+    <string name="holiday_pt_imaculada_conceicao">Onbevlekte Ontvangenis</string>
+    <string name="holiday_pt_natal">Eerste kerstdag</string>
+
+    <string name="holiday_br_confraternizacao">Nieuwjaarsdag</string>
+    <string name="holiday_br_sexta_feira_santa">Goede Vrijdag</string>
+    <string name="holiday_br_tiradentes">Tiradentesdag</string>
+    <string name="holiday_br_dia_do_trabalho">Dag van de Arbeid</string>
+    <string name="holiday_br_independencia">Onafhankelijkheidsdag</string>
+    <string name="holiday_br_aparecida">Onze-Lieve-Vrouw van Aparecida</string>
+    <string name="holiday_br_finados">Allerzielen</string>
+    <string name="holiday_br_proclamacao_republica">Dag van de Republiek</string>
+    <string name="holiday_br_consciencia_negra">Dag van het Zwarte Bewustzijn</string>
+    <string name="holiday_br_natal">Eerste kerstdag</string>
+    <string name="holiday_br_carnaval_segunda">Carnavalsmaandag</string>
+    <string name="holiday_br_carnaval_terca">Carnavalsdinsdag</string>
+    <string name="holiday_br_corpus_christi">Sacramentsdag</string>
+</resources>
