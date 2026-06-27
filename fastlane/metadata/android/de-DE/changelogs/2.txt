@@ -1,0 +1,5 @@
+- Läuft auf mehr Geräten (Android 13+)
+- Bessere Unterstützung für Foldables
+- Neue Notizen werden automatisch gespeichert
+- Zuverlässigere Ausgabenkategorien
+- Fehlerbehebungen
