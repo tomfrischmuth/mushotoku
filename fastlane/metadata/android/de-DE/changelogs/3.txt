@@ -1,0 +1,2 @@
+- Das Entsperren mit Geräte-PIN/-Passwort funktioniert jetzt zuverlässig, auch wenn Systemsprache und App-Sprache unterschiedlich sind.
+- Die App zeigt nach dem Entsperren keinen zweiten Splashscreen mehr.
