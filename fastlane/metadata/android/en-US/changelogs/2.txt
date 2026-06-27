@@ -1,0 +1,5 @@
+- Runs on more devices (Android 13+)
+- Better support for foldables
+- New notes are autosaved
+- More reliable expense categories
+- Bug fixes
