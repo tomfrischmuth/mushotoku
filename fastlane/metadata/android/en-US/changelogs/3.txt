@@ -1,2 +1,2 @@
-- Unlocking with the device PIN/password now works reliably, even if the system language and app language are different.
-- The app no longer shows a second splash screen after you unlock it.
+- Unlocking with the device PIN/password now works reliably, even when the system and app languages differ.
+- The app no longer shows a second splash screen after unlocking.
