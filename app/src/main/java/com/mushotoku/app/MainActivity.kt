@@ -43,6 +43,7 @@ import com.mushotoku.app.ui.screens.LockScreen
 import javax.crypto.Cipher
 import java.util.Locale as JavaLocale
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.withResumed
 import kotlinx.coroutines.launch
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeOut
@@ -321,11 +322,34 @@ class MainActivity : FragmentActivity() {
         }
     }
 
+    /**
+     * Guards against more than one BiometricPrompt being in flight at once. The
+     * lock screen auto-triggers the prompt on appearance *and* exposes an "unlock"
+     * button; without this guard those can overlap (especially during cold-start
+     * settling) and leave the prompt in a state where its result is never delivered.
+     */
+    private var biometricInFlight = false
+
+    private fun clearBiometricInFlight() {
+        biometricInFlight = false
+        SecurityGate.authInProgress = false
+    }
+
+    /**
+     * BiometricPrompt requires the host to be resumed; auto-triggering it from a
+     * Compose effect during cold start can fire before that and drop the result.
+     * Defer the actual prompt until the activity is resumed.
+     */
+    private fun authenticateWhenResumed(showPrompt: () -> Unit) {
+        lifecycleScope.launch { lifecycle.withResumed(showPrompt) }
+    }
+
     private fun authenticateBiometric(
         onSuccess: (Cipher) -> Unit,
         onInvalidated: () -> Unit,
         onError: (String) -> Unit,
     ) {
+        if (biometricInFlight) return
         val cipher = try {
             SecurityGate.keyManager.getCipherForBiometricPrompt()
         } catch (e: KeyInvalidatedException) {
@@ -333,6 +357,8 @@ class MainActivity : FragmentActivity() {
         } catch (e: Exception) {
             onError(e.message ?: "Fehler"); return
         }
+        biometricInFlight = true
+        SecurityGate.authInProgress = true
         val info = BiometricPrompt.PromptInfo.Builder()
             .setTitle(getString(R.string.bio_unlock_title))
             .setSubtitle(getString(R.string.bio_confirm_subtitle))
@@ -346,11 +372,13 @@ class MainActivity : FragmentActivity() {
             ContextCompat.getMainExecutor(this),
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    clearBiometricInFlight()
                     val c = result.cryptoObject?.cipher
                     if (c != null) onSuccess(c) else onError("Kein freigeschalteter Cipher")
                 }
 
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    clearBiometricInFlight()
                     if (errorCode != BiometricPrompt.ERROR_USER_CANCELED &&
                         errorCode != BiometricPrompt.ERROR_NEGATIVE_BUTTON &&
                         errorCode != BiometricPrompt.ERROR_CANCELED
@@ -360,10 +388,13 @@ class MainActivity : FragmentActivity() {
                 }
             },
         )
-        prompt.authenticate(info, BiometricPrompt.CryptoObject(cipher))
+        authenticateWhenResumed { prompt.authenticate(info, BiometricPrompt.CryptoObject(cipher)) }
     }
 
     private fun authenticateBiometricPresence(onSuccess: () -> Unit, onError: (String) -> Unit) {
+        if (biometricInFlight) return
+        biometricInFlight = true
+        SecurityGate.authInProgress = true
         val info = BiometricPrompt.PromptInfo.Builder()
             .setTitle(getString(R.string.bio_confirm_title))
             .setSubtitle(getString(R.string.bio_confirm_subtitle))
@@ -377,10 +408,12 @@ class MainActivity : FragmentActivity() {
             ContextCompat.getMainExecutor(this),
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    clearBiometricInFlight()
                     onSuccess()
                 }
 
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    clearBiometricInFlight()
                     if (errorCode != BiometricPrompt.ERROR_USER_CANCELED &&
                         errorCode != BiometricPrompt.ERROR_NEGATIVE_BUTTON &&
                         errorCode != BiometricPrompt.ERROR_CANCELED
@@ -390,7 +423,7 @@ class MainActivity : FragmentActivity() {
                 }
             },
         )
-        prompt.authenticate(info)
+        authenticateWhenResumed { prompt.authenticate(info) }
     }
 
     private fun lockErrorWrongPassphrase(): String = getString(R.string.wrong_passphrase)
