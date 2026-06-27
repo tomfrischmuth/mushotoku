@@ -81,10 +81,10 @@ Some things are missing on purpose. Mushotoku will never:
 
 <table align="center">
   <tr>
-    <td align="center"><img src="docs/screenshots/calendar.png" width="220"><br><sub>Calendar</sub></td>
-    <td align="center"><img src="docs/screenshots/notes.png" width="220"><br><sub>Notes</sub></td>
-    <td align="center"><img src="docs/screenshots/expenses.png" width="220"><br><sub>Expenses</sub></td>
-    <td align="center"><img src="docs/screenshots/overview.png" width="220"><br><sub>Overview</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="220"><br><sub>Calendar</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="220"><br><sub>Notes</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="220"><br><sub>Expenses</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="220"><br><sub>Overview</sub></td>
   </tr>
 </table>
 
