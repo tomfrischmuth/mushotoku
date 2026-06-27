@@ -43,7 +43,7 @@
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.Mushotoku"
-            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboardHidden"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboardHidden|locale|layoutDirection"
             android:windowSoftInputMode="adjustResize" />
 
         <activity-alias
