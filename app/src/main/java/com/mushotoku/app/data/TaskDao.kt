@@ -53,6 +53,10 @@ interface TaskDao {
     @Query("SELECT * FROM tasks WHERE isAppointment = 1 ORDER BY date ASC, time ASC")
     fun getAllAppointments(): Flow<List<Task>>
 
+    /** One-shot variant for headless reminder rescheduling (e.g. after a reboot). */
+    @Query("SELECT * FROM tasks WHERE isAppointment = 1 ORDER BY date ASC, time ASC")
+    suspend fun getAllAppointmentsOnce(): List<Task>
+
     @Query("UPDATE tasks SET linkedNoteId = NULL WHERE linkedNoteId = :noteId")
     suspend fun clearLinkedNoteId(noteId: Long)
 

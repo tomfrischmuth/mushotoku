@@ -1,0 +1,2 @@
+- Termin-Erinnerungen sind zuverlässiger: Sie werden nach einem Neustart neu geplant und können beim App-Start nicht mehr verloren gehen.
+- App-Sperre: Beim Aktivieren der Biometrie-Sperre erhältst du jetzt einen Wiederherstellungscode, damit der Zugriff auch bei geänderter Geräte-Biometrie erhalten bleibt. Das Zurücksetzen (löscht alle Daten) fragt nun nach einer Bestätigung.

@@ -25,7 +25,16 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
+    <!--
+      Mushotoku is a genuine calendar / appointment app whose core purpose is
+      time-critical reminders, so it declares the always-granted USE_EXACT_ALARM.
+      This guarantees reminders fire at the exact minute and never degrade to the
+      inexact fallback (setAndAllowWhileIdle) on Android 12+.
+    -->
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
+    <!-- Reschedule appointment reminders after a reboot / app update / clock change. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".MushotokuApp"
@@ -158,6 +167,17 @@
         <receiver
             android:name=".notification.ReminderReceiver"
             android:exported="false" />
+
+        <receiver
+            android:name=".notification.BootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+            </intent-filter>
+        </receiver>
 
         <provider
             android:name="androidx.core.content.FileProvider"

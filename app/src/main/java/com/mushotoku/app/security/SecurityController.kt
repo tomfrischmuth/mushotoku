@@ -65,8 +65,82 @@ class SecurityController(
 
     val appLockEnabled: Boolean get() = mode.requiresUserPresence
 
-    fun enableBiometricLock(onDone: () -> Unit = {}) = scope.launch {
-        runOp({ keyManager.rewrapDek(liveDek(), KeyMode.KEYSTORE_LOCK); null }, onDone)
+    val hasRecovery: Boolean get() = keyManager.hasRecoveryCode()
+
+    /**
+     * Switches to the biometric lock and provisions a recovery code in one step, so a
+     * biometric lock can never leave the user without a non-destructive way back in.
+     * The freshly generated code is handed to [onRecoveryCode] for one-time display.
+     */
+    fun enableBiometricLock(onRecoveryCode: (String) -> Unit = {}) = scope.launch {
+        busy = true
+        lastError = null
+        try {
+            val dek = liveDek()
+            keyManager.rewrapDek(dek, KeyMode.KEYSTORE_LOCK)
+            val code = provisionRecoveryCode(dek)
+            refresh()
+            onRecoveryCode(code)
+        } catch (e: Exception) {
+            lastError = e.message
+        } finally {
+            busy = false
+        }
+    }
+
+    /** Generates and stores a new recovery code (invalidating the previous one). */
+    fun regenerateRecoveryCode(onRecoveryCode: (String) -> Unit = {}) = scope.launch {
+        busy = true
+        lastError = null
+        try {
+            val code = provisionRecoveryCode(liveDek())
+            onRecoveryCode(code)
+        } catch (e: Exception) {
+            lastError = e.message
+        } finally {
+            busy = false
+        }
+    }
+
+    /**
+     * Switches from the passphrase lock to the biometric lock, keeping the same
+     * recovery code (same DEK). The current passphrase confirms the change.
+     */
+    fun switchToBiometric(
+        currentPassphrase: CharArray,
+        onDone: () -> Unit = {},
+        onWrong: () -> Unit = {},
+    ) = scope.launch {
+        busy = true
+        lastError = null
+        try {
+            val dek = keyManager.unlockWithPassphrase(currentPassphrase)
+            try {
+                keyManager.rewrapDek(dek, KeyMode.KEYSTORE_LOCK)
+            } finally {
+                dek.wipe()
+            }
+            refresh()
+            onDone()
+        } catch (e: WrongPassphraseException) {
+            onWrong()
+        } catch (e: Exception) {
+            lastError = e.message
+        } finally {
+            busy = false
+            currentPassphrase.wipe()
+        }
+    }
+
+    private suspend fun provisionRecoveryCode(dek: ByteArray): String {
+        val code = RecoveryCode.generate()
+        val chars = code.toCharArray()
+        try {
+            keyManager.setRecoveryCode(dek, chars)
+        } finally {
+            chars.wipe()
+        }
+        return code
     }
 
     fun disableLock(
@@ -93,28 +167,38 @@ class SecurityController(
         }
     }
 
-    fun setupPassphrase(newPassphrase: CharArray, onDone: () -> Unit = {}) {
+    /**
+     * Enables (or switches to) the passphrase lock. A recovery code is provisioned if
+     * none exists yet, so a forgotten passphrase is still recoverable; switching from
+     * the biometric lock keeps the existing code (same DEK). The freshly generated code,
+     * if any, is handed to [onDone] for one-time display.
+     */
+    fun setupPassphrase(newPassphrase: CharArray, onDone: (String?) -> Unit = {}) {
         when (mode) {
-            KeyMode.KEYSTORE_NO_LOCK -> scope.launch {
-                try {
-                    runOp({ keyManager.rewrapDek(liveDek(), KeyMode.PASSPHRASE, newPassphrase); null }, onDone)
-                } finally {
-                    newPassphrase.wipe()
-                }
-            }
+            KeyMode.KEYSTORE_NO_LOCK -> scope.launch { switchToPassphrase(newPassphrase, onDone) }
             KeyMode.KEYSTORE_LOCK -> biometricPresence(
-                {
-                    scope.launch {
-                        try {
-                            runOp({ keyManager.rewrapDek(liveDek(), KeyMode.PASSPHRASE, newPassphrase); null }, onDone)
-                        } finally {
-                            newPassphrase.wipe()
-                        }
-                    }
-                },
-                { lastError = it; newPassphrase.wipe() },
+                { scope.launch { switchToPassphrase(newPassphrase, onDone) } },
+                { lastError = it; newPassphrase.wipe(); onDone(null) },
             )
-            KeyMode.PASSPHRASE -> { newPassphrase.wipe(); onDone() }
+            KeyMode.PASSPHRASE -> { newPassphrase.wipe(); onDone(null) }
+        }
+    }
+
+    private suspend fun switchToPassphrase(newPassphrase: CharArray, onDone: (String?) -> Unit) {
+        busy = true
+        lastError = null
+        try {
+            val dek = liveDek()
+            keyManager.rewrapDek(dek, KeyMode.PASSPHRASE, newPassphrase)
+            val code = if (keyManager.hasRecoveryCode()) null else provisionRecoveryCode(dek)
+            refresh()
+            onDone(code)
+        } catch (e: Exception) {
+            lastError = e.message
+            onDone(null)
+        } finally {
+            busy = false
+            newPassphrase.wipe()
         }
     }
 

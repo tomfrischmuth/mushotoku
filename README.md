@@ -2,7 +2,7 @@
 
 # Mushotoku
 
-**A private, fully-offline productivity app for focusing on what matters – and letting go of the rest.**
+**A private, fully-offline productivity app for focusing on what matters, and letting go of the rest.**
 
 *No accounts · No cloud · No tracking · No ads · No internet permission.*
 
@@ -17,15 +17,15 @@
 
 ## About
 
-**Mushotoku** (無所得) is a Zen Buddhist term meaning *acting without grasping for a result* — without aim, without striving for gain.
+**Mushotoku** (無所得) is a Zen Buddhist term meaning *acting without grasping for a result*, without aim, without striving for gain.
 
 Which makes it a slightly absurd name for a productivity app. That's the point.
 
-Most productivity apps want you to optimize every minute, defend every streak, and turn your one short life into a backlog. Mushotoku goes the other way: work out the few things that actually matter today, do them, and then — the genuinely hard part — let the rest go. It's a tool for focusing, not for filling. The aim is fewer open tabs in your head, not more.
+Most productivity apps want you to optimize every minute, defend every streak, and turn your one short life into a backlog. Mushotoku goes the other way: work out the few things that actually matter today, do them, and then (the genuinely hard part) let the rest go. It's a tool for focusing, not for filling. The aim is fewer open tabs in your head, not more.
 
 And then, ideally, you put the phone down. It's an app that's quietly rooting for you to use it less.
 
-Everything you write, track, and plan stays **on your device**. Mushotoku ships with **no `INTERNET` permission at all**, so it physically cannot send your data anywhere — not because we promise not to, but because the option was never built.
+Everything you write, track, and plan stays **on your device**. Mushotoku ships with **no `INTERNET` permission at all**, so it physically cannot send your data anywhere. Not because we promise not to, but because the option was never built.
 
 ---
 
@@ -35,7 +35,7 @@ Some things are missing on purpose. Mushotoku will never:
 
 - **Shame you over a broken streak.** Miss a day and… nothing happens. The habit is still there tomorrow.
 - **Maximize "engagement."** There are no hooks engineered to pull you back in. Forget the app exists for a week and it has done its job perfectly.
-- **Gamify your inner life.** No XP for journaling, no badges for breathing. Sitting quietly is its own reward — or so the Buddhists keep telling me.
+- **Gamify your inner life.** No XP for journaling, no badges for breathing. Sitting quietly is its own reward, or so the Buddhists keep telling me.
 - **Phone home.** It can't (see the permissions table) and wouldn't want to anyway.
 - **Become a second job.** No productivity score, no infinite backlog, no dashboard quantifying how far "behind" you are.
 
@@ -44,36 +44,38 @@ Some things are missing on purpose. Mushotoku will never:
 ## ✨ Features
 
 ### 🗓 Plan & organize
-- **Calendar** — appointments and events, with an offline holiday layer
-- **Tasks** — manage to-dos and stay on top of the day
-- **Habits** — build and track recurring habits
+- **Calendar:** appointments and events, with an offline holiday layer
+- **Reminders:** appointment reminders that fire on time and survive a reboot
+- **Tasks:** manage to-dos and stay on top of the day
+- **Habits:** build and track recurring habits
 
 ### 📝 Capture & reflect
-- **Notes** — Markdown editor with a formatting toolbar, a clean read view, and a trash with restore
-- **Gratitude journal** — daily entries with a searchable archive
-- **Mood tracking** — log how you feel over time
+- **Notes:** Markdown editor with a formatting toolbar, a clean read view, and a trash with restore
+- **Gratitude journal:** daily entries with a searchable archive
+- **Mood tracking:** log how you feel over time
 
 ### 🧘 Wellbeing
-- **Meditation timer** — sessions with three different bells and mindful Buddhist quotes
-- **Sleep & caffeine** — see how much caffeine is still active at bedtime
+- **Meditation timer:** sessions with three different bells and mindful Buddhist quotes
+- **Sleep & caffeine:** see how much caffeine is still active at bedtime
 
 ### 💶 Money
-- **Income & expenses** — across custom categories, including recurring costs
-- **Savings potential** — a rolling-year estimate of how much you could set aside
-- **Detailed Reports** — spending by category, with trends over time
+- **Income & expenses:** across custom categories, including recurring costs
+- **Savings potential:** a rolling-year estimate of how much you could set aside
+- **Detailed reports:** spending by category, with trends over time
 
 ### 🔒 Privacy & security
-- **No internet access** — the app declares zero networking permissions
-- **Encrypted at rest** — local database encrypted with **SQLCipher**
-- **Strong key derivation** — passphrase protected via **Argon2**
-- **App lock** — PIN and biometric unlock (fingerprint / face)
-- **Encrypted backup & restore** — export and import your data locally
-- **PDF export** — generate a journal PDF of your entries
+- **No internet access:** the app declares zero networking permissions
+- **Encrypted at rest:** local database encrypted with **SQLCipher**
+- **Strong key derivation:** passphrase protected via **Argon2**
+- **App lock:** PIN and biometric unlock (fingerprint / face)
+- **Recovery code:** a device-generated key, exportable as a PDF
+- **Encrypted backup & restore:** export and import your data locally
+- **PDF export:** generate a journal PDF of your entries
 
 ### 🎨 Personalization
 - Multiple selectable launcher icons
 - Light/dark appearance and personalization options
-- **9 languages**: English, German, Spanish, French, Italian, Portuguese (Portugal & Brazil), Dutch, Polish — English as fallback
+- **9 languages**: English, German, Spanish, French, Italian, Portuguese (Portugal & Brazil), Dutch, Polish, with English as fallback
 
 ---
 
@@ -109,7 +111,7 @@ Every release is signed with the project release key, and each artifact ships wi
 sha256sum -c <apk-file>.apk.sha256
 ```
 
-The full source is public, so you don't have to trust the prebuilt APK: you can build the app yourself from the matching source tag (see below). Trust, but verify — preferably without taking my word for any of it.
+The full source is public, so you don't have to trust the prebuilt APK: you can build the app yourself from the matching source tag (see below). Trust, but verify, preferably without taking my word for any of it.
 
 ---
 
@@ -121,7 +123,7 @@ cd mushotoku
 ./gradlew :app:assembleRelease
 ```
 
-Signing is configured via `keystore.properties` — copy the example and fill in your own keystore details:
+Signing is configured via `keystore.properties`. Copy the example and fill in your own keystore details:
 
 ```sh
 cp keystore.properties.example keystore.properties
@@ -150,14 +152,14 @@ For a debug build:
 
 | | |
 |---|---|
-| Network access | **None** — no `INTERNET` permission |
+| Network access | **None** (no `INTERNET` permission) |
 | Accounts | Not required |
 | Analytics / telemetry | None |
 | Third-party trackers | None |
 | Ads | None |
 | Data storage | On-device only, encrypted |
 
-Declared permissions are limited to local functionality — deliberately boring: `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_MEDIA_PLAYBACK` (meditation timer playback), `POST_NOTIFICATIONS`, `WAKE_LOCK`, `VIBRATE`, and `USE_EXACT_ALARM` (reminders). That's the whole list.
+Declared permissions are limited to local functionality, deliberately boring: `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_MEDIA_PLAYBACK` (meditation timer playback), `POST_NOTIFICATIONS`, `WAKE_LOCK`, `VIBRATE`, `USE_EXACT_ALARM` (reminders), and `RECEIVE_BOOT_COMPLETED` (rescheduling reminders after a reboot). That's the whole list.
 
 ---
 
@@ -165,46 +167,52 @@ Declared permissions are limited to local functionality — deliberately boring:
 
 All sensitive data is encrypted locally. The app takes advantage of hardware
 security (StrongBox / Secure Element) when present, but runs on any supported
-Android device — when such hardware is unavailable it transparently falls back
+Android device. When such hardware is unavailable it transparently falls back
 to a software-backed implementation.
 
 ### Encryption
 
-- **Database** — the entire SQLite database is encrypted with
+- **Database:** the entire SQLite database is encrypted with
   **SQLCipher (AES-256)**. The database encryption key (DEK) is a random
   256-bit key.
 
-- **Three protection modes (`KeyMode`)** — the DEK is wrapped differently
+- **Three protection modes (`KeyMode`):** the DEK is wrapped differently
   depending on the chosen mode:
-  - `KEYSTORE_NO_LOCK` — DEK wrapped by an AES-256 key in the Android Keystore;
+  - `KEYSTORE_NO_LOCK`: DEK wrapped by an AES-256 key in the Android Keystore;
     no user interaction required.
-  - `KEYSTORE_LOCK` — DEK protected by an RSA-2048 key (OAEP/SHA-256) in the
+  - `KEYSTORE_LOCK`: DEK protected by an RSA-2048 key (OAEP/SHA-256) in the
     Keystore that requires **biometric authentication or device PIN**.
-  - `PASSPHRASE` — DEK wrapped by a key derived from the user's passphrase
+  - `PASSPHRASE`: DEK wrapped by a key derived from the user's passphrase
     (see Argon2 below).
 
-- **Key derivation** — passphrases are processed with **Argon2id**
+- **Key derivation:** passphrases are processed with **Argon2id**
   (64 MB memory, 3 iterations), hardening against brute-force attacks.
 
-- **Hardware-backed key storage** — Keystore keys are generated in
+- **Recovery code:** when a lock is enabled, the app generates a high-entropy
+  recovery code that wraps the same DEK a second, independent time (Argon2id +
+  AES-256-GCM). If the Keystore key is ever invalidated or the passphrase is
+  forgotten, the code unlocks the data with no loss. It is shown once,
+  exportable as a PDF, and never stored in readable form.
+
+- **Hardware-backed key storage:** Keystore keys are generated in
   **StrongBox** (e.g. the Titan M chip on Pixel devices) when available. If the
   chip is missing, the app automatically falls back via
   `StrongBoxUnavailableException` to the software-/TEE-backed Keystore.
 
-- **Biometrics** — unlock via `BiometricPrompt` (`BIOMETRIC_STRONG`), with
+- **Biometrics:** unlock via `BiometricPrompt` (`BIOMETRIC_STRONG`), with
   device PIN/pattern as a fallback (`DEVICE_CREDENTIAL`).
 
-- **Encrypted backups** — export/import as **AES-256-GCM** with an
+- **Encrypted backups:** export/import as **AES-256-GCM** with an
   Argon2id-derived key and a built-in 128-bit authentication tag. Content is
   gzip-compressed before encryption.
 
-- **App lock** — configurable inactivity/background timeout that re-locks the
+- **App lock:** configurable inactivity/background timeout that re-locks the
   app.
 
-- **Screenshot protection** — optional `FLAG_SECURE` blocks screenshots and
+- **Screenshot protection:** optional `FLAG_SECURE` blocks screenshots and
   screen recording.
 
-- **Memory hygiene** — passphrases and keys are wiped from memory immediately
+- **Memory hygiene:** passphrases and keys are wiped from memory immediately
   after use (`wipe()`).
 
 > **Note:** The only difference between a device with and without a hardware
@@ -245,7 +253,7 @@ GNU General Public License for more details.
 
 ## 🤝 Contributing
 
-Issues and pull requests are welcome. Please open an issue to discuss larger changes before submitting a PR — partly good etiquette, partly so neither of us spends a weekend on something the other was about to delete.
+Issues and pull requests are welcome. Please open an issue to discuss larger changes before submitting a PR, partly good etiquette, partly so neither of us spends a weekend on something the other was about to delete.
 
 ---
 

@@ -1,0 +1,2 @@
+- Appointment reminders are more reliable: they are rescheduled after a reboot and can no longer be dropped during app startup.
+- App lock: enabling the biometric lock now gives you a recovery code, so you keep access even if the device's biometrics change. Resetting (which erases all data) now asks for confirmation.

@@ -21,6 +21,9 @@ package com.mushotoku.app.security
 class WrongPassphraseException(cause: Throwable? = null) :
     Exception("Falsche Passphrase oder beschaedigte Schluesseldaten", cause)
 
+class WrongRecoveryCodeException(cause: Throwable? = null) :
+    Exception("Falscher Wiederherstellungscode oder beschaedigte Schluesseldaten", cause)
+
 class KeyInvalidatedException(cause: Throwable? = null) :
     Exception("Biometrie-Schluessel ungueltig geworden (neue Biometrie registriert?)", cause)
 

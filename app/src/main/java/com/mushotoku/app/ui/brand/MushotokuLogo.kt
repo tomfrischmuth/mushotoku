@@ -142,7 +142,7 @@ private fun pointOnCircle(center: Offset, r: Float, clockwiseFromTopDeg: Double)
     )
 }
 
-private val LetterPaths = listOf(
+internal val LetterPaths = listOf(
     "M 80 350 L 80 225 A 55 55 0 0 1 190 225 L 190 350 M 190 225 A 55 55 0 0 1 300 225 L 300 350",
     "M 370 170 L 370 295 A 55 55 0 0 0 480 295 L 480 170",
     "M 654 192.5 A 45 45 0 1 0 615 260 A 45 45 0 1 1 576 327.5",

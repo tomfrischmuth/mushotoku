@@ -38,8 +38,12 @@ import com.mushotoku.app.security.LocalSecurityController
 import com.mushotoku.app.security.SecurityController
 import com.mushotoku.app.security.SecurityGate
 import com.mushotoku.app.security.WrongPassphraseException
+import com.mushotoku.app.security.WrongRecoveryCodeException
 import com.mushotoku.app.security.wipe
 import com.mushotoku.app.ui.screens.LockScreen
+import com.mushotoku.app.ui.screens.PostRecoveryLockSetup
+import com.mushotoku.app.ui.screens.SecBusyDialog
+import com.mushotoku.app.ui.screens.SecConfirmDialog
 import javax.crypto.Cipher
 import java.util.Locale as JavaLocale
 import androidx.lifecycle.lifecycleScope
@@ -209,6 +213,10 @@ class MainActivity : FragmentActivity() {
     private fun ReLockOverlay() {
         val context = LocalContext.current
         var error by remember { mutableStateOf<String?>(null) }
+        var invalidated by remember { mutableStateOf(false) }
+        var showResetConfirm by remember { mutableStateOf(false) }
+        var recovered by remember { mutableStateOf(false) }
+        var recovering by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
         MushotokuTheme(themeMode = "DARK") {
             Box(
@@ -222,15 +230,21 @@ class MainActivity : FragmentActivity() {
                         }
                     }
             ) {
+            if (recovered) {
+                PostRecoveryLockSetup(
+                    controller = securityController,
+                    onDone = { recovered = false; securityController.clearRelock() },
+                )
+            } else {
             LockScreen(
                 mode = securityController.mode,
                 errorText = error,
-                keyInvalidated = false,
+                keyInvalidated = invalidated,
                 onRequestBiometric = {
                     error = null
                     authenticateBiometric(
                         onSuccess = { securityController.clearRelock() },
-                        onInvalidated = { error = lockErrorWrongPassphrase() },
+                        onInvalidated = { invalidated = true },
                         onError = { msg -> error = msg },
                     )
                 },
@@ -249,8 +263,54 @@ class MainActivity : FragmentActivity() {
                         }
                     }
                 },
-                onReset = { securityController.clearRelock() },
+                hasRecovery = securityController.hasRecovery,
+                onSubmitRecoveryCode = { chars ->
+                    error = null
+                    recovering = true
+                    scope.launch {
+                        try {
+                            SecurityGate.unlockWithRecoveryCode(context, chars)
+                            securityController.refresh()
+                            invalidated = false
+                            recovered = true
+                        } catch (e: WrongRecoveryCodeException) {
+                            error = lockErrorWrongRecoveryCode()
+                        } catch (e: Exception) {
+                            error = e.message
+                        } finally {
+                            chars.wipe()
+                            recovering = false
+                        }
+                    }
+                },
+                onReset = { showResetConfirm = true },
             )
+            if (showResetConfirm) {
+                SecConfirmDialog(
+                    title = getString(R.string.lock_reset_confirm_title),
+                    message = getString(R.string.lock_reset_confirm_message),
+                    confirmLabel = getString(R.string.lock_reset_confirm_button),
+                    dismissLabel = getString(R.string.cancel),
+                    onConfirm = {
+                        showResetConfirm = false
+                        scope.launch {
+                            SecurityGate.resetAndReinitialize(context)
+                            // A full process restart: recreate() alone would retain the
+                            // Activity's ViewModels (and their cached user data), so we
+                            // relaunch fresh into the now-empty database — no leak.
+                            restartApp()
+                        }
+                    },
+                    onDismiss = { showResetConfirm = false },
+                )
+            }
+            if (recovering) {
+                SecBusyDialog(
+                    getString(R.string.sec_lock_busy_title),
+                    getString(R.string.sec_lock_busy_hint),
+                )
+            }
+            }
             }
         }
     }
@@ -261,6 +321,9 @@ class MainActivity : FragmentActivity() {
         var gate by remember { mutableStateOf<GateState>(GateState.Loading) }
         var error by remember { mutableStateOf<String?>(null) }
         var invalidated by remember { mutableStateOf(false) }
+        var showResetConfirm by remember { mutableStateOf(false) }
+        var recovered by remember { mutableStateOf(false) }
+        var recovering by remember { mutableStateOf(false) }
         // True once a lock screen has been shown — used to suppress the otherwise
         // redundant post-unlock brand splash.
         var lockEngaged by remember { mutableStateOf(false) }
@@ -283,6 +346,12 @@ class MainActivity : FragmentActivity() {
             GateState.Unlocked -> content(!lockEngaged)
             is GateState.Failed -> MushotokuTheme(themeMode = "DARK") { BrandSplash() }
             is GateState.Locked -> MushotokuTheme(themeMode = "DARK") {
+                if (recovered) {
+                    PostRecoveryLockSetup(
+                        controller = securityController,
+                        onDone = { recovered = false; gate = GateState.Unlocked },
+                    )
+                } else {
                 LockScreen(
                     mode = g.mode,
                     errorText = error,
@@ -318,14 +387,55 @@ class MainActivity : FragmentActivity() {
                             }
                         }
                     },
-                    onReset = {
+                    hasRecovery = securityController.hasRecovery,
+                    onSubmitRecoveryCode = { chars ->
+                        error = null
+                        recovering = true
                         scope.launch {
-                            SecurityGate.resetAndReinitialize(context)
-                            securityController.clearRelock()
-                            gate = GateState.Unlocked
+                            try {
+                                SecurityGate.unlockWithRecoveryCode(context, chars)
+                                securityController.clearRelock()
+                                securityController.refresh()
+                                invalidated = false
+                                recovered = true
+                            } catch (e: WrongRecoveryCodeException) {
+                                error = lockErrorWrongRecoveryCode()
+                            } catch (e: Exception) {
+                                error = e.message
+                            } finally {
+                                chars.wipe()
+                                recovering = false
+                            }
                         }
                     },
+                    onReset = { showResetConfirm = true },
                 )
+                if (showResetConfirm) {
+                    SecConfirmDialog(
+                        title = getString(R.string.lock_reset_confirm_title),
+                        message = getString(R.string.lock_reset_confirm_message),
+                        confirmLabel = getString(R.string.lock_reset_confirm_button),
+                        dismissLabel = getString(R.string.cancel),
+                        onConfirm = {
+                            showResetConfirm = false
+                            scope.launch {
+                                SecurityGate.resetAndReinitialize(context)
+                                // A full process restart: recreate() alone would retain the
+                                // Activity's ViewModels (and their cached user data), so we
+                                // relaunch fresh into the now-empty database — no leak.
+                                restartApp()
+                            }
+                        },
+                        onDismiss = { showResetConfirm = false },
+                    )
+                }
+                if (recovering) {
+                    SecBusyDialog(
+                        getString(R.string.sec_lock_busy_title),
+                        getString(R.string.sec_lock_busy_hint),
+                    )
+                }
+                }
             }
         }
     }
@@ -435,6 +545,23 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun lockErrorWrongPassphrase(): String = getString(R.string.wrong_passphrase)
+
+    private fun lockErrorWrongRecoveryCode(): String = getString(R.string.wrong_recovery_code)
+
+    /**
+     * Relaunches the app in a brand-new process. Used after a full data reset so that
+     * nothing in memory — retained ViewModels, cached flows, singletons — can leak the
+     * wiped data. The launcher activity restarts cleanly into the empty database.
+     */
+    private fun restartApp() {
+        val component = packageManager.getLaunchIntentForPackage(packageName)?.component
+        if (component != null) {
+            startActivity(Intent.makeRestartActivityTask(component))
+            Runtime.getRuntime().exit(0)
+        } else {
+            recreate()
+        }
+    }
 }
 
 internal fun localeListForSetting(setting: String): LocaleList = when (setting) {

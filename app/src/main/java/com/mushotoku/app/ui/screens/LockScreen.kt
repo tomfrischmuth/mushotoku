@@ -48,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -64,13 +65,16 @@ fun LockScreen(
     mode: KeyMode,
     errorText: String?,
     keyInvalidated: Boolean,
+    hasRecovery: Boolean,
     onRequestBiometric: () -> Unit,
     onSubmitPassphrase: (CharArray) -> Unit,
+    onSubmitRecoveryCode: (CharArray) -> Unit,
     onReset: () -> Unit,
 ) {
     val context = LocalContext.current
     val s = remember(context) { lockStrings(context) }
     val accent = DarkAppColors.accent
+    var showRecovery by remember { mutableStateOf(false) }
 
     LaunchedEffect(mode, keyInvalidated) {
         if (mode == KeyMode.KEYSTORE_LOCK && !keyInvalidated) onRequestBiometric()
@@ -115,15 +119,35 @@ fun LockScreen(
         Spacer(Modifier.height(24.dp))
 
         when {
+            keyInvalidated && hasRecovery ->
+                RecoveryEntry(s, accent, s.recoveryMessage, onSubmitRecoveryCode, onReset, onBack = null)
             keyInvalidated -> InvalidatedRecovery(s, accent, onReset)
-            mode == KeyMode.PASSPHRASE -> PassphraseEntry(s, accent, onSubmitPassphrase)
-            else -> Button(
-                onClick = soundClick(onRequestBiometric),
-                colors = ButtonDefaults.buttonColors(containerColor = accent, contentColor = Color.White),
-            ) { Text(s.unlock) }
+            showRecovery && hasRecovery ->
+                RecoveryEntry(s, accent, s.recoveryPrompt, onSubmitRecoveryCode, onReset, onBack = { showRecovery = false })
+            mode == KeyMode.PASSPHRASE -> {
+                PassphraseEntry(s, accent, onSubmitPassphrase)
+                if (hasRecovery) {
+                    Spacer(Modifier.height(12.dp))
+                    TextButton(onClick = soundClick { showRecovery = true }) {
+                        Text(s.useRecovery, color = accent)
+                    }
+                }
+            }
+            else -> {
+                Button(
+                    onClick = soundClick(onRequestBiometric),
+                    colors = ButtonDefaults.buttonColors(containerColor = accent, contentColor = Color.White),
+                ) { Text(s.unlock) }
+                if (hasRecovery) {
+                    Spacer(Modifier.height(12.dp))
+                    TextButton(onClick = soundClick { showRecovery = true }) {
+                        Text(s.useRecovery, color = accent)
+                    }
+                }
+            }
         }
 
-        if (errorText != null && !keyInvalidated) {
+        if (errorText != null) {
             Spacer(Modifier.height(16.dp))
             Text(errorText, color = Color(0xFFFF6B6B), fontSize = 13.sp, textAlign = TextAlign.Center)
         }
@@ -163,6 +187,59 @@ private fun PassphraseEntry(
 }
 
 @Composable
+private fun RecoveryEntry(
+    s: LockStrings,
+    accent: Color,
+    message: String,
+    onSubmit: (CharArray) -> Unit,
+    onReset: () -> Unit,
+    onBack: (() -> Unit)?,
+) {
+    var value by remember { mutableStateOf("") }
+    val submit = {
+        if (value.isNotBlank()) {
+            onSubmit(value.toCharArray())
+            value = ""
+        }
+    }
+    Text(
+        text = message,
+        color = Color(0xFFFFB74D),
+        fontSize = 14.sp,
+        textAlign = TextAlign.Center,
+    )
+    Spacer(Modifier.height(16.dp))
+    OutlinedTextField(
+        value = value,
+        onValueChange = { value = it },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(
+            capitalization = KeyboardCapitalization.Characters,
+            imeAction = ImeAction.Done,
+        ),
+        keyboardActions = KeyboardActions(onDone = { submit() }),
+        label = { Text(s.recoveryLabel, color = DarkAppColors.onSurfaceSecondary) },
+        modifier = Modifier.fillMaxWidth(),
+    )
+    Spacer(Modifier.height(16.dp))
+    Button(
+        onClick = soundClick(submit),
+        modifier = Modifier.fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(containerColor = accent, contentColor = Color.White),
+    ) { Text(s.unlock) }
+    if (onBack != null) {
+        Spacer(Modifier.height(8.dp))
+        TextButton(onClick = soundClick(onBack)) {
+            Text(s.back, color = DarkAppColors.onSurfaceSecondary)
+        }
+    }
+    Spacer(Modifier.height(8.dp))
+    TextButton(onClick = soundClick(onReset)) {
+        Text(s.resetAction, color = DarkAppColors.onSurfaceSecondary)
+    }
+}
+
+@Composable
 private fun InvalidatedRecovery(
     s: LockStrings,
     accent: Color,
@@ -188,6 +265,11 @@ private class LockStrings(
     val unlock: String,
     val invalidatedMessage: String,
     val resetAction: String,
+    val recoveryMessage: String,
+    val recoveryLabel: String,
+    val recoveryPrompt: String,
+    val useRecovery: String,
+    val back: String,
 )
 
 private fun lockStrings(ctx: android.content.Context) = LockStrings(
@@ -198,4 +280,9 @@ private fun lockStrings(ctx: android.content.Context) = LockStrings(
     unlock = ctx.getString(R.string.lock_unlock),
     invalidatedMessage = ctx.getString(R.string.lock_invalidated_message),
     resetAction = ctx.getString(R.string.lock_reset_action),
+    recoveryMessage = ctx.getString(R.string.lock_recovery_message),
+    recoveryLabel = ctx.getString(R.string.lock_recovery_label),
+    recoveryPrompt = ctx.getString(R.string.lock_recovery_prompt),
+    useRecovery = ctx.getString(R.string.lock_use_recovery),
+    back = ctx.getString(R.string.cancel),
 )

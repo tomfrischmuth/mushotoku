@@ -128,4 +128,38 @@ class KeyManagerInstrumentedTest {
             assertTrue(km.requiresUserPresence())
         }
     }
+
+    @Test fun recoveryCode_roundtrip_usingDisplayFormat() {
+        runBlocking {
+            val dek = km.initialize(KeyMode.KEYSTORE_NO_LOCK)
+            assertFalse(km.hasRecoveryCode())
+            val display = RecoveryCode.generate()   // grouped, with hyphens
+            km.setRecoveryCode(dek, display.toCharArray())
+            assertTrue(km.hasRecoveryCode())
+            // Unlock with the exact string the user sees / pastes (hyphens, same case).
+            assertArrayEquals(dek, km.unlockWithRecoveryCode(display.toCharArray()))
+            // And with a lower-cased, de-hyphenated variant.
+            assertArrayEquals(dek, km.unlockWithRecoveryCode(display.lowercase().replace("-", "").toCharArray()))
+        }
+    }
+
+    @Test fun recoveryCode_wrongCode_throws() {
+        runBlocking {
+            val dek = km.initialize(KeyMode.KEYSTORE_NO_LOCK)
+            km.setRecoveryCode(dek, RecoveryCode.generate().toCharArray())
+        }
+        assertThrows(WrongRecoveryCodeException::class.java) {
+            runBlocking { km.unlockWithRecoveryCode(RecoveryCode.generate().toCharArray()) }
+        }
+    }
+
+    @Test fun clearRecoveryCode_removesSlot() {
+        runBlocking {
+            val dek = km.initialize(KeyMode.KEYSTORE_NO_LOCK)
+            km.setRecoveryCode(dek, RecoveryCode.generate().toCharArray())
+            assertTrue(km.hasRecoveryCode())
+            km.clearRecoveryCode()
+            assertFalse(km.hasRecoveryCode())
+        }
+    }
 }

@@ -48,13 +48,11 @@ object ReminderScheduler {
     ) {
         val am = context.getSystemService(AlarmManager::class.java) ?: return
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val previous = prefs.getStringSet(KEY_IDS, emptySet()).orEmpty()
 
-        prefs.getStringSet(KEY_IDS, emptySet()).orEmpty().forEach { idStr ->
-            idStr.toLongOrNull()?.let { id ->
-                am.cancel(buildPendingIntent(context, id, null, null))
-            }
-        }
-
+        // 1. Schedule all currently-valid alarms first. Re-using the same request
+        //    code replaces any existing alarm in place, so a still-valid reminder is
+        //    never left unscheduled — there is no window where it can be lost.
         val scheduled = mutableSetOf<String>()
         if (enabled) {
             val now = System.currentTimeMillis()
@@ -65,6 +63,14 @@ object ReminderScheduler {
                 val text = reminderText(context, task.time, leadMinutes)
                 schedule(am, context, task.id, task.title, text, triggerAt)
                 scheduled += task.id.toString()
+            }
+        }
+
+        // 2. Cancel only the alarms that are no longer needed (previously scheduled
+        //    but not in the current set), then persist the new set.
+        (previous - scheduled).forEach { idStr ->
+            idStr.toLongOrNull()?.let { id ->
+                am.cancel(buildPendingIntent(context, id, null, null))
             }
         }
         prefs.edit().putStringSet(KEY_IDS, scheduled).apply()
@@ -79,6 +85,9 @@ object ReminderScheduler {
         triggerAt: Long,
     ) {
         val pi = buildPendingIntent(context, id, title, text)
+        // The app holds USE_EXACT_ALARM (see AndroidManifest), so canScheduleExactAlarms()
+        // is always true here and reminders fire at the exact minute. The inexact branch is
+        // kept purely as a defensive fallback and is not reached in normal operation.
         if (am.canScheduleExactAlarms()) {
             am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi)
         } else {

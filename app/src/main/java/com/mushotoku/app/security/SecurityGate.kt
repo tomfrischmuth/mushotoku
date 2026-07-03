@@ -131,6 +131,22 @@ object SecurityGate {
         DatabaseProvider.open(context.applicationContext, dek)
     }
 
+    /**
+     * Recovers a locked database with the recovery code: unwrap the DEK and open the
+     * database with the lock removed (no-lock). The user then chooses a new lock. Safe
+     * if interrupted — the next launch simply opens without a lock. No data is lost.
+     */
+    suspend fun unlockWithRecoveryCode(context: Context, code: CharArray) {
+        val dek = keyManager.unlockWithRecoveryCode(code)
+        try {
+            keyManager.rewrapDek(dek, KeyMode.KEYSTORE_NO_LOCK)
+            DatabaseProvider.open(context.applicationContext, dek)
+        } catch (t: Throwable) {
+            dek.wipe()
+            throw t
+        }
+    }
+
     suspend fun resetAndReinitialize(context: Context): Unit = withContext(Dispatchers.IO) {
         val appCtx = context.applicationContext
         DatabaseProvider.close()

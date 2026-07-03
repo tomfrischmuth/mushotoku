@@ -56,6 +56,25 @@ class KeyStorage(context: Context) {
         get() = prefs.getInt(KEY_ARGON_PAR, Argon2Kdf.PARALLELISM)
         set(value) = prefs.edit().putInt(KEY_ARGON_PAR, value).apply()
 
+    // Optional recovery slot: the same DEK wrapped a second, independent time with a
+    // device-generated recovery code (Argon2 + AES-GCM). Lets a KEYSTORE_LOCK user
+    // recover without data loss if the biometric Keystore key is invalidated. Nullable,
+    // so existing installs are unaffected until a recovery code is provisioned.
+    var recoveryWrappedDek: ByteArray?
+        get() = getBytes(KEY_REC_WRAPPED_DEK)
+        set(value) = setBytes(KEY_REC_WRAPPED_DEK, value)
+
+    var recoveryIv: ByteArray?
+        get() = getBytes(KEY_REC_IV)
+        set(value) = setBytes(KEY_REC_IV, value)
+
+    var recoverySalt: ByteArray?
+        get() = getBytes(KEY_REC_SALT)
+        set(value) = setBytes(KEY_REC_SALT, value)
+
+    val hasRecovery: Boolean
+        get() = recoveryWrappedDek != null && recoveryIv != null && recoverySalt != null
+
     val isInitialized: Boolean
         get() = mode != null && wrappedDek != null
 
@@ -77,5 +96,8 @@ class KeyStorage(context: Context) {
         private const val KEY_ARGON_MEM = "argon_mem_kib"
         private const val KEY_ARGON_ITER = "argon_iterations"
         private const val KEY_ARGON_PAR = "argon_parallelism"
+        private const val KEY_REC_WRAPPED_DEK = "recovery_wrapped_dek"
+        private const val KEY_REC_IV = "recovery_dek_iv"
+        private const val KEY_REC_SALT = "recovery_salt"
     }
 }

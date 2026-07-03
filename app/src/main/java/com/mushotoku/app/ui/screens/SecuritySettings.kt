@@ -61,6 +61,8 @@ internal fun SicherheitSection(
     var showSetupPassphrase by remember { mutableStateOf(false) }
     var showChangePassphrase by remember { mutableStateOf(false) }
     var showDisableViaPassphrase by remember { mutableStateOf(false) }
+    var recoveryCodeToShow by remember { mutableStateOf<String?>(null) }
+    var showSwitchToBiometric by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -130,6 +132,28 @@ internal fun SicherheitSection(
             }
         }
 
+        if (controller.mode == KeyMode.PASSPHRASE) {
+            Spacer(Modifier.height(10.dp))
+            SecCard {
+                SecClickRow(
+                    title = s.switchToBiometric,
+                    subtitle = s.switchToBiometricHint,
+                    onClick = { showSwitchToBiometric = true },
+                )
+            }
+        }
+
+        if (controller.appLockEnabled) {
+            Spacer(Modifier.height(10.dp))
+            SecCard {
+                SecClickRow(
+                    title = if (controller.hasRecovery) s.recoveryRegenerate else s.recoverySetup,
+                    subtitle = s.recoveryHint,
+                    onClick = { controller.regenerateRecoveryCode { code -> recoveryCodeToShow = code } },
+                )
+            }
+        }
+
         controller.lastError?.let {
             Spacer(Modifier.height(12.dp))
             Text(it, color = Color(0xFFFF6B6B), fontSize = 13.sp, modifier = Modifier.padding(horizontal = 4.dp))
@@ -163,9 +187,26 @@ internal fun SicherheitSection(
             message = s.enableWarnMessage,
             confirmLabel = s.activate,
             dismissLabel = s.cancel,
-            onConfirm = { showEnableWarning = false; controller.enableBiometricLock() },
+            onConfirm = { showEnableWarning = false; controller.enableBiometricLock { code -> recoveryCodeToShow = code } },
             onDismiss = { showEnableWarning = false },
         )
+    }
+
+    if (showSwitchToBiometric) {
+        ConfirmPassphraseDialog(
+            title = s.switchToBiometric,
+            message = s.switchToBiometricMessage,
+            s = s,
+            onConfirm = { chars ->
+                showSwitchToBiometric = false
+                controller.switchToBiometric(chars, onWrong = { controller.lastError = s.wrongPassphrase })
+            },
+            onDismiss = { showSwitchToBiometric = false },
+        )
+    }
+
+    recoveryCodeToShow?.let { code ->
+        RecoveryCodeDialog(code = code, onDone = { recoveryCodeToShow = null })
     }
 
     if (showSetupPassphrase) {
@@ -177,7 +218,7 @@ internal fun SicherheitSection(
             s = s,
             onConfirm = { newChars ->
                 showSetupPassphrase = false
-                controller.setupPassphrase(newChars)
+                controller.setupPassphrase(newChars) { code -> code?.let { recoveryCodeToShow = it } }
             },
             onDismiss = { showSetupPassphrase = false },
         )

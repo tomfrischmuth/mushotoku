@@ -196,9 +196,12 @@ fun MushotokuApp(
         }
 
         LaunchedEffect(allAppointments, settings.notificationsEnabled, settings.notificationLeadMinutes) {
+            // Skip until the appointments have actually loaded from the DB. Running
+            // with the pre-load empty list would cancel every scheduled alarm.
+            val appointments = allAppointments ?: return@LaunchedEffect
             ReminderScheduler.sync(
                 context      = notifContext,
-                appointments = allAppointments,
+                appointments = appointments,
                 enabled      = settings.notificationsEnabled,
                 leadMinutes  = settings.notificationLeadMinutes,
             )
@@ -248,7 +251,7 @@ fun MushotokuApp(
         }
 
         val linkedNoteToTaskMap = remember(allAppointments) {
-            allAppointments
+            allAppointments.orEmpty()
                 .filter { it.linkedNoteId != null }
                 .associateBy { it.linkedNoteId!! }
         }

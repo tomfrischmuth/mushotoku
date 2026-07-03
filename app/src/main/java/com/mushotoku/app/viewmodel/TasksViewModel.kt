@@ -56,9 +56,12 @@ class TasksViewModel(app: Application) : AndroidViewModel(app) {
         .map { it.toImmutableList() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), persistentListOf())
 
-    val allAppointments: StateFlow<ImmutableList<Task>> = repo.getAllAppointments()
+    // Null until the first DB emission, so consumers can distinguish "not loaded
+    // yet" from a genuinely empty list. The reminder scheduler relies on this to
+    // avoid cancelling all alarms on cold start before the database has loaded.
+    val allAppointments: StateFlow<ImmutableList<Task>?> = repo.getAllAppointments()
         .map { it.toImmutableList() }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), persistentListOf())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val appointmentsForMonth: StateFlow<ImmutableList<Task>> = calendarMonth

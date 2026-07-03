@@ -100,6 +100,62 @@ class KeyManager(context: Context) {
         }
     }
 
+    // ---- Recovery code: a second, independent wrapping of the same DEK ----
+
+    fun hasRecoveryCode(): Boolean = storage.hasRecovery
+
+    /**
+     * Wraps [dek] a second time with a device-generated recovery [code]. The code is
+     * normalised (grouping/case removed) before key derivation, exactly as on unlock,
+     * so the two always derive the same key.
+     */
+    suspend fun setRecoveryCode(dek: ByteArray, code: CharArray) = withContext(Dispatchers.Default) {
+        val normalized = RecoveryCode.normalize(code)
+            ?: throw IllegalArgumentException("Ungueltiger Wiederherstellungscode")
+        try {
+            val salt = randomBytes(Argon2Kdf.SALT_LENGTH_BYTES)
+            val kek = derivePassphraseKek(normalized, salt)
+            try {
+                val cipher = Cipher.getInstance(TRANSFORM_AES)
+                cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(kek, "AES"))
+                storage.recoveryWrappedDek = cipher.doFinal(dek)
+                storage.recoveryIv = cipher.iv
+                storage.recoverySalt = salt
+                storage.argonMemoryKiB = Argon2Kdf.MEMORY_KIB
+                storage.argonIterations = Argon2Kdf.ITERATIONS
+                storage.argonParallelism = Argon2Kdf.PARALLELISM
+            } finally {
+                kek.wipe()
+            }
+        } finally {
+            normalized.wipe()
+        }
+    }
+
+    fun clearRecoveryCode() {
+        storage.recoveryWrappedDek = null
+        storage.recoveryIv = null
+        storage.recoverySalt = null
+    }
+
+    suspend fun unlockWithRecoveryCode(code: CharArray): ByteArray = withContext(Dispatchers.Default) {
+        val wrapped = storage.recoveryWrappedDek ?: error("Kein Wiederherstellungscode hinterlegt")
+        val iv = storage.recoveryIv ?: error("Kein Recovery-IV vorhanden")
+        val salt = storage.recoverySalt ?: error("Kein Recovery-Salt vorhanden")
+        val normalized = RecoveryCode.normalize(code) ?: throw WrongRecoveryCodeException()
+        val kek = derivePassphraseKek(normalized, salt)
+        try {
+            val cipher = Cipher.getInstance(TRANSFORM_AES)
+            cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(kek, "AES"), GCMParameterSpec(GCM_TAG_BITS, iv))
+            cipher.doFinal(wrapped)
+        } catch (e: AEADBadTagException) {
+            throw WrongRecoveryCodeException(e)
+        } finally {
+            kek.wipe()
+            normalized.wipe()
+        }
+    }
+
     fun getCipherForBiometricPrompt(): Cipher {
         requireMode(KeyMode.KEYSTORE_LOCK, "getCipherForBiometricPrompt")
         val privateKey = androidKeyStore().getKey(ALIAS_LOCK, null) as PrivateKey
@@ -183,6 +239,10 @@ class KeyManager(context: Context) {
             }
         }
         storage.mode = mode
+        // The recovery code backs any lock (biometric or passphrase) and wraps the same
+        // DEK, so it stays valid when switching between those two. Only a full unlock
+        // (no-lock) makes it pointless, so drop it there.
+        if (mode == KeyMode.KEYSTORE_NO_LOCK) clearRecoveryCode()
     }
 
     private fun wrapWithLockKey(dek: ByteArray): ByteArray {
