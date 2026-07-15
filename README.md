@@ -6,6 +6,7 @@
 
 *No accounts · No cloud · No tracking · No ads · No internet permission.*
 
+[![F-Droid](https://img.shields.io/f-droid/v/com.mushotoku.app?logo=fdroid)](https://f-droid.org/packages/com.mushotoku.app)
 [![Release](https://img.shields.io/github/v/release/tomfrischmuth/mushotoku?label=release)](https://github.com/tomfrischmuth/mushotoku/releases)
 [![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](#-license)
 [![Platform](https://img.shields.io/badge/platform-Android-3DDC84.svg)](#requirements)
@@ -94,7 +95,9 @@ Some things are missing on purpose. Mushotoku will never:
 
 ## 📥 Download
 
-Grab the latest signed APK from the [**Releases**](https://github.com/tomfrischmuth/mushotoku/releases) page.
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.mushotoku.app)
+
+Mushotoku is available on [**F-Droid**](https://f-droid.org/packages/com.mushotoku.app), the trusted catalogue of free and open-source Android apps. Alternatively, grab the latest signed APK from the [**Releases**](https://github.com/tomfrischmuth/mushotoku/releases) page.
 
 ### Requirements
 - Android 13+ (minSdk **33**)
@@ -103,7 +106,7 @@ Grab the latest signed APK from the [**Releases**](https://github.com/tomfrischm
 
 ## ✅ Verification
 
-Every release is signed with the project release key, and each artifact ships with a **SHA-256** checksum on the Releases page.
+Every release on GitHub is signed with the project release key, and each artifact ships with a **SHA-256** checksum on the Releases page. APKs from F-Droid are built from the tagged source and signed by F-Droid on their infrastructure.
 
 ```sh
 # Check your download against the published checksum
