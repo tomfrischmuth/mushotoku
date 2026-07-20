@@ -179,6 +179,22 @@
     <string name="trash_delete_all_dialog_title">¿Vaciar la papelera?</string>
     <string name="trash_delete_all_dialog_text">Todas las notas de la papelera se eliminarán de forma permanente.</string>
     <string name="trash_restore">Restaurar</string>
+    <string name="trash_restore_confirm_title">¿Restaurar?</string>
+    <plurals name="trash_restore_confirm_text">
+        <item quantity="one">%d nota volverá a tus notas.</item>
+        <item quantity="other">%d notas volverán a tus notas.</item>
+    </plurals>
+    <string name="trash_delete_confirm_title">¿Eliminar definitivamente?</string>
+    <plurals name="trash_delete_confirm_text">
+        <item quantity="one">%d nota se eliminará para siempre. Esto no se puede deshacer.</item>
+        <item quantity="other">%d notas se eliminarán para siempre. Esto no se puede deshacer.</item>
+    </plurals>
+    <plurals name="trash_tag_text">
+        <item quantity="one">%d nota de la papelera lleva esta etiqueta.</item>
+        <item quantity="other">%d notas de la papelera llevan esta etiqueta.</item>
+    </plurals>
+    <string name="trash_restore_all">Restaurar todo</string>
+    <string name="select_all">Seleccionar todo</string>
 
     <string name="no_notes_yet">Aún no hay notas. Toca + para añadir una.</string>
     <string name="no_routines_yet">Aún no hay rutinas. Toca + para añadir una.</string>
@@ -212,6 +228,8 @@
     <string name="notes_pinned_section">Fijadas</string>
     <string name="notes_filter_all">Todas</string>
     <string name="notes_search_hint">Buscar …</string>
+    <string name="notes_filter_timestamp">Notas con marca de tiempo</string>
+    <string name="notes_filter_lists">Listas</string>
     <string name="notes_content_hint">Empieza a escribir …</string>
     <string name="notes_no_results">Sin resultados</string>
     <string name="notes_done">Hecho</string>
@@ -227,7 +245,16 @@
     <string name="notes_list_numbered">Lista numerada</string>
     <string name="notes_list_checkbox">Lista de tareas</string>
     <string name="notes_tag_remove">No es una etiqueta</string>
+    <string name="tag_delete">Eliminar etiqueta</string>
+    <string name="tag_delete_text">Quitar «#%1$s» de todas las notas. Las notas se mantienen.</string>
+    <string name="tag_delete_with_notes">Eliminar etiqueta y notas</string>
+    <string name="tag_delete_with_notes_text">Eliminar «#%1$s» y las %2$d notas que la llevan. No se puede deshacer.</string>
     <string name="notes_no_title">Aún sin título</string>
+    <string name="notes_tag_hint">Añadir etiquetas …</string>
+    <string name="section_notes">Notas</string>
+    <string name="new_note_starts_with">La nota nueva empieza por</string>
+    <string name="new_note_title">Título</string>
+    <string name="new_note_text">Texto</string>
     <string name="task_moved_tomorrow">Movido a mañana</string>
     <string name="undo">Deshacer</string>
 

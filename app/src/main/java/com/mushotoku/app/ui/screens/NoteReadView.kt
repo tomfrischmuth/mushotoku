@@ -130,6 +130,15 @@ private fun appendInlineReadMode(
                 b.append("#", rawStart + i + 1)
                 i += 2
             }
+            stampLengthAt(text, i) > 0 -> {
+                val len = stampLengthAt(text, i)
+                b.styled(TagSpacerStyle) { b.insert(TagSpacer, rawStart + i) }
+                val from = b.length
+                b.styled(stampStyle(colors)) { b.append(text.substring(i, i + len), rawStart + i) }
+                b.sb.addStringAnnotation(StampPillAnnotation, "", from, b.length)
+                b.styled(TagSpacerStyle) { b.insert(TagSpacer, rawStart + i + len) }
+                i += len
+            }
             tagLengthAt(text, i) > 0 -> {
                 val len = tagLengthAt(text, i)
                 b.styled(TagSpacerStyle) { b.insert(TagSpacer, rawStart + i) }
@@ -150,11 +159,10 @@ internal class ReadView(val text: AnnotatedString, val visToRaw: IntArray) {
     fun rawOffset(visibleOffset: Int): Int = visToRaw[visibleOffset.coerceIn(0, visToRaw.size - 1)]
 }
 
-internal fun buildReadView(rawText: String, colors: AppColors): ReadView {
+internal fun buildReadView(rawText: String, colors: AppColors, accent: Color = NoteAccent): ReadView {
     val b      = ReadViewBuilder()
     val muted  = colors.onSurfaceTertiary
     val subtle = colors.onSurfaceSecondary
-    val accent = NoteAccent
     var lineStart = 0
     rawText.lines().forEachIndexed { idx, line ->
         if (idx > 0) b.append("\n", lineStart - 1)
@@ -181,18 +189,16 @@ internal fun buildReadView(rawText: String, colors: AppColors): ReadView {
                 b.sb.addStringAnnotation("checkbox", idx.toString(), from, b.length)
             }
             line.startsWith("- ") -> {
-                b.styled(DashStyle) { b.append("- ", lineStart) }
+                b.styled(dashStyle(accent)) { b.append("- ", lineStart) }
                 body(2, null)
             }
             line.startsWith("* ") -> {
-                b.styled(BulletStyle) { b.substitute("$Bullet ", lineStart) }
+                b.styled(bulletStyle(accent)) { b.substitute("$Bullet ", lineStart) }
                 body(2, null)
             }
             numberedPrefixLength(line) > 0 -> {
                 val n = numberedPrefixLength(line)
-                b.styled(SpanStyle(color = accent, fontWeight = FontWeight.Bold)) {
-                    b.append(line.substring(0, n), lineStart)
-                }
+                b.styled(numberStyle(accent)) { b.append(line.substring(0, n), lineStart) }
                 body(n, null)
             }
             line == "---" || line == "***" || line == "___" ->
@@ -207,13 +213,13 @@ internal fun buildReadView(rawText: String, colors: AppColors): ReadView {
 @Composable
 internal fun NoteReadView(
     rawText: String,
+    accent: Color = NoteAccent,
     modifier: Modifier = Modifier,
     onToggleCheckbox: ((lineIndex: Int) -> Unit)? = null,
     onTapText: ((rawOffset: Int) -> Unit)? = null
 ) {
     val colors      = LocalAppColors.current
-    val scrollState = rememberScrollState()
-    val readView    = remember(rawText, colors) { buildReadView(rawText, colors) }
+    val readView    = remember(rawText, colors, accent) { buildReadView(rawText, colors, accent) }
     val annotated   = readView.text
 
     if (onToggleCheckbox != null || onTapText != null) {
@@ -222,7 +228,6 @@ internal fun NoteReadView(
             text     = annotated,
             modifier = modifier
                 .fillMaxWidth()
-                .verticalScroll(scrollState)
                 .padding(horizontal = NoteBodyPaddingH)
                 .padding(top = NoteBodyPaddingTop, bottom = NoteBodyPaddingBottom)
                 .drawBehind {
@@ -258,7 +263,6 @@ internal fun NoteReadView(
                 text     = annotated,
                 modifier = modifier
                     .fillMaxWidth()
-                    .verticalScroll(scrollState)
                     .padding(horizontal = NoteBodyPaddingH)
                     .padding(top = NoteBodyPaddingTop, bottom = NoteBodyPaddingBottom),
                 style = TextStyle(fontSize = NoteBodySize, color = colors.onSurface, lineHeight = NoteBodyLineHeight)

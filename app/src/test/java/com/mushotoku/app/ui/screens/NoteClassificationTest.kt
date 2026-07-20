@@ -20,6 +20,7 @@ package com.mushotoku.app.ui.screens
 
 import com.mushotoku.app.data.Note
 import com.mushotoku.app.data.NoteType
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -29,38 +30,36 @@ class NoteClassificationTest {
     private fun note(content: String, type: NoteType = NoteType.NOTE) =
         Note(id = 1, title = "# Titel", content = content, type = type)
 
-    @Test fun `eine Notiz mit Liste erscheint auch bei den Listen`() {
-        listOf("- Milch", "* Milch", "1. Milch", "- [ ] Milch").forEach { line ->
-            assertTrue(line, matchesTypeFilter(note(line), NoteType.LIST))
-        }
+    @Test fun `das Symbol richtet sich nach dem Inhalt`() {
+        // Mostly list -> list, mostly prose -> note, whatever it was created as.
+        assertEquals(NoteType.LIST, displayedNoteType(note("- Milch\n- Brot")))
+        assertEquals(NoteType.LIST, displayedNoteType(note("- [ ] a\n- [x] b\nkurze Notiz")))
+        assertEquals(NoteType.NOTE, displayedNoteType(note("Ein Satz.\nNoch einer.\n- Milch")))
+        assertEquals(NoteType.NOTE, displayedNoteType(note("nur Text")))
+        assertEquals(NoteType.NOTE, displayedNoteType(note("")))
     }
 
-    @Test fun `eine Notiz ohne Liste erscheint dort nicht`() {
-        assertFalse(matchesTypeFilter(note("nur Text"), NoteType.LIST))
-        assertFalse(matchesTypeFilter(note("## Zwischentitel"), NoteType.LIST))
+    @Test fun `Ueberschriften entscheiden nicht mit`() {
+        assertEquals(NoteType.LIST, displayedNoteType(note("## Montag\n- Milch")))
     }
 
-    @Test fun `eine reine Liste bleibt aus den Notizen heraus`() {
-        val pure = Note(id = 1, title = "# Einkauf", content = "## Montag\n- Milch\n- Brot",
-                        type = NoteType.LIST)
-        assertTrue(matchesTypeFilter(pure, NoteType.LIST))
-        assertFalse(matchesTypeFilter(pure, NoteType.NOTE))
+    @Test fun `jede Notiz landet in genau einem Tab`() {
+        val liste = note("- Milch\n- Brot")
+        assertTrue(matchesTypeFilter(liste, NoteType.LIST))
+        assertFalse(matchesTypeFilter(liste, NoteType.NOTE))
+
+        val text = note("Ein Satz.\nNoch einer.")
+        assertTrue(matchesTypeFilter(text, NoteType.NOTE))
+        assertFalse(matchesTypeFilter(text, NoteType.LIST))
     }
 
-    @Test fun `eine Liste mit echtem Text erscheint auch bei den Notizen`() {
-        val mixed = Note(id = 1, title = "# Einkauf",
-                         content = "## Montag\n- Milch\nDenk an den Bon.", type = NoteType.LIST)
-        assertTrue(matchesTypeFilter(mixed, NoteType.LIST))
-        assertTrue(matchesTypeFilter(mixed, NoteType.NOTE))
-    }
-
-    @Test fun `der eigene Typ zaehlt immer`() {
-        val plain = Note(id = 1, title = "# Titel", content = "", type = NoteType.NOTE)
-        assertTrue(matchesTypeFilter(plain, NoteType.NOTE))
-        val routine = Note(id = 1, title = "# Ablauf", content = "- Aufstehen", type = NoteType.ROUTINE)
-        assertTrue(matchesTypeFilter(routine, NoteType.ROUTINE))
-        assertTrue("eine Routine mit Liste steht auch bei den Listen",
-                   matchesTypeFilter(routine, NoteType.LIST))
+    @Test fun `der gespeicherte Typ entscheidet nicht mehr mit`() {
+        // Created as a note, written as a list: it belongs with the lists.
+        assertTrue(matchesTypeFilter(note("- Milch", NoteType.NOTE), NoteType.LIST))
+        // Created as a list, written as prose: it belongs with the notes.
+        assertTrue(matchesTypeFilter(note("Ein langer Satz.", NoteType.LIST), NoteType.NOTE))
+        // Old routines follow the same rule.
+        assertTrue(matchesTypeFilter(note("nur Text", NoteType.ROUTINE), NoteType.NOTE))
     }
 
     @Test fun `ohne Filter erscheint alles`() {

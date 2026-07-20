@@ -179,6 +179,22 @@
     <string name="trash_delete_all_dialog_title">Vider la corbeille ?</string>
     <string name="trash_delete_all_dialog_text">Toutes les notes de la corbeille seront supprimées définitivement.</string>
     <string name="trash_restore">Restaurer</string>
+    <string name="trash_restore_confirm_title">Restaurer ?</string>
+    <plurals name="trash_restore_confirm_text">
+        <item quantity="one">%d note retournera dans vos notes.</item>
+        <item quantity="other">%d notes retourneront dans vos notes.</item>
+    </plurals>
+    <string name="trash_delete_confirm_title">Supprimer définitivement ?</string>
+    <plurals name="trash_delete_confirm_text">
+        <item quantity="one">%d note sera supprimée définitivement. Action irréversible.</item>
+        <item quantity="other">%d notes seront supprimées définitivement. Action irréversible.</item>
+    </plurals>
+    <plurals name="trash_tag_text">
+        <item quantity="one">%d note de la corbeille porte cette étiquette.</item>
+        <item quantity="other">%d notes de la corbeille portent cette étiquette.</item>
+    </plurals>
+    <string name="trash_restore_all">Tout restaurer</string>
+    <string name="select_all">Tout sélectionner</string>
 
     <string name="no_notes_yet">Aucune note. Touche + pour en ajouter une.</string>
     <string name="no_routines_yet">Aucune routine. Touche + pour en ajouter une.</string>
@@ -212,6 +228,8 @@
     <string name="notes_pinned_section">Épinglées</string>
     <string name="notes_filter_all">Toutes</string>
     <string name="notes_search_hint">Rechercher …</string>
+    <string name="notes_filter_timestamp">Notes horodatées</string>
+    <string name="notes_filter_lists">Listes</string>
     <string name="notes_content_hint">Commence à écrire …</string>
     <string name="notes_no_results">Aucun résultat</string>
     <string name="notes_done">Terminé</string>
@@ -227,7 +245,16 @@
     <string name="notes_list_numbered">Liste numérotée</string>
     <string name="notes_list_checkbox">Liste de cases à cocher</string>
     <string name="notes_tag_remove">Pas une étiquette</string>
+    <string name="tag_delete">Supprimer l’étiquette</string>
+    <string name="tag_delete_text">Retirer « #%1$s » de toutes les notes. Les notes sont conservées.</string>
+    <string name="tag_delete_with_notes">Supprimer l’étiquette et les notes</string>
+    <string name="tag_delete_with_notes_text">Supprimer « #%1$s » et les %2$d notes concernées. Action irréversible.</string>
     <string name="notes_no_title">Pas encore de titre</string>
+    <string name="notes_tag_hint">Ajouter des étiquettes …</string>
+    <string name="section_notes">Notes</string>
+    <string name="new_note_starts_with">Une nouvelle note commence par</string>
+    <string name="new_note_title">Titre</string>
+    <string name="new_note_text">Texte</string>
     <string name="task_moved_tomorrow">Déplacé à demain</string>
     <string name="undo">Annuler</string>
 

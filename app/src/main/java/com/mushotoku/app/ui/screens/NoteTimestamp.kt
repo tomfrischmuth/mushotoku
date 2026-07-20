@@ -20,7 +20,65 @@ package com.mushotoku.app.ui.screens
 
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import com.mushotoku.app.data.Note
 import java.time.LocalDateTime
+
+/** The dot that joins date and time, and the marker the box is found by. */
+internal const val StampSeparator = " · "
+
+private val TimePattern = Regex("""\d{1,2}:\d{2}(?::\d{2})?(?:[   ]?[AaPp]\.?[Mm]\.?)?""")
+
+private fun isStampWordChar(c: Char) = c.isLetterOrDigit()
+
+/** Characters a localized medium date is built from — "Jul 20, 2026", "20.07.2026". */
+private fun isDateChar(c: Char) = c.isLetterOrDigit() || c in ".,-/ "
+
+/**
+ * Length of the timestamp starting at [at], or 0 if none does. Only what the
+ * stamp button writes is meant to be found: a time, on its own or behind a date
+ * and the separating dot.
+ */
+internal fun stampLengthAt(text: String, at: Int): Int {
+    if (at > 0 && isStampWordChar(text[at - 1])) return 0
+
+    fun timeLengthAt(from: Int): Int {
+        val m = TimePattern.matchAt(text, from) ?: return 0
+        val end = from + m.value.length
+        if (end < text.length && isStampWordChar(text[end])) return 0
+        return m.value.length
+    }
+
+    // "20.07.2026 · 14:32" — the dot is what tells a written date apart from
+    // any other words that happen to stand in front of a time.
+    val dot = text.indexOf(StampSeparator, at)
+    if (dot > at && dot - at <= 20) {
+        val date = text.substring(at, dot)
+        // A date is three words at most ("Jul 20, 2026"), so the words in front
+        // of it stay outside the box.
+        val words = date.split(' ')
+        if (date.any { it.isDigit() } && date.all { isDateChar(it) } &&
+            words.size <= 3 && words.none { it.isEmpty() }
+        ) {
+            val timeLen = timeLengthAt(dot + StampSeparator.length)
+            if (timeLen > 0) return dot + StampSeparator.length + timeLen - at
+        }
+    }
+    return timeLengthAt(at)
+}
+
+/** Whether a timestamp stands anywhere in the note. */
+internal fun noteHasStamp(note: Note): Boolean =
+    textHasStamp(note.title) || textHasStamp(note.content)
+
+private fun textHasStamp(text: String): Boolean {
+    var i = 0
+    while (i < text.length) {
+        val len = stampLengthAt(text, i)
+        if (len > 0) return true
+        i++
+    }
+    return false
+}
 
 /** Where the last timestamp was written, and in which form. */
 internal data class StampAnchor(

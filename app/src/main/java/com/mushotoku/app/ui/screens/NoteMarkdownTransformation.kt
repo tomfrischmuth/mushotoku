@@ -63,13 +63,18 @@ internal val TagSpacerStyle = SpanStyle(letterSpacing = 5.sp)
 
 /** Marks the tag ranges that get a pill, for the drawing pass to pick up. */
 internal const val TagPillAnnotation = "tagPill"
+internal const val StampPillAnnotation = "stampPill"
 
 internal const val Bullet     = '•'  // •
 internal const val EmptyBox   = '☐'  // ☐
 
 /** The bullet is drawn larger than the body text so it reads as a symbol, not a letter. */
-internal val BulletStyle   = SpanStyle(color = NoteAccent, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-internal val DashStyle     = SpanStyle(color = NoteAccent, fontWeight = FontWeight.Bold)
+internal fun bulletStyle(accent: Color) =
+    SpanStyle(color = accent, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+internal fun dashStyle(accent: Color) =
+    SpanStyle(color = accent, fontWeight = FontWeight.Bold)
+internal fun numberStyle(accent: Color) =
+    SpanStyle(color = accent, fontWeight = FontWeight.Bold)
 
 /**
  * Tags are greyed here; the pill of a finished tag is drawn behind the text,
@@ -77,13 +82,18 @@ internal val DashStyle     = SpanStyle(color = NoteAccent, fontWeight = FontWeig
  */
 internal fun tagStyle(colors: AppColors) = SpanStyle(color = colors.onSurfaceSecondary)
 
+/** A stamp reads as a marker, not as prose, so it stays as quiet as a tag. */
+internal fun stampStyle(colors: AppColors) = SpanStyle(color = colors.onSurfaceSecondary)
+
 internal class MarkdownVisualTransformation(
     private val colors: AppColors,
-    private val cursorLine: Int
+    private val cursorLine: Int,
+    /** Colour for the list markers; the check boxes keep the task light. */
+    private val accent: Color = NoteAccent
 ) : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
         val mb = MarkdownBuilder(text.text.length)
-        renderMarkdown(text.text, colors, cursorLine, mb)
+        renderMarkdown(text.text, colors, cursorLine, accent, mb)
         return TransformedText(mb.sb.toAnnotatedString(), mb.buildMapping())
     }
 }
@@ -136,10 +146,15 @@ private class MarkdownBuilder(sourceLen: Int) {
     }
 }
 
-private fun renderMarkdown(raw: String, colors: AppColors, activeLineIdx: Int, mb: MarkdownBuilder) {
+private fun renderMarkdown(
+    raw: String,
+    colors: AppColors,
+    activeLineIdx: Int,
+    accent: Color,
+    mb: MarkdownBuilder
+) {
     val muted  = colors.onSurfaceTertiary
     val subtle = colors.onSurfaceSecondary
-    val accent = NoteAccent
 
     raw.lines().forEachIndexed { idx, line ->
         if (idx > 0) mb.show('\n')
@@ -188,18 +203,16 @@ private fun renderMarkdown(raw: String, colors: AppColors, activeLineIdx: Int, m
             }
             // A dash stays a dash: it is its own kind of list, not a bullet.
             line.startsWith("- ") -> {
-                mb.styled(DashStyle) { mb.show('-'); mb.show(' ') }
+                mb.styled(dashStyle(accent)) { mb.show('-'); mb.show(' ') }
                 appendInline(line.substring(2), mb, show, colors)
             }
             line.startsWith("* ") -> {
-                mb.styled(BulletStyle) { mb.substitute(Bullet); mb.show(' ') }
+                mb.styled(bulletStyle(accent)) { mb.substitute(Bullet); mb.show(' ') }
                 appendInline(line.substring(2), mb, show, colors)
             }
             numberedPrefixLength(line) > 0 -> {
                 val n = numberedPrefixLength(line)
-                mb.styled(SpanStyle(color = accent, fontWeight = FontWeight.Bold)) {
-                    mb.show(line.substring(0, n))
-                }
+                mb.styled(numberStyle(accent)) { mb.show(line.substring(0, n)) }
                 appendInline(line.substring(n), mb, show, colors)
             }
             line == "---" || line == "***" || line == "___" -> {
@@ -266,6 +279,15 @@ private fun appendInline(text: String, mb: MarkdownBuilder, showSyntax: Boolean,
             text.startsWith("$TagEscape#", i) -> {
                 mb.hide(); mb.show('#')
                 i += 2
+            }
+            stampLengthAt(text, i) > 0 -> {
+                val len = stampLengthAt(text, i)
+                mb.styled(TagSpacerStyle) { mb.insert(TagSpacer) }
+                val from = mb.visibleIndex
+                mb.styled(stampStyle(colors)) { mb.show(text.substring(i, i + len)) }
+                mb.annotate(StampPillAnnotation, from, mb.visibleIndex)
+                mb.styled(TagSpacerStyle) { mb.insert(TagSpacer) }
+                i += len
             }
             tagLengthAt(text, i) > 0 -> {
                 val len = tagLengthAt(text, i)

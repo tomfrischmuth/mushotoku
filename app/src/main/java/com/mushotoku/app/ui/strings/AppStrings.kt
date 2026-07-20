@@ -185,6 +185,13 @@ class AppStrings(private val ctx: Context) {
     val trashDeleteAllDialogTitle get() = s(R.string.trash_delete_all_dialog_title)
     val trashDeleteAllDialogText get() = s(R.string.trash_delete_all_dialog_text)
     val trashRestore get() = s(R.string.trash_restore)
+    val trashRestoreAll get() = s(R.string.trash_restore_all)
+    val trashRestoreConfirmTitle get() = s(R.string.trash_restore_confirm_title)
+    val trashRestoreConfirmText: (Int) -> String = { n -> q(R.plurals.trash_restore_confirm_text, n) }
+    val trashDeleteConfirmTitle get() = s(R.string.trash_delete_confirm_title)
+    val trashDeleteConfirmText: (Int) -> String = { n -> q(R.plurals.trash_delete_confirm_text, n) }
+    val trashTagText: (Int) -> String = { n -> q(R.plurals.trash_tag_text, n) }
+    val selectAll get() = s(R.string.select_all)
     val noNotesYet get() = s(R.string.no_notes_yet)
     val noRoutinesYet get() = s(R.string.no_routines_yet)
     val noListsYet get() = s(R.string.no_lists_yet)
@@ -207,9 +214,8 @@ class AppStrings(private val ctx: Context) {
         NoteType.LIST -> q(R.plurals.notes_count_list, n)
         NoteType.NOTE -> q(R.plurals.notes_count_note, n)
     } }
-    val notesCountByType: (Int, Int, Int) -> String = { routines, lists, notes ->
+    val notesCountByType: (Int, Int) -> String = { lists, notes ->
         listOfNotNull(
-            if (routines > 0) q(R.plurals.notes_count_routine, routines) else null,
             if (lists > 0) q(R.plurals.notes_count_list, lists) else null,
             if (notes > 0) q(R.plurals.notes_count_note, notes) else null
         ).joinToString(" · ").ifEmpty { s(R.string.no_notes) }
@@ -217,6 +223,8 @@ class AppStrings(private val ctx: Context) {
     val notesPinnedSection get() = s(R.string.notes_pinned_section)
     val notesFilterAll get() = s(R.string.notes_filter_all)
     val notesSearchHint get() = s(R.string.notes_search_hint)
+    val notesFilterTimestamp get() = s(R.string.notes_filter_timestamp)
+    val notesFilterLists get() = s(R.string.notes_filter_lists)
     val notesContentHint get() = s(R.string.notes_content_hint)
     val notesNoResults get() = s(R.string.notes_no_results)
     val notesDone get() = s(R.string.notes_done)
@@ -232,7 +240,16 @@ class AppStrings(private val ctx: Context) {
     val notesListNumbered get() = s(R.string.notes_list_numbered)
     val notesListCheckbox get() = s(R.string.notes_list_checkbox)
     val notesTagRemove get() = s(R.string.notes_tag_remove)
+    val tagDelete get() = s(R.string.tag_delete)
+    val tagDeleteText: (String) -> String = { tag -> s(R.string.tag_delete_text, tag) }
+    val tagDeleteWithNotes get() = s(R.string.tag_delete_with_notes)
+    val tagDeleteWithNotesText: (String, Int) -> String = { tag, n -> s(R.string.tag_delete_with_notes_text, tag, n) }
     val notesNoTitle get() = s(R.string.notes_no_title)
+    val notesTagHint get() = s(R.string.notes_tag_hint)
+    val sectionNotes get() = s(R.string.section_notes)
+    val newNoteStartsWith get() = s(R.string.new_note_starts_with)
+    val newNoteTitle get() = s(R.string.new_note_title)
+    val newNoteText get() = s(R.string.new_note_text)
     val taskMovedTomorrow get() = s(R.string.task_moved_tomorrow)
     val undo get() = s(R.string.undo)
     val dialogNewAppointment get() = s(R.string.dialog_new_appointment)

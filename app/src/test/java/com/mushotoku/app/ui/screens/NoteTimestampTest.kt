@@ -77,4 +77,43 @@ class NoteTimestampTest {
         val out = toggleStamp(tfv, anchor(2, "09:25"), "20.07.2026 09:25")
         assertEquals("a 20.07.2026 09:25 b", out?.text)
     }
+
+    // --- Das Kästchen um den Zeitstempel ---
+
+    private fun stampAt(text: String, at: Int) =
+        if (stampLengthAt(text, at) == 0) null else text.substring(at, at + stampLengthAt(text, at))
+
+    @Test fun `eine blosse Uhrzeit bekommt ein Kaestchen`() {
+        assertEquals("09:25", stampAt("Notiz 09:25 weiter", 6))
+    }
+
+    @Test fun `Datum Punkt Uhrzeit gehoeren in ein Kaestchen`() {
+        assertEquals("20.07.2026 \u00b7 09:25", stampAt("a 20.07.2026 \u00b7 09:25 b", 2))
+    }
+
+    @Test fun `auch ein Datum aus Worten zaehlt dazu`() {
+        assertEquals("Jul 20, 2026 \u00b7 9:25 AM", stampAt("Jul 20, 2026 \u00b7 9:25 AM", 0))
+    }
+
+    @Test fun `mitten im Wort faengt kein Stempel an`() {
+        assertEquals(0, stampLengthAt("Raum1 09:25", 4))
+    }
+
+    @Test fun `ein Doppelpunkt im Text ist kein Stempel`() {
+        assertEquals(0, stampLengthAt("Notiz: weiter", 5))
+    }
+
+    @Test fun `eine angehaengte Zahl gehoert nicht zum Stempel`() {
+        assertEquals(0, stampLengthAt("09:250", 0))
+    }
+
+    @Test fun `ohne Punkt bleibt das Datum aussen vor`() {
+        assertEquals("09:25", stampAt("20.07.2026 09:25", 11))
+        assertEquals(0, stampLengthAt("20.07.2026 09:25", 0))
+    }
+
+    @Test fun `das Wort vor dem Datum bleibt aussen vor`() {
+        assertEquals(0, stampLengthAt("test Jul 20, 2026 \u00b7 5:31 PM", 0))
+        assertEquals("Jul 20, 2026 \u00b7 5:31 PM", stampAt("test Jul 20, 2026 \u00b7 5:31 PM", 5))
+    }
 }

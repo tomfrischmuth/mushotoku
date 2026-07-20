@@ -179,6 +179,22 @@
     <string name="trash_delete_all_dialog_title">Svuotare il cestino?</string>
     <string name="trash_delete_all_dialog_text">Tutte le note nel cestino saranno eliminate definitivamente.</string>
     <string name="trash_restore">Ripristina</string>
+    <string name="trash_restore_confirm_title">Ripristinare?</string>
+    <plurals name="trash_restore_confirm_text">
+        <item quantity="one">%d nota tornerà tra le tue note.</item>
+        <item quantity="other">%d note torneranno tra le tue note.</item>
+    </plurals>
+    <string name="trash_delete_confirm_title">Eliminare definitivamente?</string>
+    <plurals name="trash_delete_confirm_text">
+        <item quantity="one">%d nota verrà eliminata per sempre. L’operazione è irreversibile.</item>
+        <item quantity="other">%d note verranno eliminate per sempre. L’operazione è irreversibile.</item>
+    </plurals>
+    <plurals name="trash_tag_text">
+        <item quantity="one">%d nota nel cestino ha questo tag.</item>
+        <item quantity="other">%d note nel cestino hanno questo tag.</item>
+    </plurals>
+    <string name="trash_restore_all">Ripristina tutto</string>
+    <string name="select_all">Seleziona tutto</string>
 
     <string name="no_notes_yet">Ancora nessuna nota. Tocca + per aggiungerne una.</string>
     <string name="no_routines_yet">Ancora nessuna routine. Tocca + per aggiungerne una.</string>
@@ -212,6 +228,8 @@
     <string name="notes_pinned_section">Fissate</string>
     <string name="notes_filter_all">Tutte</string>
     <string name="notes_search_hint">Cerca …</string>
+    <string name="notes_filter_timestamp">Note con marca temporale</string>
+    <string name="notes_filter_lists">Elenchi</string>
     <string name="notes_content_hint">Inizia a scrivere …</string>
     <string name="notes_no_results">Nessun risultato</string>
     <string name="notes_done">Fatto</string>
@@ -227,7 +245,16 @@
     <string name="notes_list_numbered">Elenco numerato</string>
     <string name="notes_list_checkbox">Lista di controllo</string>
     <string name="notes_tag_remove">Non è un tag</string>
+    <string name="tag_delete">Elimina tag</string>
+    <string name="tag_delete_text">Togliere «#%1$s» da tutte le note. Le note restano.</string>
+    <string name="tag_delete_with_notes">Elimina tag e note</string>
+    <string name="tag_delete_with_notes_text">Eliminare «#%1$s» e le %2$d note che lo portano. Non è reversibile.</string>
     <string name="notes_no_title">Ancora senza titolo</string>
+    <string name="notes_tag_hint">Aggiungi tag …</string>
+    <string name="section_notes">Note</string>
+    <string name="new_note_starts_with">Una nota nuova inizia con</string>
+    <string name="new_note_title">Titolo</string>
+    <string name="new_note_text">Testo</string>
     <string name="task_moved_tomorrow">Spostato a domani</string>
     <string name="undo">Annulla</string>
 

@@ -25,6 +25,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
@@ -36,6 +37,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
@@ -53,8 +55,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextRange
@@ -84,6 +89,8 @@ internal fun NoteEditor(
     defaultType: NoteType = NoteType.NOTE,
     onCreate: (String, String, NoteType, (Note) -> Unit) -> Unit,
     onUpdate: (Note) -> Unit,
+    /** Saves without moving the note to the top; used for a mere tick. */
+    onUpdateQuiet: (Note) -> Unit = onUpdate,
     onDelete: (Note) -> Unit,
     onClose: () -> Unit,
     bottomPad: Dp,
@@ -92,7 +99,10 @@ internal fun NoteEditor(
     linkedTask: Task? = null,
     onNavigateToTask: (Task) -> Unit = {},
     hapticEnabled: Boolean = true,
-    knownTags: List<String> = emptyList()
+    knownTags: List<String> = emptyList(),
+    startInTitle: Boolean = true,
+    /** The note's colour, used for the editor's controls. */
+    accent: Color = NoteAccent
 ) {
     val colors  = LocalAppColors.current
     val strings = LocalAppStrings.current
@@ -125,11 +135,15 @@ internal fun NoteEditor(
     // second one. It only counts while the cursor still sits right behind it.
     var stampAnchor by remember(note?.id) { mutableStateOf<StampAnchor?>(null) }
 
+    // Set while the only change so far is a tick, so the note keeps its place
+    // in the list. Any typing clears it again.
+    var tickOnly by remember(note?.id) { mutableStateOf(false) }
+
     fun renderStamp(at: LocalDateTime, withDate: Boolean): String {
         val time = at.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(strings.locale))
         if (!withDate) return time
         val date = at.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(strings.locale))
-        return "$date $time"
+        return date + StampSeparator + time
     }
 
     /**
@@ -179,8 +193,14 @@ internal fun NoteEditor(
                 creating = false
             }
         } else {
-            if (saveTitle == existing.title && saveContent == existing.content) return
-            onUpdate(existing.copy(title = saveTitle, content = saveContent))
+            // Old notes still store their heading marker, so compare without it:
+            // otherwise merely opening a note rewrites it and sorts it to the top.
+            val unchanged = saveTitle == existing.title.stripHeadingMarker() &&
+                saveContent == existing.content
+            if (unchanged) return
+            val saved = existing.copy(title = saveTitle, content = saveContent)
+            if (tickOnly) onUpdateQuiet(saved) else onUpdate(saved)
+            tickOnly = false
         }
     }
 
@@ -204,6 +224,7 @@ internal fun NoteEditor(
         // Reaching green is the moment worth feeling.
         if (hapticEnabled && state.next() == CheckState.DONE) context.performCheckHaptic()
         lines[lineIndex] = cycleCheckLine(line)
+        tickOnly = true
         val newText = lines.joinToString("\n")
         text = TextFieldValue(newText, TextRange(text.selection.start.coerceIn(0, newText.length)))
     }
@@ -220,9 +241,13 @@ internal fun NoteEditor(
     }
 
     val focusRequester = remember { FocusRequester() }
+    val titleFocusRequester = remember { FocusRequester() }
     LaunchedEffect(isEditing) {
         if (isEditing) {
-            try { focusRequester.requestFocus() } catch (_: Exception) {}
+            // A brand-new note starts where the setting says; an existing one
+            // always opens in the text, where the work is.
+            val target = if (isNew && startInTitle) titleFocusRequester else focusRequester
+            try { target.requestFocus() } catch (_: Exception) {}
         } else {
             keyboard?.hide()
             persist(text.text)
@@ -256,6 +281,7 @@ internal fun NoteEditor(
     ) {
         if (isEditing) {
             FormattingToolbar(
+                accent        = accent,
                 currentLine   = currentLine,
                 canUndo       = canUndo,
                 onApplyPrefix = { prefix -> text = applyLinePrefix(text, prefix) },
@@ -286,25 +312,48 @@ internal fun NoteEditor(
                 onClick  = { persist(text.text); onNavigateToTask(linkedTask) }
             )
         }
+        // Title and text share one scroll container: the title belongs to the
+        // note, not to the chrome, so it scrolls away with the text.
+        BoxWithConstraints(Modifier.weight(1f)) {
+        val viewportHeight = maxHeight
+        var headerPx by remember { mutableStateOf(0) }
+        val headerHeight = with(LocalDensity.current) { headerPx.toDp() }
+        Column(Modifier.verticalScroll(rememberScrollState())) {
+        Box(Modifier.onSizeChanged { headerPx = it.height }) {
         NoteTitleField(
-            value    = titleText,
-            onChange = { titleText = it },
-            editable = isEditing
+            value          = titleText,
+            onChange       = { titleText = it },
+            editable       = isEditing,
+            focusRequester = titleFocusRequester,
+            // Enter in the title carries on into the text, as one would expect
+            // from a line that is followed by the note itself.
+            onNext         = { try { focusRequester.requestFocus() } catch (_: Exception) {} }
         )
+        }
+        // The text reaches at least to the bottom of the screen, so tapping the
+        // empty space below the last line lands in the text and not nowhere.
+        val bodyMinHeight = (viewportHeight - headerHeight).coerceAtLeast(0.dp)
         if (isEditing) {
             NoteMarkdownEditField(
+                accent         = accent,
                 value          = text,
                 onValueChange  = { new ->
-                    val continued = if (new.text != text.text) autoContinueList(text, new) else new
-                    text = lowercaseTags(continued)
+                    val unboxed = deleteCheckMarker(text, new)
+                    if (new.text != text.text) tickOnly = false
+                    text = when {
+                        unboxed != null -> unboxed
+                        new.text != text.text -> lowercaseTags(autoContinueList(text, new))
+                        else -> lowercaseTags(new)
+                    }
                 },
                 focusRequester = focusRequester,
-                modifier       = Modifier.weight(1f)
+                modifier       = Modifier.fillMaxWidth().heightIn(min = bodyMinHeight)
             )
         } else {
             NoteReadView(
                 rawText          = text.text,
-                modifier         = Modifier.weight(1f),
+                accent           = accent,
+                modifier         = Modifier.fillMaxWidth().heightIn(min = bodyMinHeight),
                 onToggleCheckbox = ::toggleCheckbox,
                 // Tapping the note opens the editor right where the finger landed.
                 onTapText        = { rawOffset ->
@@ -315,13 +364,15 @@ internal fun NoteEditor(
                 }
             )
         }
-
-        Spacer(Modifier.height(bottomPad))
+            Spacer(Modifier.height(bottomPad))
+        }
+        }
     }
 }
 
 @Composable
 private fun NoteMarkdownEditField(
+    accent: Color,
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
     focusRequester: FocusRequester,
@@ -341,7 +392,6 @@ private fun NoteMarkdownEditField(
         onTextLayout  = { layout = it },
         modifier      = modifier
             .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
             .padding(horizontal = NoteBodyPaddingH)
             .padding(top = NoteBodyPaddingTop, bottom = NoteBodyPaddingBottom)
             .drawBehind {
@@ -355,8 +405,8 @@ private fun NoteMarkdownEditField(
             color      = colors.onSurface,
             lineHeight = NoteBodyLineHeight
         ),
-        cursorBrush          = SolidColor(NoteAccent),
-        visualTransformation = MarkdownVisualTransformation(colors, cursorLine),
+        cursorBrush          = SolidColor(accent),
+        visualTransformation = MarkdownVisualTransformation(colors, cursorLine, accent),
         decorationBox        = { inner ->
             if (value.text.isEmpty()) {
                 Text(
@@ -367,6 +417,61 @@ private fun NoteMarkdownEditField(
             inner()
         }
     )
+}
+
+/**
+ * The note's title, on its own line above the body. Keeping it separate is what
+ * stops the first body line from being pulled up into the title.
+ */
+@Composable
+private fun NoteTitleField(
+    value: String,
+    onChange: (String) -> Unit,
+    editable: Boolean,
+    focusRequester: FocusRequester,
+    onNext: () -> Unit
+) {
+    val colors  = LocalAppColors.current
+    val strings = LocalAppStrings.current
+    val style = TextStyle(
+        fontSize   = 27.sp,
+        fontWeight = FontWeight.Bold,
+        color      = colors.onSurface
+    )
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = NoteBodyPaddingH)
+            .padding(top = NoteBodyPaddingTop, bottom = 4.dp)
+    ) {
+        if (editable) {
+            BasicTextField(
+                value         = value,
+                onValueChange = { typed ->
+                    // The title wraps, so Enter would insert a line break; it is
+                    // taken as the step into the text instead.
+                    if (typed.contains('\n')) {
+                        onChange(typed.replace("\n", ""))
+                        onNext()
+                    } else onChange(typed)
+                },
+                textStyle     = style,
+                cursorBrush     = SolidColor(NoteAccent),
+                modifier        = Modifier.fillMaxWidth().focusRequester(focusRequester),
+                decorationBox = { inner ->
+                    if (value.isEmpty()) {
+                        Text(strings.notesNoTitle, style = style.copy(color = colors.onSurfaceTertiary))
+                    }
+                    inner()
+                }
+            )
+        } else {
+            Text(
+                text  = value.ifBlank { strings.notesNoTitle },
+                style = if (value.isBlank()) style.copy(color = colors.onSurfaceTertiary) else style
+            )
+        }
+    }
 }
 
 /**
@@ -424,53 +529,6 @@ private fun TagSuggestionRow(
                     )
                 }
             }
-        }
-    }
-}
-
-/**
- * The note's title, on its own line above the body. Keeping it separate is what
- * stops the first body line from being pulled up into the title.
- */
-@Composable
-private fun NoteTitleField(
-    value: String,
-    onChange: (String) -> Unit,
-    editable: Boolean
-) {
-    val colors  = LocalAppColors.current
-    val strings = LocalAppStrings.current
-    val style = TextStyle(
-        fontSize   = 27.sp,
-        fontWeight = FontWeight.Bold,
-        color      = colors.onSurface
-    )
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .padding(horizontal = NoteBodyPaddingH)
-            .padding(top = NoteBodyPaddingTop, bottom = 4.dp)
-    ) {
-        if (editable) {
-            BasicTextField(
-                value         = value,
-                onValueChange = { onChange(it.replace("\n", "")) },
-                textStyle     = style,
-                singleLine    = true,
-                cursorBrush   = SolidColor(NoteAccent),
-                modifier      = Modifier.fillMaxWidth(),
-                decorationBox = { inner ->
-                    if (value.isEmpty()) {
-                        Text(strings.notesNoTitle, style = style.copy(color = colors.onSurfaceTertiary))
-                    }
-                    inner()
-                }
-            )
-        } else {
-            Text(
-                text  = value.ifBlank { strings.notesNoTitle },
-                style = if (value.isBlank()) style.copy(color = colors.onSurfaceTertiary) else style
-            )
         }
     }
 }

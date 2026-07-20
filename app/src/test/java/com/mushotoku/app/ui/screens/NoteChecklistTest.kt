@@ -18,6 +18,8 @@
 
 package com.mushotoku.app.ui.screens
 
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import com.mushotoku.app.ui.StatusGreen
 import com.mushotoku.app.ui.StatusRed
 import com.mushotoku.app.ui.StatusYellow
@@ -90,6 +92,30 @@ class NoteChecklistTest {
         assertNull(openCheckState("- [x] a\n- [x] b"))
         assertNull(openCheckState("nur Text\n- Strich"))
         assertNull(openCheckState(""))
+    }
+
+    @Test fun `ein Rueckschritt loescht das ganze Kaestchen`() {
+        // The cursor sits behind the box; one backspace removes "- [ ] " whole.
+        val old = TextFieldValue("- [ ] ", TextRange(6))
+        val new = TextFieldValue("- [ ]", TextRange(5))
+        val out = deleteCheckMarker(old, new)
+        assertEquals("", out?.text)
+        assertEquals(TextRange(0), out?.selection)
+    }
+
+    @Test fun `der Text des Eintrags bleibt dabei stehen`() {
+        val old = TextFieldValue("a\n- [ ] Milch", TextRange(8))
+        val new = TextFieldValue("a\n- [ ]Milch", TextRange(7))
+        assertEquals("a\nMilch", deleteCheckMarker(old, new)?.text)
+    }
+
+    @Test fun `gewoehnliches Loeschen bleibt gewoehnlich`() {
+        val old = TextFieldValue("- [ ] Milch", TextRange(11))
+        val new = TextFieldValue("- [ ] Milc", TextRange(10))
+        assertNull(deleteCheckMarker(old, new))
+
+        val text = TextFieldValue("kein Kaestchen", TextRange(5))
+        assertNull(deleteCheckMarker(text, TextFieldValue("keinKaestchen", TextRange(4))))
     }
 
     @Test fun `die Farben sind die der Aufgaben-Ampel`() {

@@ -23,13 +23,16 @@ import com.mushotoku.app.ui.strings.*
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -37,11 +40,22 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.composed
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.pointer.pointerInput
@@ -72,22 +86,13 @@ data class NoteEditorBarState(
 fun NotesScreen(
     notes: ImmutableList<Note>,
     contentPadding: PaddingValues,
-    typeFilter: NoteType?,
-    defaultNoteType: NoteType = NoteType.NOTE,
-    createRequested: Boolean,
-    onCreateConsumed: () -> Unit,
-    onCreateNote: (String, String, NoteType, (Note) -> Unit) -> Unit,
-    onUpdateNote: (Note) -> Unit,
-    onDeleteNote: (Note) -> Unit,
-    hapticEnabled: Boolean = true,
-    onEditorActiveChange: (Boolean) -> Unit = {},
-    onEditorBarState: ((NoteEditorBarState) -> Unit)? = null,
+    /** True while the editor covers this screen; the list then freezes its insets. */
+    editorActive: Boolean = false,
+    onOpenNote: (Note) -> Unit = {},
+    onDeleteTag: (tag: String, withNotes: Boolean) -> Unit = { _, _ -> },
     selectedNoteIds: Set<Long> = emptySet(),
     onSelectionChange: (Set<Long>) -> Unit = {},
-    linkedNoteToTaskMap: Map<Long, Task> = emptyMap(),
-    onNavigateToTask: (Task) -> Unit = {},
-    openNoteId: Long? = null,
-    onOpenNoteConsumed: () -> Unit = {}
+    linkedNoteToTaskMap: Map<Long, Task> = emptyMap()
 ) {
     val strings = LocalAppStrings.current
     val colors  = LocalAppColors.current
@@ -95,40 +100,36 @@ fun NotesScreen(
     val isSelectionMode = selectedNoteIds.isNotEmpty()
 
     var pinnedCollapsed by remember { mutableStateOf(false) }
-    var editingNote     by remember { mutableStateOf<Note?>(null) }
-    var creatingNote    by remember { mutableStateOf(false) }
 
-    val isEditorActive = editingNote != null || creatingNote
-    LaunchedEffect(isEditorActive) { onEditorActiveChange(isEditorActive) }
-
-    LaunchedEffect(createRequested) {
-        if (createRequested) { creatingNote = true; onCreateConsumed() }
-    }
-
-    LaunchedEffect(openNoteId, notes) {
-        if (openNoteId != null) {
-            val target = notes.firstOrNull { it.id == openNoteId }
-            if (target != null) {
-                editingNote = target
-                onOpenNoteConsumed()
-            }
-        }
-    }
-
+    val gridState = rememberLazyGridState()
     val focusManager = LocalFocusManager.current
     var searchQuery   by remember { mutableStateOf("") }
+    val searchFocus   = rememberSearchFocus()
     var selectedTag   by remember { mutableStateOf<String?>(null) }
+    var quickFilter   by remember { mutableStateOf<NoteQuickFilter?>(null) }
+    var tagToDelete   by remember { mutableStateOf<String?>(null) }
 
     // The bar offers the tags of the notes currently in view, so it never
     // suggests a tag that would lead to an empty screen.
-    val tags = remember(notes, typeFilter) {
-        collectTags(notes.filter { matchesTypeFilter(it, typeFilter) })
-    }
+    val tags = remember(notes) { collectTags(notes) }
     LaunchedEffect(tags) { if (selectedTag != null && selectedTag !in tags) selectedTag = null }
 
-    val (pinned, unpinned) = remember(notes, typeFilter, searchQuery, selectedTag) {
-        val byType = notes.filter { matchesTypeFilter(it, typeFilter) }
-        val list = selectedTag?.let { tag -> byType.filter { noteHasTag(it, tag) } } ?: byType
+    // A chip only shows while there is something for it to find.
+    val quickAvailable = remember(notes) {
+        buildSet {
+            if (notes.any { noteHasStamp(it) }) add(NoteQuickFilter.STAMP)
+            if (notes.any { displayedNoteType(it) == NoteType.LIST }) add(NoteQuickFilter.LIST)
+        }
+    }
+    LaunchedEffect(quickAvailable) { if (quickFilter !in quickAvailable) quickFilter = null }
+
+    val (pinned, unpinned) = remember(notes, searchQuery, selectedTag, quickFilter) {
+        val byTag = selectedTag?.let { tag -> notes.filter { noteHasTag(it, tag) } } ?: notes
+        val list  = when (quickFilter) {
+            NoteQuickFilter.STAMP -> byTag.filter { noteHasStamp(it) }
+            NoteQuickFilter.LIST  -> byTag.filter { displayedNoteType(it) == NoteType.LIST }
+            null                  -> byTag
+        }
         val filtered = if (searchQuery.isBlank()) list
         else list.filter { note ->
             note.title.contains(searchQuery, ignoreCase = true) ||
@@ -144,29 +145,12 @@ fun NotesScreen(
     }
     val total = pinned.size + unpinned.size
 
-    if (editingNote != null || creatingNote) {
-        val currentLinkedTask = editingNote?.id?.let { linkedNoteToTaskMap[it] }
-        NoteEditor(
-            note        = editingNote,
-            defaultType = defaultNoteType,
-            onCreate    = onCreateNote,
-            onUpdate    = onUpdateNote,
-            onDelete    = onDeleteNote,
-            onClose     = { editingNote = null; creatingNote = false },
-            bottomPad   = contentPadding.calculateBottomPadding(),
-            topPad      = contentPadding.calculateTopPadding(),
-            onBarState  = onEditorBarState,
-            linkedTask  = currentLinkedTask,
-            onNavigateToTask = { task ->
-                editingNote = null
-                creatingNote = false
-                onNavigateToTask(task)
-            },
-            hapticEnabled = hapticEnabled,
-            // Every tag in the app, not just the ones the filter shows.
-            knownTags     = remember(notes) { collectTags(notes) }
-        )
-        return
+    // The insets the list was laid out with before the editor took over. While a
+    // note is open the top bar is the editor's and reports different insets;
+    // re-measuring the list to those would move it under the reader's feet.
+    var listPadding by remember { mutableStateOf(contentPadding) }
+    LaunchedEffect(contentPadding, editorActive) {
+        if (!editorActive) listPadding = contentPadding
     }
 
     Box(
@@ -185,15 +169,16 @@ fun NotesScreen(
                 val newIds = if (note.id in selectedNoteIds) selectedNoteIds - note.id
                              else selectedNoteIds + note.id
                 onSelectionChange(newIds)
-            } else editingNote = note
+            } else onOpenNote(note)
         }
         LazyVerticalGrid(
             columns  = GridCells.Fixed(2),
-            modifier = Modifier.fillMaxSize(),
+            state    = gridState,
+            modifier = Modifier.fillMaxSize().endSearchOnOutsideTap(searchFocus),
             contentPadding = PaddingValues(
                 start = 20.dp, end = 20.dp,
-                top   = contentPadding.calculateTopPadding() + 16.dp,
-                bottom = contentPadding.calculateBottomPadding() + 16.dp
+                top   = listPadding.calculateTopPadding() + 16.dp,
+                bottom = listPadding.calculateBottomPadding() + 16.dp
             ),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement   = Arrangement.spacedBy(12.dp)
@@ -202,16 +187,29 @@ fun NotesScreen(
                 NoteSearchBar(
                     query         = searchQuery,
                     hint          = strings.notesSearchHint,
-                    onQueryChange = { searchQuery = it }
+                    onQueryChange = { searchQuery = it },
+                    focus         = searchFocus
                 )
             }
-            if (tags.isNotEmpty()) {
+            if (tags.isNotEmpty() || quickAvailable.isNotEmpty()) {
                 item(key = "tags", span = { GridItemSpan(maxLineSpan) }) {
                     NoteTagBar(
-                        tags     = tags,
-                        selected = selectedTag,
-                        // Tapping the active tag again is the way back to all notes.
-                        onSelect = { tag -> selectedTag = if (selectedTag == tag) null else tag }
+                        tags       = tags,
+                        selected   = selectedTag,
+                        // Tapping the active tag again is the way back to all
+                        // notes. Only ever one filter at a time, so the bar
+                        // always says plainly what is on screen.
+                        onSelect   = { tag ->
+                            selectedTag = if (selectedTag == tag) null else tag
+                            quickFilter = null
+                        },
+                        onLongPress = { tag -> tagToDelete = tag },
+                        quick          = quickFilter,
+                        quickAvailable = quickAvailable,
+                        onQuick        = { filter ->
+                            quickFilter = if (quickFilter == filter) null else filter
+                            selectedTag = null
+                        }
                     )
                 }
             }
@@ -268,12 +266,9 @@ fun NotesScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text  = if (searchQuery.isNotBlank() || selectedTag != null) strings.notesNoResults
-                                    else when (typeFilter) {
-                                        NoteType.ROUTINE -> strings.noRoutinesYet
-                                        NoteType.LIST    -> strings.noListsYet
-                                        else             -> strings.noNotesYet
-                                    },
+                            text  = if (searchQuery.isNotBlank() || selectedTag != null || quickFilter != null)
+                                        strings.notesNoResults
+                                    else strings.noNotesYet,
                             color = colors.onSurfaceTertiary,
                             fontSize = 15.sp
                         )
@@ -281,26 +276,92 @@ fun NotesScreen(
                 }
             }
         }
+
+
+    tagToDelete?.let { tag ->
+        val affected = notes.count { noteHasTag(it, tag) }
+        GlassAlertDialog(
+            onDismissRequest = { tagToDelete = null },
+            title = { Text("#" + tag) },
+            text  = { Text(strings.tagDeleteText(tag)) },
+            confirmButton = {
+                TextButton(onClick = soundClick { onDeleteTag(tag, false); tagToDelete = null }) {
+                    Text(strings.tagDelete)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = soundClick { onDeleteTag(tag, true); tagToDelete = null }) {
+                    Text(strings.tagDeleteWithNotes, color = Color(0xFFD32F2F))
+                }
+            }
+        )
+    }
     }
 }
 
 /**
- * Tags found in the notes themselves. Deliberately tags only — the note types
- * keep their own switch in the bottom bar.
+ * What the icon chips in front of the tags stand for: the two ways of finding
+ * a note that need no tag written into it.
  */
+internal enum class NoteQuickFilter { STAMP, LIST }
+
+/**
+ * Tags found in the notes themselves, and in front of them the quick filters.
+ * Deliberately no folders — a note says itself what it is.
+ *
+ * Only ever one of them holds at a time, tags included: two filters at once
+ * would leave the bar unable to say what is on screen.
+ */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun NoteTagBar(
+internal fun NoteTagBar(
     tags: List<String>,
     selected: String?,
-    onSelect: (String) -> Unit
+    onSelect: (String) -> Unit,
+    onLongPress: (String) -> Unit,
+    quick: NoteQuickFilter? = null,
+    quickAvailable: Set<NoteQuickFilter> = emptySet(),
+    onQuick: (NoteQuickFilter) -> Unit = {}
 ) {
-    val colors = LocalAppColors.current
+    val colors  = LocalAppColors.current
+    val strings = LocalAppStrings.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        NoteQuickFilter.entries.filter { it in quickAvailable }.forEach { filter ->
+            val isSelected = filter == quick
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(50))
+                    .background(if (isSelected) NoteAccent else colors.surface)
+                    .then(
+                        if (isSelected) Modifier
+                        else Modifier.border(1.dp, colors.divider, RoundedCornerShape(50))
+                    )
+                    .clickable { onQuick(filter) }
+                    .padding(horizontal = 14.dp, vertical = 7.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                // A blank label in the tags' own size makes these chips exactly
+                // as tall as they are, whatever the icon measures.
+                Text(" ", fontSize = 13.sp, maxLines = 1)
+                Icon(
+                    imageVector = when (filter) {
+                        NoteQuickFilter.STAMP -> Icons.Default.Schedule
+                        NoteQuickFilter.LIST  -> Icons.AutoMirrored.Filled.List
+                    },
+                    contentDescription = when (filter) {
+                        NoteQuickFilter.STAMP -> strings.notesFilterTimestamp
+                        NoteQuickFilter.LIST  -> strings.notesFilterLists
+                    },
+                    tint     = if (isSelected) Color.White else colors.onSurfaceSecondary,
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+        }
         tags.forEach { tag ->
             val isSelected = tag == selected
             Box(
@@ -312,7 +373,10 @@ private fun NoteTagBar(
                         else Modifier.border(1.dp, colors.divider, RoundedCornerShape(50))
                     )
                     // LocalIndication already sounds the tap; soundClick would double it.
-                    .clickable { onSelect(tag) }
+                    .combinedClickable(
+                        onClick     = { onSelect(tag) },
+                        onLongClick = { onLongPress(tag) }
+                    )
                     .padding(horizontal = 14.dp, vertical = 7.dp)
             ) {
                 Text(
@@ -361,16 +425,52 @@ private fun SectionHeader(
     }
 }
 
+/**
+ * Where the search bar sits and whether it is being typed in — so a tap that
+ * lands anywhere else can end the search.
+ */
+@Stable
+internal class SearchFocus {
+    var bounds  by mutableStateOf(Rect.Zero)
+    var focused by mutableStateOf(false)
+}
+
 @Composable
-private fun NoteSearchBar(
+internal fun rememberSearchFocus(): SearchFocus = remember { SearchFocus() }
+
+/**
+ * Ends the search on a press outside the bar. The press is only watched, never
+ * consumed, so the note under the finger still gets its tap.
+ */
+internal fun Modifier.endSearchOnOutsideTap(search: SearchFocus): Modifier = composed {
+    val focusManager = LocalFocusManager.current
+    var origin by remember { mutableStateOf(Offset.Zero) }
+    onGloballyPositioned { origin = it.positionInRoot() }
+        .pointerInput(search) {
+            awaitPointerEventScope {
+                while (true) {
+                    val event = awaitPointerEvent(PointerEventPass.Initial)
+                    if (event.type == PointerEventType.Press && search.focused) {
+                        val point = event.changes.first().position + origin
+                        if (!search.bounds.contains(point)) focusManager.clearFocus()
+                    }
+                }
+            }
+        }
+}
+
+@Composable
+internal fun NoteSearchBar(
     query: String,
     hint: String,
-    onQueryChange: (String) -> Unit
+    onQueryChange: (String) -> Unit,
+    focus: SearchFocus? = null
 ) {
     val colors = LocalAppColors.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .onGloballyPositioned { focus?.bounds = it.boundsInRoot() }
             .background(colors.surface, RoundedCornerShape(12.dp))
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -385,7 +485,9 @@ private fun NoteSearchBar(
         BasicTextField(
             value         = query,
             onValueChange = onQueryChange,
-            modifier      = Modifier.weight(1f),
+            modifier      = Modifier
+                .weight(1f)
+                .onFocusChanged { focus?.focused = it.isFocused },
             textStyle     = TextStyle(fontSize = 15.sp, color = colors.onSurface),
             cursorBrush   = SolidColor(NoteAccent),
             singleLine    = true,

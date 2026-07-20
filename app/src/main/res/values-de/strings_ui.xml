@@ -179,6 +179,22 @@
     <string name="trash_delete_all_dialog_title">Papierkorb leeren?</string>
     <string name="trash_delete_all_dialog_text">Alle Notizen im Papierkorb werden unwiderruflich gelöscht.</string>
     <string name="trash_restore">Wiederherstellen</string>
+    <string name="trash_restore_confirm_title">Wiederherstellen?</string>
+    <plurals name="trash_restore_confirm_text">
+        <item quantity="one">%d Notiz wandert zurück zu deinen Notizen.</item>
+        <item quantity="other">%d Notizen wandern zurück zu deinen Notizen.</item>
+    </plurals>
+    <string name="trash_delete_confirm_title">Endgültig löschen?</string>
+    <plurals name="trash_delete_confirm_text">
+        <item quantity="one">%d Notiz wird unwiderruflich gelöscht. Das lässt sich nicht rückgängig machen.</item>
+        <item quantity="other">%d Notizen werden unwiderruflich gelöscht. Das lässt sich nicht rückgängig machen.</item>
+    </plurals>
+    <plurals name="trash_tag_text">
+        <item quantity="one">%d Notiz im Papierkorb trägt diesen Tag.</item>
+        <item quantity="other">%d Notizen im Papierkorb tragen diesen Tag.</item>
+    </plurals>
+    <string name="trash_restore_all">Alle wiederherstellen</string>
+    <string name="select_all">Alle auswählen</string>
 
     <string name="no_notes_yet">Noch keine Notiz. Tippe + um eine hinzuzufügen.</string>
     <string name="no_routines_yet">Noch keine Routine. Tippe + um eine hinzuzufügen.</string>
@@ -212,6 +228,8 @@
     <string name="notes_pinned_section">Angepinnt</string>
     <string name="notes_filter_all">Alle</string>
     <string name="notes_search_hint">Suchen …</string>
+    <string name="notes_filter_timestamp">Notizen mit Zeitstempel</string>
+    <string name="notes_filter_lists">Listen</string>
     <string name="notes_content_hint">Schreib etwas …</string>
     <string name="notes_no_results">Keine Treffer</string>
     <string name="notes_done">Fertig</string>
@@ -227,7 +245,16 @@
     <string name="notes_list_numbered">Nummerierte Liste</string>
     <string name="notes_list_checkbox">Checkliste</string>
     <string name="notes_tag_remove">Kein Tag</string>
+    <string name="tag_delete">Tag löschen</string>
+    <string name="tag_delete_text">„#%1$s“ aus allen Notizen entfernen. Die Notizen selbst bleiben.</string>
+    <string name="tag_delete_with_notes">Tag und Notizen löschen</string>
+    <string name="tag_delete_with_notes_text">„#%1$s“ und alle %2$d Notizen damit löschen. Das lässt sich nicht rückgängig machen.</string>
     <string name="notes_no_title">Noch kein Titel</string>
+    <string name="notes_tag_hint">Tags hinzufügen …</string>
+    <string name="section_notes">Notizen</string>
+    <string name="new_note_starts_with">Neue Notiz beginnt mit</string>
+    <string name="new_note_title">Titel</string>
+    <string name="new_note_text">Text</string>
     <string name="task_moved_tomorrow">Auf morgen verschoben</string>
     <string name="undo">Rückgängig</string>
 

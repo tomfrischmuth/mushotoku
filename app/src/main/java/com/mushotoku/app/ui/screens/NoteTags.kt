@@ -178,6 +178,18 @@ internal fun isTagOnly(text: String): Boolean =
 internal fun noteHasTag(note: Note, tag: String): Boolean =
     extractTags(note).contains(normalizeTag(tag))
 
+/** The note with every mention of [tag] taken out of its text. */
+internal fun Note.withoutTag(tag: String): Note {
+    val pattern = Regex(
+        """\s*(?<![\p{L}\p{N}_\\])#${Regex.escape(normalizeTag(tag))}\b""",
+        RegexOption.IGNORE_CASE
+    )
+    return copy(
+        title   = pattern.replace(title, "").trim(),
+        content = pattern.replace(content, "")
+    )
+}
+
 /**
  * All tags across [notes], alphabetically so a tag keeps its place in the bar
  * instead of jumping around whenever a note is edited.

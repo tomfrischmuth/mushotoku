@@ -80,6 +80,11 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
         repo.updateSettings(settings.value.copy(hapticFeedbackEnabled = enabled))
     }
 
+
+    fun setNewNoteStartsWithTitle(withTitle: Boolean) = viewModelScope.launch {
+        repo.updateSettings(settings.value.copy(newNoteStartsWithTitle = withTitle))
+    }
+
     fun setCurrency(code: String) = viewModelScope.launch {
         repo.updateSettings(settings.value.copy(currency = code))
     }

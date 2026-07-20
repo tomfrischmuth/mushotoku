@@ -77,6 +77,8 @@ private val ChipLabelMinWidth = ChipMinWidth - ChipLabelPadding * 2
 
 @Composable
 internal fun FormattingToolbar(
+    /** The note's own colour, so the tools match what the note is marked with. */
+    accent: Color = ToolbarAccent,
     currentLine: String,
     canUndo: Boolean,
     onApplyPrefix: (String) -> Unit,
@@ -110,33 +112,36 @@ internal fun FormattingToolbar(
                 verticalAlignment     = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                FormatChip("H1",   selected = activeFormat == "h1")   { onApplyPrefix("# ") }
-                FormatChip("H2",   selected = activeFormat == "h2")   { onApplyPrefix("## ") }
-                FormatChip("H3",   selected = activeFormat == "h3")   { onApplyPrefix("### ") }
-                FormatChip("Text", selected = activeFormat == "text") { onApplyPrefix("") }
+                FormatChip("H1",   accent, selected = activeFormat == "h1")   { onApplyPrefix("# ") }
+                FormatChip("H2",   accent, selected = activeFormat == "h2")   { onApplyPrefix("## ") }
+                FormatChip("H3",   accent, selected = activeFormat == "h3")   { onApplyPrefix("### ") }
+                FormatChip("Text", accent, selected = activeFormat == "text") { onApplyPrefix("") }
 
                 ToolbarDivider(colors.divider)
 
-                FormatChip("B", fontWeight = FontWeight.Bold)                { onApplyInline("**") }
-                FormatChip("I", fontStyle  = FontStyle.Italic)               { onApplyInline("*") }
+                FormatChip("B", accent, fontWeight = FontWeight.Bold)          { onApplyInline("**") }
+                FormatChip("I", accent, fontStyle  = FontStyle.Italic)         { onApplyInline("*") }
 
                 ToolbarDivider(colors.divider)
 
                 // One chip per list kind, each labelled with the marker it produces.
                 FormatChip(
                     "-",
+                    accent,
                     selected    = activeFormat == "dash",
                     fontWeight  = FontWeight.Bold,
                     description = strings.notesListDash
                 ) { toggle("dash", "- ") }
                 FormatChip(
                     Bullet.toString(),
+                    accent,
                     selected    = activeFormat == "bullet",
                     fontWeight  = FontWeight.Bold,
                     description = strings.notesListBullet
                 ) { toggle("bullet", "* ") }
                 FormatChip(
                     "1.",
+                    accent,
                     selected    = activeFormat == "number",
                     fontWeight  = FontWeight.Bold,
                     description = strings.notesListNumbered,
@@ -144,6 +149,7 @@ internal fun FormattingToolbar(
                 )
                 FormatChip(
                     EmptyBox.toString(),
+                    accent,
                     selected    = activeFormat == "check",
                     description = strings.notesListCheckbox
                 ) { toggle("check", "- [ ] ") }
@@ -151,6 +157,7 @@ internal fun FormattingToolbar(
                 ToolbarDivider(colors.divider)
 
                 TimestampChip(
+                    accent       = accent,
                     description  = strings.notesInsertTimestamp,
                     onClick      = { onInsertTimestamp(false) },
                     onLongClick  = { onInsertTimestamp(true) }
@@ -165,7 +172,7 @@ internal fun FormattingToolbar(
                 Icon(
                     imageVector        = Icons.AutoMirrored.Filled.Undo,
                     contentDescription = null,
-                    tint               = if (canUndo) ToolbarAccent else colors.onSurfaceTertiary,
+                    tint               = if (canUndo) accent else colors.onSurfaceTertiary,
                     modifier           = Modifier.size(20.dp)
                 )
             }
@@ -181,6 +188,7 @@ internal fun FormattingToolbar(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TimestampChip(
+    accent: Color,
     description: String,
     onClick: () -> Unit,
     onLongClick: () -> Unit
@@ -190,7 +198,7 @@ private fun TimestampChip(
         modifier = Modifier
             .height(32.dp)
             .width(ChipMinWidth)
-            .border(1.dp, ToolbarAccent, shape)
+            .border(1.dp, accent, shape)
             .clip(shape)
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -203,7 +211,7 @@ private fun TimestampChip(
         Icon(
             imageVector        = Icons.Default.Schedule,
             contentDescription = description,
-            tint               = ToolbarAccent,
+            tint               = accent,
             modifier           = Modifier.size(18.dp)
         )
     }
@@ -223,6 +231,7 @@ private fun ToolbarDivider(color: Color) {
 @Composable
 private fun FormatChip(
     label: String,
+    accent: Color = ToolbarAccent,
     selected: Boolean = false,
     fontWeight: FontWeight = FontWeight.Normal,
     fontStyle: FontStyle = FontStyle.Normal,
@@ -258,14 +267,14 @@ private fun FormatChip(
         },
         colors = FilterChipDefaults.filterChipColors(
             containerColor         = Color.Transparent,
-            labelColor             = ToolbarAccent,
-            selectedContainerColor = ToolbarAccent,
+            labelColor             = accent,
+            selectedContainerColor = accent,
             selectedLabelColor     = Color.White
         ),
         border = FilterChipDefaults.filterChipBorder(
             enabled             = true,
             selected            = selected,
-            borderColor         = ToolbarAccent,
+            borderColor         = accent,
             selectedBorderColor = Color.Transparent,
             borderWidth         = 1.dp
         )

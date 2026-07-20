@@ -181,6 +181,28 @@
     <string name="trash_delete_all_dialog_title">Opróżnić kosz?</string>
     <string name="trash_delete_all_dialog_text">Wszystkie notatki w koszu zostaną trwale usunięte.</string>
     <string name="trash_restore">Przywróć</string>
+    <string name="trash_restore_confirm_title">Przywrócić?</string>
+    <plurals name="trash_restore_confirm_text">
+        <item quantity="one">%d notatka wróci do Twoich notatek.</item>
+        <item quantity="few">%d notatki wrócą do Twoich notatek.</item>
+        <item quantity="many">%d notatek wróci do Twoich notatek.</item>
+        <item quantity="other">%d notatki wrócą do Twoich notatek.</item>
+    </plurals>
+    <string name="trash_delete_confirm_title">Usunąć trwale?</string>
+    <plurals name="trash_delete_confirm_text">
+        <item quantity="one">%d notatka zostanie trwale usunięta. Tego nie można cofnąć.</item>
+        <item quantity="few">%d notatki zostaną trwale usunięte. Tego nie można cofnąć.</item>
+        <item quantity="many">%d notatek zostanie trwale usuniętych. Tego nie można cofnąć.</item>
+        <item quantity="other">%d notatki zostaną trwale usunięte. Tego nie można cofnąć.</item>
+    </plurals>
+    <plurals name="trash_tag_text">
+        <item quantity="one">%d notatka w koszu ma ten tag.</item>
+        <item quantity="few">%d notatki w koszu mają ten tag.</item>
+        <item quantity="many">%d notatek w koszu ma ten tag.</item>
+        <item quantity="other">%d notatki w koszu mają ten tag.</item>
+    </plurals>
+    <string name="trash_restore_all">Przywróć wszystkie</string>
+    <string name="select_all">Zaznacz wszystko</string>
 
     <string name="no_notes_yet">Brak notatek. Dotknij +, aby dodać.</string>
     <string name="no_routines_yet">Brak rutyn. Dotknij +, aby dodać.</string>
@@ -222,6 +244,8 @@
     <string name="notes_pinned_section">Przypięte</string>
     <string name="notes_filter_all">Wszystkie</string>
     <string name="notes_search_hint">Szukaj …</string>
+    <string name="notes_filter_timestamp">Notatki ze znacznikiem czasu</string>
+    <string name="notes_filter_lists">Listy</string>
     <string name="notes_content_hint">Zacznij pisać …</string>
     <string name="notes_no_results">Brak wyników</string>
     <string name="notes_done">Gotowe</string>
@@ -237,7 +261,16 @@
     <string name="notes_list_numbered">Lista numerowana</string>
     <string name="notes_list_checkbox">Lista kontrolna</string>
     <string name="notes_tag_remove">To nie tag</string>
+    <string name="tag_delete">Usuń tag</string>
+    <string name="tag_delete_text">Usunąć „#%1$s” ze wszystkich notatek. Same notatki zostaną.</string>
+    <string name="tag_delete_with_notes">Usuń tag i notatki</string>
+    <string name="tag_delete_with_notes_text">Usunąć „#%1$s” i wszystkie %2$d notatki z nim. Tego nie można cofnąć.</string>
     <string name="notes_no_title">Jeszcze bez tytułu</string>
+    <string name="notes_tag_hint">Dodaj tagi …</string>
+    <string name="section_notes">Notatki</string>
+    <string name="new_note_starts_with">Nowa notatka zaczyna się od</string>
+    <string name="new_note_title">Tytuł</string>
+    <string name="new_note_text">Tekst</string>
     <string name="task_moved_tomorrow">Przeniesiono na jutro</string>
     <string name="undo">Cofnij</string>
 

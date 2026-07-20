@@ -22,19 +22,21 @@ import com.mushotoku.app.ui.components.*
 import com.mushotoku.app.ui.strings.*
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.RestoreFromTrash
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -42,8 +44,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mushotoku.app.data.Note
-import com.mushotoku.app.ui.components.SwipeAction
-import com.mushotoku.app.ui.components.SwipeToReveal
+import com.mushotoku.app.data.NoteType
 import com.mushotoku.app.ui.theme.LocalAppColors
 import kotlinx.collections.immutable.ImmutableList
 
@@ -61,12 +62,56 @@ fun TrashScreen(
     val strings = LocalAppStrings.current
     val colors  = LocalAppColors.current
     var showDeleteAllDialog by remember { mutableStateOf(false) }
+    var selectedIds by remember { mutableStateOf<Set<Long>>(emptySet()) }
+    var searchQuery by remember { mutableStateOf("") }
+    val searchFocus = rememberSearchFocus()
+    var selectedTag by remember { mutableStateOf<String?>(null) }
+    var quickFilter by remember { mutableStateOf<NoteQuickFilter?>(null) }
+    var tagAction   by remember { mutableStateOf<String?>(null) }
+    var confirm     by remember { mutableStateOf<TrashConfirm?>(null) }
+    val selectionMode = selectedIds.isNotEmpty()
+    val selected = notes.filter { it.id in selectedIds }
+
+    val tags = remember(notes) { collectTags(notes) }
+    val quickAvailable = remember(notes) {
+        buildSet {
+            if (notes.any { noteHasStamp(it) }) add(NoteQuickFilter.STAMP)
+            if (notes.any { displayedNoteType(it) == NoteType.LIST }) add(NoteQuickFilter.LIST)
+        }
+    }
+    val shown = remember(notes, searchQuery, selectedTag, quickFilter) {
+        val byTag  = selectedTag?.let { tag -> notes.filter { noteHasTag(it, tag) } } ?: notes
+        val byKind = when (quickFilter) {
+            NoteQuickFilter.STAMP -> byTag.filter { noteHasStamp(it) }
+            NoteQuickFilter.LIST  -> byTag.filter { displayedNoteType(it) == NoteType.LIST }
+            null                  -> byTag
+        }
+        if (searchQuery.isBlank()) byKind
+        else byKind.filter {
+            it.title.contains(searchQuery, ignoreCase = true) ||
+            it.content.contains(searchQuery, ignoreCase = true)
+        }
+    }
+
+    // Nothing to select or filter by once the bin empties under the screen.
+    LaunchedEffect(notes) { selectedIds = selectedIds.filter { id -> notes.any { it.id == id } }.toSet() }
+    LaunchedEffect(tags)  { if (selectedTag != null && selectedTag !in tags) selectedTag = null }
+    LaunchedEffect(quickAvailable) { if (quickFilter !in quickAvailable) quickFilter = null }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(colors.background)
-            .pointerInput(Unit) { detectTapGestures { } }
+            // Keeps taps from reaching the notes lying behind this screen, but
+            // only in the final pass: a tap detector here would race the chips
+            // and cards for the same tap and swallow theirs.
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        awaitPointerEvent(PointerEventPass.Final).changes.forEach { it.consume() }
+                    }
+                }
+            }
             .navigationBarsPadding()
     ) {
         Row(
@@ -77,17 +122,37 @@ fun TrashScreen(
                 .padding(end = 8.dp, top = 12.dp, bottom = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = soundClick(onClose)) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = colors.onSurface)
+            IconButton(onClick = soundClick { if (selectionMode) selectedIds = emptySet() else onClose() }) {
+                Icon(
+                    if (selectionMode) Icons.Default.Close else Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = null,
+                    tint = colors.onSurface
+                )
             }
             Text(
-                strings.trash,
+                if (selectionMode) strings.notesSelected(selectedIds.size) else strings.trash,
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
                 color = colors.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f)
             )
-            if (notes.isNotEmpty()) {
+            if (selectionMode) {
+                IconButton(onClick = soundClick {
+                    confirm = TrashConfirm(selected, restore = true)
+                }) {
+                    Icon(Icons.Default.RestoreFromTrash, contentDescription = strings.trashRestore, tint = AppBlue)
+                }
+                IconButton(onClick = soundClick {
+                    confirm = TrashConfirm(selected, restore = false)
+                }) {
+                    Icon(Icons.Default.DeleteForever, contentDescription = strings.delete, tint = DeleteRed)
+                }
+            } else if (notes.isNotEmpty()) {
+                TextButton(onClick = soundClick { selectedIds = notes.map { it.id }.toSet() }) {
+                    Text(strings.selectAll, color = AppBlue, fontWeight = FontWeight.SemiBold)
+                }
                 TextButton(onClick = soundClick { showDeleteAllDialog = true }) {
                     Text(strings.trashDeleteAll, color = DeleteRed, fontWeight = FontWeight.SemiBold)
                 }
@@ -102,26 +167,123 @@ fun TrashScreen(
                 Text(strings.trashEmpty, fontSize = 16.sp, color = colors.onSurfaceSecondary)
             }
         } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(vertical = 12.dp)
+            LazyVerticalGrid(
+                columns  = GridCells.Fixed(2),
+                modifier = Modifier.fillMaxSize().endSearchOnOutsideTap(searchFocus),
+                contentPadding = PaddingValues(20.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement   = Arrangement.spacedBy(12.dp)
             ) {
-                itemsIndexed(notes, key = { _, note -> note.id }) { index, note ->
-                    TrashNoteRow(
-                        note = note,
-                        onRestore = { onRestore(note) },
-                        onPermanentDelete = { onPermanentDelete(note) }
+                item(key = "search", span = { GridItemSpan(maxLineSpan) }) {
+                    NoteSearchBar(
+                        query         = searchQuery,
+                        hint          = strings.notesSearchHint,
+                        onQueryChange = { searchQuery = it },
+                        focus         = searchFocus
                     )
-                    if (index < notes.size - 1) {
-                        HorizontalDivider(
-                            modifier  = Modifier.padding(horizontal = 16.dp),
-                            thickness = 0.5.dp,
-                            color     = colors.divider
+                }
+                if (tags.isNotEmpty() || quickAvailable.isNotEmpty()) {
+                    item(key = "tags", span = { GridItemSpan(maxLineSpan) }) {
+                        NoteTagBar(
+                            tags       = tags,
+                            selected   = selectedTag,
+                            onSelect   = { tag ->
+                                selectedTag = if (selectedTag == tag) null else tag
+                                quickFilter = null
+                            },
+                            onLongPress = { tag -> tagAction = tag },
+                            quick          = quickFilter,
+                            quickAvailable = quickAvailable,
+                            onQuick        = { filter ->
+                                quickFilter = if (quickFilter == filter) null else filter
+                                selectedTag = null
+                            }
                         )
                     }
                 }
+                if (shown.isEmpty()) {
+                    item(key = "none", span = { GridItemSpan(maxLineSpan) }) {
+                        Box(
+                            modifier = Modifier.fillMaxWidth().padding(top = 48.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(strings.notesNoResults, fontSize = 16.sp, color = colors.onSurfaceSecondary)
+                        }
+                    }
+                }
+                items(shown, key = { it.id }) { note ->
+                    NoteCard(
+                        note         = note,
+                        isSelected   = note.id in selectedIds,
+                        isLinked     = false,
+                        previewLines = 2,
+                        // Without a selection a tap does nothing here: a note in
+                        // the bin is not open for reading, only for restoring.
+                        onTap        = {
+                            if (selectionMode) {
+                                selectedIds = if (note.id in selectedIds) selectedIds - note.id
+                                              else selectedIds + note.id
+                            }
+                        },
+                        onLongPress  = { selectedIds = selectedIds + note.id }
+                    )
+                }
             }
         }
+    }
+
+    // Long press on a tag acts on every note in the bin carrying it — the way
+    // to empty or rescue a whole topic without picking the notes one by one.
+    tagAction?.let { tag ->
+        val affected = notes.filter { noteHasTag(it, tag) }
+        GlassAlertDialog(
+            onDismissRequest = { tagAction = null },
+            title = { Text("#$tag") },
+            text  = { Text(strings.trashTagText(affected.size)) },
+            confirmButton = {
+                TextButton(onClick = soundClick {
+                    tagAction = null; confirm = TrashConfirm(affected, restore = true)
+                }) {
+                    Text(strings.trashRestoreAll, color = AppBlue)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = soundClick {
+                    tagAction = null; confirm = TrashConfirm(affected, restore = false)
+                }) {
+                    Text(strings.delete, color = DeleteRed)
+                }
+            }
+        )
+    }
+
+    // Restoring and deleting always ask first, however they were triggered.
+    confirm?.let { action ->
+        GlassAlertDialog(
+            onDismissRequest = { confirm = null },
+            title = { Text(if (action.restore) strings.trashRestoreConfirmTitle else strings.trashDeleteConfirmTitle) },
+            text  = {
+                Text(
+                    if (action.restore) strings.trashRestoreConfirmText(action.notes.size)
+                    else strings.trashDeleteConfirmText(action.notes.size)
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = soundClick {
+                    action.notes.forEach(if (action.restore) onRestore else onPermanentDelete)
+                    selectedIds = emptySet()
+                    confirm = null
+                }) {
+                    Text(
+                        if (action.restore) strings.trashRestore else strings.delete,
+                        color = if (action.restore) AppBlue else DeleteRed
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = soundClick { confirm = null }) { Text(strings.cancel) }
+            }
+        )
     }
 
     if (showDeleteAllDialog) {
@@ -143,52 +305,5 @@ fun TrashScreen(
     }
 }
 
-@Composable
-private fun TrashNoteRow(
-    note: Note,
-    onRestore: () -> Unit,
-    onPermanentDelete: () -> Unit
-) {
-    val colors = LocalAppColors.current
-    var resetTrigger by remember { mutableIntStateOf(0) }
-
-    SwipeToReveal(
-        startAction  = SwipeAction(Icons.Default.RestoreFromTrash, AppBlue, onAction = onRestore),
-        endAction    = SwipeAction(Icons.Default.DeleteForever, DeleteRed, onAction = onPermanentDelete),
-        resetTrigger = resetTrigger
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(colors.surface)
-                .padding(horizontal = 20.dp, vertical = 14.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                val displayTitle = note.title
-                    .removePrefix("### ")
-                    .removePrefix("## ")
-                    .removePrefix("# ")
-                    .ifBlank { "–" }
-                Text(
-                    text     = displayTitle,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Medium,
-                    color    = colors.onSurface,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                if (note.content.isNotBlank()) {
-                    Spacer(Modifier.height(2.dp))
-                    Text(
-                        text     = note.content,
-                        fontSize = 13.sp,
-                        color    = colors.onSurfaceSecondary,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
-        }
-    }
-}
+/** A pending restore or permanent delete, waiting for its confirmation. */
+private data class TrashConfirm(val notes: List<Note>, val restore: Boolean)

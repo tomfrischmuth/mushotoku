@@ -43,7 +43,6 @@ import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.PushPin
-import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -211,11 +210,8 @@ internal fun NoteCard(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = when (note.type) {
-                            NoteType.ROUTINE -> Icons.Default.Repeat
-                            NoteType.LIST    -> Icons.AutoMirrored.Filled.List
-                            NoteType.NOTE    -> Icons.Default.Description
-                        },
+                        imageVector = if (displayedNoteType(note) == NoteType.LIST)
+                            Icons.AutoMirrored.Filled.List else Icons.Default.Description,
                         contentDescription = null,
                         tint = colors.onSurfaceTertiary,
                         modifier = Modifier.size(15.dp)

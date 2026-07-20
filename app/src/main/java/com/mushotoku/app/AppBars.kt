@@ -57,7 +57,6 @@ import com.mushotoku.app.ui.components.AppTab
 import com.mushotoku.app.ui.components.soundClick
 import com.mushotoku.app.ui.components.BottomBar
 import com.mushotoku.app.ui.components.DateSlider
-import com.mushotoku.app.ui.components.NoteTypeFilter
 import com.mushotoku.app.ui.screens.NoteColorPicker
 import com.mushotoku.app.ui.screens.NoteEditorBarState
 import com.mushotoku.app.ui.screens.matchesTypeFilter
@@ -112,11 +111,12 @@ internal fun NotesTopBar(
     editorBar: NoteEditorBarState?,
     selectedNoteIds: Set<Long>,
     notes: ImmutableList<Note>,
-    noteTypeFilter: NoteType?,
     onClearSelection: () -> Unit,
     onDeleteSelected: () -> Unit,
     onPinSelected: () -> Unit,
     onSetColor: (Int) -> Unit,
+    /** Colour of the open note, for the editor's controls. */
+    editorAccent: Color = AccentBlue,
     onOpenTrash: () -> Unit,
     onOpenSettings: () -> Unit
 ) {
@@ -131,14 +131,14 @@ internal fun NotesTopBar(
             subtitle = " ",
             leading  = {
                 IconButton(onClick = soundClick(editorBar.onBack)) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = strings.back, tint = AccentBlue)
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = strings.back, tint = editorAccent)
                 }
             },
             trailing = {
                 TextButton(onClick = soundClick(editorBar.onToggle)) {
                     Text(
                         text       = if (editorBar.isEditing) strings.notesDone else strings.notesEdit,
-                        color      = AccentBlue,
+                        color      = editorAccent,
                         fontWeight = FontWeight.SemiBold
                     )
                 }
@@ -181,15 +181,10 @@ internal fun NotesTopBar(
         AppTopBar(
             modifier = modifier,
             title    = strings.tabNotes,
-            subtitle = if (noteTypeFilter == null)
-                strings.notesCountByType(
-                    notes.count { matchesTypeFilter(it, NoteType.ROUTINE) },
-                    notes.count { matchesTypeFilter(it, NoteType.LIST) },
-                    notes.count { matchesTypeFilter(it, NoteType.NOTE) }
-                )
-            else noteTypeFilter.let { filter ->
-                strings.notesCountFor(filter, notes.count { matchesTypeFilter(it, filter) })
-            },
+            subtitle = strings.notesCountByType(
+                notes.count { matchesTypeFilter(it, NoteType.LIST) },
+                notes.count { matchesTypeFilter(it, NoteType.NOTE) }
+            ),
             trailing = {
                 IconButton(onClick = soundClick(onOpenTrash)) {
                     Icon(Icons.Default.Delete, contentDescription = strings.trash, tint = AccentBlue)
@@ -234,12 +229,10 @@ internal fun AppBottomBar(
     modifier: Modifier,
     currentTab: AppTab,
     selectedDate: LocalDate,
-    noteTypeFilter: NoteType?,
     financeTabEnabled: Boolean,
     glassDividerColor: Color,
     onDateSelected: (LocalDate) -> Unit,
     onTodayLongPress: () -> Unit,
-    onNoteTypeSelect: (NoteType?) -> Unit,
     onTabChange: (AppTab) -> Unit,
     dateScrollTrigger: Int = 0
 ) {
@@ -251,11 +244,6 @@ internal fun AppBottomBar(
                 onDateSelected   = onDateSelected,
                 onTodayLongPress = onTodayLongPress,
                 scrollToSelectedTrigger = dateScrollTrigger
-            )
-        } else if (currentTab == AppTab.NOTES) {
-            NoteTypeFilter(
-                selected = noteTypeFilter,
-                onSelect = onNoteTypeSelect
             )
         }
         BottomBar(

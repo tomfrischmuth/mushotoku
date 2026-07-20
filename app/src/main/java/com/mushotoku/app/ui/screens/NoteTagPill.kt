@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
 private val PillPaddingH = 9.dp
+private val StampCorner   = 5.dp
 
 /**
  * Height as a multiple of the font size, and how far above the baseline the
@@ -54,11 +55,24 @@ internal fun DrawScope.drawTagPills(
     fill: Color,
     fontSize: TextUnit
 ) {
-    // The renderer marked the tags it wants a pill for; re-detecting them here
-    // could not tell an escaped hash from a real tag.
+    // The renderer marked what it wants a box for; re-detecting it here could
+    // not tell an escaped hash from a real tag.
+    val annotated = layout.layoutInput.text
+    drawPills(layout, fill, fontSize, TagPillAnnotation, rounded = true)
+    drawPills(layout, fill, fontSize, StampPillAnnotation, rounded = false)
+}
+
+/** [rounded] tells the tag capsule from the squarer box around a timestamp. */
+private fun DrawScope.drawPills(
+    layout: TextLayoutResult,
+    fill: Color,
+    fontSize: TextUnit,
+    annotation: String,
+    rounded: Boolean
+) {
     val annotated = layout.layoutInput.text
     val ranges = annotated
-        .getStringAnnotations(TagPillAnnotation, 0, annotated.length)
+        .getStringAnnotations(annotation, 0, annotated.length)
         .map { it.start until it.end }
     val padH   = PillPaddingH.toPx()
     val fontPx = fontSize.toPx()
@@ -80,7 +94,7 @@ internal fun DrawScope.drawTagPills(
             color        = fill,
             topLeft      = topLeft,
             size         = Size(width, height),
-            cornerRadius = CornerRadius(height / 2f)
+            cornerRadius = CornerRadius(if (rounded) height / 2f else StampCorner.toPx())
         )
     }
 }

@@ -40,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
@@ -55,7 +56,13 @@ import com.mushotoku.app.ui.strings.LocalAppStrings
 import com.mushotoku.app.ui.LocalAppCurrency
 import com.mushotoku.app.ui.currencyByCode
 import com.mushotoku.app.ui.screens.MeditationScreen
+import com.mushotoku.app.ui.screens.NoteEditor
 import com.mushotoku.app.ui.screens.NotesScreen
+import com.mushotoku.app.ui.screens.collectTags
+import com.mushotoku.app.ui.screens.isDarkSurface
+import com.mushotoku.app.ui.screens.noteAccentColor
+import com.mushotoku.app.ui.screens.noteHasTag
+import com.mushotoku.app.ui.screens.withoutTag
 import com.mushotoku.app.ui.screens.SettingsScreen
 import com.mushotoku.app.ui.screens.SettingsSection
 import com.mushotoku.app.ui.screens.TaskScreen
@@ -65,6 +72,7 @@ import com.mushotoku.app.ui.brand.MushotokuBrand
 import com.mushotoku.app.ui.brand.MushotokuWordmark
 import com.mushotoku.app.ui.theme.DarkAppColors
 import com.mushotoku.app.ui.theme.LocalAppColors
+import com.mushotoku.app.data.Note
 import com.mushotoku.app.data.NoteType
 import com.mushotoku.app.data.TaskStatus
 import com.mushotoku.app.util.performCheckHaptic
@@ -210,9 +218,12 @@ fun MushotokuApp(
         var currentTab          by remember { mutableStateOf(AppTab.TODAY) }
         var dateSliderScrollTrigger by remember { mutableIntStateOf(0) }
         var showAddTask         by remember { mutableStateOf(false) }
-        var showNewNote         by remember { mutableStateOf(false) }
-        var noteTypeFilter      by remember { mutableStateOf<NoteType?>(null) }
-        var noteEditorActive    by remember { mutableStateOf(false) }
+        // Which note is open is held here, not inside the notes screen: the
+        // editor is drawn with the other full-screen overlays, above the bottom
+        // bar. That way nothing has to be hidden and brought back for it.
+        var editingNote         by remember { mutableStateOf<Note?>(null) }
+        var creatingNote        by remember { mutableStateOf(false) }
+        val noteEditorActive    = editingNote != null || creatingNote
         var noteEditorBarState  by remember { mutableStateOf<NoteEditorBarState?>(null) }
         LaunchedEffect(noteEditorActive) { if (!noteEditorActive) noteEditorBarState = null }
         var showFinanceOverview by remember { mutableStateOf(false) }
@@ -223,12 +234,11 @@ fun MushotokuApp(
         var showTrash              by remember { mutableStateOf(false) }
         var showMeditation         by remember { mutableStateOf(false) }
         var selectedNoteIds        by remember { mutableStateOf<Set<Long>>(emptySet()) }
-        var openNoteId             by remember { mutableStateOf<Long?>(null) }
 
         val focusManager = LocalFocusManager.current
         val scope        = rememberCoroutineScope()
         val taskSnackbar = remember { SnackbarHostState() }
-        val anyOverlayOpen = showAddTask || showNewNote || showCalendar || showSettings ||
+        val anyOverlayOpen = showAddTask || noteEditorActive || showCalendar || showSettings ||
                 showFinanceOverview || showBudgetOverview || showTrash || showMeditation
         LaunchedEffect(anyOverlayOpen) { if (anyOverlayOpen) focusManager.clearFocus() }
 
@@ -287,20 +297,24 @@ fun MushotokuApp(
 
         val topPadding    = with(density) { topBarHeightPx.toDp() }
         val bottomPadding = with(density) { bottomBarHeightPx.toDp() }
-        val showBottomBar = !(currentTab == AppTab.NOTES && noteEditorActive)
 
         val contentPadding = PaddingValues(
             top    = topPadding,
-            bottom = if (showBottomBar) bottomPadding else 0.dp
+            bottom = bottomPadding
         )
 
+        // Switched off while the note editor is open: it brings its own handler,
+        // and leaving both enabled let one back gesture close the note and jump
+        // to the Today tab in the same motion.
+        // Back closes what is open on top; on a bare Finance or Notes tab it
+        // deliberately does nothing, so the gesture cannot throw the reader back
+        // to Today.
         BackHandler(enabled = true) {
             when {
                 showMeditation -> showMeditation = false
                 showCalendar   -> showCalendar = false
                 showTrash      -> showTrash = false
                 showSettings   -> showSettings = false
-                currentTab != AppTab.TODAY -> currentTab = AppTab.TODAY
             }
         }
 
@@ -350,7 +364,7 @@ fun MushotokuApp(
                         confirmDeleteEnabled = settings.confirmDeleteEnabled,
                         onOpenLinkedNote     = { task ->
                             task.linkedNoteId?.let { noteId ->
-                                openNoteId = noteId
+                                notes.firstOrNull { it.id == noteId }?.let { editingNote = it }
                                 currentTab = AppTab.NOTES
                             }
                         }
@@ -380,28 +394,20 @@ fun MushotokuApp(
                     AppTab.NOTES -> NotesScreen(
                         notes                 = notes,
                         contentPadding        = contentPadding,
-                        typeFilter            = noteTypeFilter,
-                        defaultNoteType       = noteTypeFilter ?: NoteType.NOTE,
-                        createRequested       = showNewNote,
-                        onCreateConsumed      = { showNewNote = false },
-                        onCreateNote          = { t, c, tp, cb -> notesVm.createNote(t, c, tp, cb) },
-                        onUpdateNote          = { notesVm.updateNote(it) },
-                        onDeleteNote             = { notesVm.deleteNote(it) },
-                        hapticEnabled            = settings.hapticFeedbackEnabled,
-                        onEditorActiveChange     = { noteEditorActive = it },
-                        onEditorBarState         = { noteEditorBarState = it },
+                        editorActive          = noteEditorActive,
+                        onOpenNote            = { editingNote = it },
+                        onDeleteTag           = { tag, withNotes ->
+                            val carrying = notes.filter { noteHasTag(it, tag) }
+                            if (withNotes) carrying.forEach { notesVm.deleteNote(it) }
+                            else carrying.forEach { notesVm.updateNote(it.withoutTag(tag)) }
+                        },
                         selectedNoteIds          = selectedNoteIds,
                         onSelectionChange        = { selectedNoteIds = it },
                         linkedNoteToTaskMap      = linkedNoteToTaskMap,
-                        onNavigateToTask         = { task ->
-                            vm.selectDate(java.time.LocalDate.ofEpochDay(task.date))
-                            currentTab = AppTab.TODAY
-                        },
-                        openNoteId               = openNoteId,
-                        onOpenNoteConsumed       = { openNoteId = null }
                     )
                 }
             }
+
 
             if (currentTab == AppTab.TODAY) {
                 FloatingActionButton(
@@ -415,7 +421,7 @@ fun MushotokuApp(
                 }
             } else if (currentTab == AppTab.NOTES && !noteEditorActive) {
                 FloatingActionButton(
-                    onClick = soundClick { showNewNote = true },
+                    onClick = soundClick { creatingNote = true },
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(end = 16.dp, bottom = bottomPadding + 16.dp),
@@ -425,10 +431,103 @@ fun MushotokuApp(
                 }
             }
 
+            // While a note is open the bar is plain, not frosted: what lies
+            // behind it is the note itself, so there is nothing to show through.
+            // It shares the grey of the markdown bar right below it, so the two
+            // read as one strip of chrome above the text.
+            val editorTint = if (noteEditorActive) colors.surface else null
+            // The note's own hue at full strength; an uncoloured note keeps the
+            // app's blue.
+            val editorAccent = editingNote?.color
+                ?.let { noteAccentColor(it, colors.background.isDarkSurface()) }
+                ?: Color(0xFF3D5AFE)
             val topBarModifier = Modifier
                 .align(Alignment.TopCenter)
-                .hazeEffect(hazeState, glassStyle)
+                .let { if (editorTint != null) it.background(editorTint) else it.hazeEffect(hazeState, glassStyle) }
                 .onSizeChanged { topBarHeightPx = it.height }
+
+            SnackbarHost(
+                hostState = taskSnackbar,
+                modifier  = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = bottomPadding + 12.dp, start = 16.dp, end = 16.dp)
+            ) { data ->
+                // The action carries the app's accent, like every other one.
+                Snackbar(snackbarData = data, actionContentColor = Color(0xFF3D5AFE))
+            }
+
+            // Always present now: the note editor is drawn over it instead of
+            // making it disappear and come back.
+            AppBottomBar(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .hazeEffect(hazeState, glassStyle)
+                    .onSizeChanged { bottomBarHeightPx = it.height },
+                currentTab        = currentTab,
+                selectedDate      = selectedDate,
+                financeTabEnabled = settings.financeTabEnabled,
+                glassDividerColor = glassDividerColor,
+                onDateSelected    = { vm.selectDate(it) },
+                onTodayLongPress  = { showMeditation = true },
+                onTabChange       = {
+                    if (it == AppTab.TODAY || it == AppTab.FINANCE) {
+                        vm.selectDate(java.time.LocalDate.now())
+                        dateSliderScrollTrigger++
+                    }
+                    currentTab = it
+                },
+                dateScrollTrigger = dateSliderScrollTrigger
+            )
+
+            // Above the bottom bar so it covers it, below the top bar which
+            // carries the editor's own back and done buttons.
+            if (noteEditorActive) {
+                val linkedTask = editingNote?.id?.let { linkedNoteToTaskMap[it] }
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .background(colors.background)
+                        .pointerInput(Unit) {
+                            awaitPointerEventScope {
+                                while (true) {
+                                    awaitPointerEvent().changes.forEach { it.consume() }
+                                }
+                            }
+                        }
+                ) {
+                    NoteEditor(
+                        note        = editingNote,
+                        defaultType = NoteType.NOTE,
+                        onCreate    = { t, c, tp, cb -> notesVm.createNote(t, c, tp, cb) },
+                        onUpdate    = { notesVm.updateNote(it) },
+                        onUpdateQuiet = { notesVm.updateNoteQuietly(it) },
+                        onDelete    = { notesVm.deleteNote(it) },
+                        onClose     = { editingNote = null; creatingNote = false },
+                        // Only the system's own inset: the editor covers the app's
+                        // bottom bar, so reserving its height would leave a dead
+                        // strip across the lower part of the note.
+                        bottomPad   = WindowInsets.navigationBars.asPaddingValues()
+                            .calculateBottomPadding(),
+                        topPad      = contentPadding.calculateTopPadding(),
+                        onBarState  = { noteEditorBarState = it },
+                        linkedTask  = linkedTask,
+                        onNavigateToTask = { task ->
+                            editingNote = null
+                            creatingNote = false
+                            vm.selectDate(java.time.LocalDate.ofEpochDay(task.date))
+                            currentTab = AppTab.TODAY
+                        },
+                        hapticEnabled = settings.hapticFeedbackEnabled,
+                        startInTitle  = settings.newNoteStartsWithTitle,
+                        knownTags     = remember(notes) { collectTags(notes) },
+                        accent        = editorAccent
+                    )
+                }
+            }
+
+            // Drawn last of the three so the editor covers the bottom bar but
+            // keeps the top bar, which carries its back and done buttons.
             when (currentTab) {
                 AppTab.TODAY -> TodayTopBar(
                     modifier       = topBarModifier,
@@ -449,8 +548,8 @@ fun MushotokuApp(
                     editorBar        = noteEditorBarState,
                     selectedNoteIds  = selectedNoteIds,
                     notes            = notes,
-                    noteTypeFilter   = noteTypeFilter,
                     onClearSelection = { selectedNoteIds = emptySet() },
+                    editorAccent = editorAccent,
                     onSetColor = { color ->
                         notesVm.setColor(notes.filter { it.id in selectedNoteIds }, color)
                     },
@@ -481,42 +580,6 @@ fun MushotokuApp(
                         settingsInitialSection = SettingsSection.Finanzen
                         showSettings = true
                     }
-                )
-            }
-
-            SnackbarHost(
-                hostState = taskSnackbar,
-                modifier  = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = bottomPadding + 12.dp, start = 16.dp, end = 16.dp)
-            ) { data ->
-                // The action carries the app's accent, like every other one.
-                Snackbar(snackbarData = data, actionContentColor = Color(0xFF3D5AFE))
-            }
-
-            if (showBottomBar) {
-                AppBottomBar(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .hazeEffect(hazeState, glassStyle)
-                        .onSizeChanged { bottomBarHeightPx = it.height },
-                    currentTab        = currentTab,
-                    selectedDate      = selectedDate,
-                    noteTypeFilter    = noteTypeFilter,
-                    financeTabEnabled = settings.financeTabEnabled,
-                    glassDividerColor = glassDividerColor,
-                    onDateSelected    = { vm.selectDate(it) },
-                    onTodayLongPress  = { showMeditation = true },
-                    onNoteTypeSelect  = { noteTypeFilter = it },
-                    onTabChange       = {
-                        if (it == AppTab.TODAY || it == AppTab.FINANCE) {
-                            vm.selectDate(java.time.LocalDate.now())
-                            dateSliderScrollTrigger++
-                        }
-                        currentTab = it
-                    },
-                    dateScrollTrigger = dateSliderScrollTrigger
                 )
             }
 
@@ -575,6 +638,7 @@ fun MushotokuApp(
                     onSetSalaryDay      = { settingsVm.setSalaryDay(it) },
                     onSetConfirmDelete  = { settingsVm.setConfirmDeleteEnabled(it) },
                     onSetHaptic         = { settingsVm.setHapticFeedbackEnabled(it) },
+                    onSetNewNoteStartsWithTitle = { settingsVm.setNewNoteStartsWithTitle(it) },
                     onSetCurrency       = { settingsVm.setCurrency(it) },
                     onSetAppLockTimeout = { settingsVm.setAppLockTimeout(it) },
                     onSetBlockScreenshots = { settingsVm.setBlockScreenshots(it) },

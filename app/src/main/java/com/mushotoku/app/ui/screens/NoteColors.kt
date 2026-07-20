@@ -70,8 +70,28 @@ internal fun noteHue(index: Int): Color? = NoteHues.getOrNull(index - 1)
  */
 internal fun noteCardColor(index: Int, surface: Color, isDark: Boolean): Color {
     val hue = noteHue(index) ?: return surface
-    return hue.copy(alpha = if (isDark) 0.22f else 0.16f).compositeOver(surface)
+    // Light mode needs the larger share: the same tint over white reads much
+    // paler than over a dark surface.
+    return hue.copy(alpha = if (isDark) 0.34f else 0.30f).compositeOver(surface)
 }
+
+/**
+ * Colour for the editor's controls: the same hue as the card, but at full
+ * strength — as a thin outline or a letter it has to carry, where the card can
+ * rely on its whole area. On a dark surface it is lifted towards white, which
+ * dark backgrounds need to keep a colour legible.
+ */
+internal fun noteAccentColor(index: Int, isDark: Boolean): Color? {
+    val hue = noteHue(index) ?: return null
+    return if (isDark) hue.mixWith(Color.White, 0.35f) else hue
+}
+
+private fun Color.mixWith(other: Color, amount: Float): Color = Color(
+    red   = red * (1 - amount) + other.red * amount,
+    green = green * (1 - amount) + other.green * amount,
+    blue  = blue * (1 - amount) + other.blue * amount,
+    alpha = 1f
+)
 
 private fun Color.compositeOver(background: Color): Color {
     val a = alpha

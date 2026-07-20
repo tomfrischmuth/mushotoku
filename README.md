@@ -6,8 +6,8 @@
 
 *No accounts · No cloud · No tracking · No ads · No internet permission.*
 
-[![F-Droid](https://img.shields.io/f-droid/v/com.mushotoku.app?logo=fdroid)](https://f-droid.org/packages/com.mushotoku.app)
 [![Release](https://img.shields.io/github/v/release/tomfrischmuth/mushotoku?label=release)](https://github.com/tomfrischmuth/mushotoku/releases)
+[![F-Droid](https://img.shields.io/f-droid/v/com.mushotoku.app?logo=fdroid)](https://f-droid.org/packages/com.mushotoku.app)
 [![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](#-license)
 [![Platform](https://img.shields.io/badge/platform-Android-3DDC84.svg)](#requirements)
 [![Built with](https://img.shields.io/badge/built%20with-Kotlin%20%2B%20Compose-7F52FF.svg)](#-tech-stack)
@@ -51,7 +51,7 @@ Some things are missing on purpose. Mushotoku will never:
 - **Habits:** build and track recurring habits
 
 ### 📝 Capture & reflect
-- **Notes:** Markdown editor with a formatting toolbar, a clean read view, and a trash with restore
+- **Notes:** Markdown editor with lists and timestamps, hashtag tags, colours, and a trash with restore
 - **Gratitude journal:** daily entries with a searchable archive
 - **Mood tracking:** log how you feel over time
 

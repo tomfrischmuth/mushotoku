@@ -221,3 +221,25 @@ internal fun autoContinueList(old: TextFieldValue, new: TextFieldValue): TextFie
     val cursor = insertPos + 1 + prefix.length
     return TextFieldValue(result, TextRange(cursor))
 }
+
+/**
+ * A backspace anywhere in a check marker takes the whole box away in one go.
+ * Deleting a single character would leave "- [ ]", which is no longer a check
+ * line — the raw markdown would suddenly show and want five more presses.
+ *
+ * Returns null when the edit was something else.
+ */
+internal fun deleteCheckMarker(old: TextFieldValue, new: TextFieldValue): TextFieldValue? {
+    if (new.text.length != old.text.length - 1) return null
+    val at = new.selection.start
+    if (at < 0 || at > old.text.length) return null
+
+    val lineStart = old.text.lastIndexOf('\n', (at - 1).coerceAtLeast(0))
+        .let { if (it < 0) 0 else it + 1 }
+    val lineEnd = old.text.indexOf('\n', lineStart).let { if (it < 0) old.text.length else it }
+    if (checkStateOf(old.text.substring(lineStart, lineEnd)) == null) return null
+    if (at < lineStart || at >= lineStart + ChecklistPrefixLength) return null
+
+    val newText = old.text.removeRange(lineStart, lineStart + ChecklistPrefixLength)
+    return TextFieldValue(newText, TextRange(lineStart))
+}

@@ -179,6 +179,22 @@
     <string name="trash_delete_all_dialog_title">Prullenbak legen?</string>
     <string name="trash_delete_all_dialog_text">Alle notities in de prullenbak worden definitief verwijderd.</string>
     <string name="trash_restore">Herstellen</string>
+    <string name="trash_restore_confirm_title">Herstellen?</string>
+    <plurals name="trash_restore_confirm_text">
+        <item quantity="one">%d notitie gaat terug naar je notities.</item>
+        <item quantity="other">%d notities gaan terug naar je notities.</item>
+    </plurals>
+    <string name="trash_delete_confirm_title">Definitief verwijderen?</string>
+    <plurals name="trash_delete_confirm_text">
+        <item quantity="one">%d notitie wordt definitief verwijderd. Dit kan niet ongedaan worden gemaakt.</item>
+        <item quantity="other">%d notities worden definitief verwijderd. Dit kan niet ongedaan worden gemaakt.</item>
+    </plurals>
+    <plurals name="trash_tag_text">
+        <item quantity="one">%d notitie in de prullenbak heeft deze tag.</item>
+        <item quantity="other">%d notities in de prullenbak hebben deze tag.</item>
+    </plurals>
+    <string name="trash_restore_all">Alles herstellen</string>
+    <string name="select_all">Alles selecteren</string>
 
     <string name="no_notes_yet">Nog geen notitie. Tik op + om er een toe te voegen.</string>
     <string name="no_routines_yet">Nog geen routine. Tik op + om er een toe te voegen.</string>
@@ -212,6 +228,8 @@
     <string name="notes_pinned_section">Vastgezet</string>
     <string name="notes_filter_all">Alle</string>
     <string name="notes_search_hint">Zoeken …</string>
+    <string name="notes_filter_timestamp">Notities met tijdstempel</string>
+    <string name="notes_filter_lists">Lijsten</string>
     <string name="notes_content_hint">Begin met schrijven …</string>
     <string name="notes_no_results">Geen resultaten</string>
     <string name="notes_done">Klaar</string>
@@ -227,7 +245,16 @@
     <string name="notes_list_numbered">Genummerde lijst</string>
     <string name="notes_list_checkbox">Checklist</string>
     <string name="notes_tag_remove">Geen tag</string>
+    <string name="tag_delete">Tag verwijderen</string>
+    <string name="tag_delete_text">“#%1$s” uit alle notities halen. De notities blijven.</string>
+    <string name="tag_delete_with_notes">Tag en notities verwijderen</string>
+    <string name="tag_delete_with_notes_text">“#%1$s” en alle %2$d notities ermee verwijderen. Dit kan niet ongedaan worden gemaakt.</string>
     <string name="notes_no_title">Nog geen titel</string>
+    <string name="notes_tag_hint">Tags toevoegen …</string>
+    <string name="section_notes">Notities</string>
+    <string name="new_note_starts_with">Nieuwe notitie begint met</string>
+    <string name="new_note_title">Titel</string>
+    <string name="new_note_text">Tekst</string>
     <string name="task_moved_tomorrow">Naar morgen verplaatst</string>
     <string name="undo">Ongedaan maken</string>
 

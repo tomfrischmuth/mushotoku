@@ -179,6 +179,22 @@
     <string name="trash_delete_all_dialog_title">Empty trash?</string>
     <string name="trash_delete_all_dialog_text">All notes in the trash will be permanently deleted.</string>
     <string name="trash_restore">Restore</string>
+    <string name="trash_restore_confirm_title">Restore?</string>
+    <plurals name="trash_restore_confirm_text">
+        <item quantity="one">%d note goes back to your notes.</item>
+        <item quantity="other">%d notes go back to your notes.</item>
+    </plurals>
+    <string name="trash_delete_confirm_title">Delete permanently?</string>
+    <plurals name="trash_delete_confirm_text">
+        <item quantity="one">%d note will be deleted for good. This cannot be undone.</item>
+        <item quantity="other">%d notes will be deleted for good. This cannot be undone.</item>
+    </plurals>
+    <plurals name="trash_tag_text">
+        <item quantity="one">%d note in the trash carries this tag.</item>
+        <item quantity="other">%d notes in the trash carry this tag.</item>
+    </plurals>
+    <string name="trash_restore_all">Restore all</string>
+    <string name="select_all">Select all</string>
 
     <string name="no_notes_yet">No note yet. Tap + to add one.</string>
     <string name="no_routines_yet">No routine yet. Tap + to add one.</string>
@@ -212,6 +228,8 @@
     <string name="notes_pinned_section">Pinned</string>
     <string name="notes_filter_all">All</string>
     <string name="notes_search_hint">Search …</string>
+    <string name="notes_filter_timestamp">Notes with a timestamp</string>
+    <string name="notes_filter_lists">Lists</string>
     <string name="notes_content_hint">Start writing …</string>
     <string name="notes_no_results">No results</string>
     <string name="notes_done">Done</string>
@@ -227,7 +245,16 @@
     <string name="notes_list_numbered">Numbered list</string>
     <string name="notes_list_checkbox">Checklist</string>
     <string name="notes_tag_remove">Not a tag</string>
+    <string name="tag_delete">Delete tag</string>
+    <string name="tag_delete_text">Remove “#%1$s” from every note. The notes themselves stay.</string>
+    <string name="tag_delete_with_notes">Delete tag and notes</string>
+    <string name="tag_delete_with_notes_text">Delete “#%1$s” and all %2$d notes carrying it. This cannot be undone.</string>
     <string name="notes_no_title">No title yet</string>
+    <string name="notes_tag_hint">Add tags …</string>
+    <string name="section_notes">Notes</string>
+    <string name="new_note_starts_with">New note starts with</string>
+    <string name="new_note_title">Title</string>
+    <string name="new_note_text">Text</string>
     <string name="task_moved_tomorrow">Moved to tomorrow</string>
     <string name="undo">Undo</string>
 

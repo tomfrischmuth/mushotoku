@@ -60,6 +60,14 @@ class NotesViewModel(app: Application) : AndroidViewModel(app) {
         callback(id)
     }
 
+    /**
+     * Saves without touching [Note.updatedAt] — for changes that say nothing
+     * about the note's content, such as ticking one of its check items.
+     */
+    fun updateNoteQuietly(note: Note) = viewModelScope.launch {
+        repo.updateNote(note)
+    }
+
     fun updateNote(note: Note) = viewModelScope.launch {
         repo.updateNote(note.copy(updatedAt = System.currentTimeMillis()))
     }

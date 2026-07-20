@@ -20,6 +20,7 @@ package com.mushotoku.app.ui.screens
 import com.mushotoku.app.ui.components.*
 import com.mushotoku.app.ui.*
 
+import androidx.compose.foundation.clickable
 import com.mushotoku.app.ui.strings.*
 
 import androidx.compose.foundation.layout.*
@@ -47,7 +48,8 @@ internal fun DarstellungSection(
     onSetFontScale: (Float) -> Unit,
     onSetLanguage: (String) -> Unit,
     onSetConfirmDelete: (Boolean) -> Unit,
-    onSetHaptic: (Boolean) -> Unit
+    onSetHaptic: (Boolean) -> Unit,
+    onSetNewNoteStartsWithTitle: (Boolean) -> Unit
 ) {
     val strings = LocalAppStrings.current
     val colors  = LocalAppColors.current
@@ -169,6 +171,40 @@ internal fun DarstellungSection(
                         onCheckedChange = soundCheck(onSetHaptic),
                         colors = SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = colors.accent)
                     )
+                }
+            }
+        }
+
+        Spacer(Modifier.height(20.dp))
+        SectionLabel(strings.sectionNotes)
+        Card(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = colors.surface),
+            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+        ) {
+            Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp)) {
+                HorizontalDivider(color = colors.divider)
+                Spacer(Modifier.height(8.dp))
+
+                Text(strings.newNoteStartsWith, fontSize = 13.sp, color = colors.onSurfaceSecondary)
+                Spacer(Modifier.height(8.dp))
+                listOf(true to strings.newNoteTitle, false to strings.newNoteText).forEach { (withTitle, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onSetNewNoteStartsWithTitle(withTitle) }
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = settings.newNoteStartsWithTitle == withTitle,
+                            onClick = soundClick { onSetNewNoteStartsWithTitle(withTitle) },
+                            colors = RadioButtonDefaults.colors(selectedColor = colors.accent)
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(label, fontSize = 15.sp, color = colors.onSurface)
+                    }
                 }
             }
         }

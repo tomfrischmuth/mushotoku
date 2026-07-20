@@ -30,7 +30,7 @@ import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
 
 @Database(
     entities = [Task::class, Note::class, Expense::class, Category::class, AppSettings::class, Habit::class, HabitLog::class, GratitudeEntry::class, MoodEntry::class, CaffeineDose::class, RecurringCostHistory::class, AdditionalIncome::class],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -50,12 +50,32 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         /**
-         * Adds the note colour. Written out rather than left to the destructive
-         * fallback, which would wipe every note on update.
+         * Everything this release adds to the schema, in one step: the note
+         * colour and the two notes preferences. Written out rather than left to
+         * the destructive fallback, which would wipe every note on update.
          */
         private val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL("ALTER TABLE notes ADD COLUMN color INTEGER NOT NULL DEFAULT 0")
+                connection.execSQL(
+                    "ALTER TABLE app_settings ADD COLUMN newNoteStartsWithTitle INTEGER NOT NULL DEFAULT 1"
+                )
+            }
+        }
+
+        /**
+         * The switch between lists and notes is gone, and with it its setting.
+         * Its column only exists where the unreleased step above once wrote it,
+         * so the drop is asked for rather than assumed.
+         */
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(connection: SQLiteConnection) {
+                val hasColumn = connection.prepare(
+                    "SELECT COUNT(*) FROM pragma_table_info('app_settings') WHERE name = 'noteTypeFilterEnabled'"
+                ).use { it.step() && it.getLong(0) > 0 }
+                if (hasColumn) {
+                    connection.execSQL("ALTER TABLE app_settings DROP COLUMN noteTypeFilterEnabled")
+                }
             }
         }
 
@@ -63,7 +83,7 @@ abstract class AppDatabase : RoomDatabase() {
             val factory = SupportOpenHelperFactory(SqlCipherKey.rawKeyBytes(dek))
             return Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "mushotoku.db")
                 .openHelperFactory(factory)
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                 .fallbackToDestructiveMigration(dropAllTables = true)
                 .fallbackToDestructiveMigrationOnDowngrade(dropAllTables = true)
                 .build()

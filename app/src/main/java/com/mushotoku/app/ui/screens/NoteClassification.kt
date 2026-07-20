@@ -45,13 +45,19 @@ internal fun hasProse(note: Note): Boolean =
     note.lines().drop(1).any { it.isNotBlank() && !isHeading(it) && !isListLine(it) }
 
 /**
- * Which tab a note shows up under. Its stored type always counts, and its
- * content can add to it: a note holding a list also belongs with the lists, and
- * a list that carries real text belongs with the notes as well.
+ * The kind a note reads as, judged by what is written in it rather than by the
+ * type it was created under — that type was often just the tab that happened to
+ * be open.
  */
-internal fun matchesTypeFilter(note: Note, filter: NoteType?): Boolean = when (filter) {
-    null              -> true
-    NoteType.LIST     -> note.type == NoteType.LIST || containsList(note)
-    NoteType.NOTE     -> note.type == NoteType.NOTE || (containsList(note) && hasProse(note))
-    NoteType.ROUTINE  -> note.type == NoteType.ROUTINE
+internal fun displayedNoteType(note: Note): NoteType {
+    val body = note.lines().drop(1).filter { it.isNotBlank() && !isHeading(it) }
+    val lists = body.count { isListLine(it) }
+    return if (lists > 0 && lists >= body.size - lists) NoteType.LIST else NoteType.NOTE
 }
+
+/**
+ * Which tab a note shows up under: the same judgement its icon shows, so the
+ * two can never contradict each other. Every note lands in exactly one tab.
+ */
+internal fun matchesTypeFilter(note: Note, filter: NoteType?): Boolean =
+    filter == null || displayedNoteType(note) == filter

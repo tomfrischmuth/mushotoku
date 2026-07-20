@@ -46,4 +46,7 @@ data class AppSettings(
     val holidayCountry: String = "",
     val holidayRegion: String = "",
     val includeHolidaysInExport: Boolean = true,
+    /** Whether the All/Routines/Lists/Notes switch is shown at all. */
+    /** Where the cursor starts in a new note: the title, or straight into the text. */
+    val newNoteStartsWithTitle: Boolean = true,
 )

@@ -67,6 +67,7 @@ fun SettingsScreen(
     onSetSalaryDay: (String) -> Unit,
     onSetConfirmDelete: (Boolean) -> Unit,
     onSetHaptic: (Boolean) -> Unit,
+    onSetNewNoteStartsWithTitle: (Boolean) -> Unit,
     onSetCurrency: (String) -> Unit,
     onSetAppLockTimeout: (Int) -> Unit,
     onSetBlockScreenshots: (Boolean) -> Unit,
@@ -132,7 +133,8 @@ fun SettingsScreen(
                 onSetFontScale = onSetFontScale,
                 onSetLanguage  = onSetLanguage,
                 onSetConfirmDelete = onSetConfirmDelete,
-                onSetHaptic = onSetHaptic
+                onSetHaptic = onSetHaptic,
+                onSetNewNoteStartsWithTitle = onSetNewNoteStartsWithTitle
             )
             SettingsSection.Finanzen -> FinanzenSection(
                 categories = categories,

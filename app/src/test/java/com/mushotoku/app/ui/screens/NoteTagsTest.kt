@@ -159,6 +159,19 @@ class NoteTagsTest {
         assertFalse(isTagOnly("\\#job"))
     }
 
+    @Test fun `ein Tag laesst sich aus dem Text entfernen`() {
+        val n = Note(id = 1, title = "# Notiz #job", content = "Text #job hier\nund #idee")
+        val out = n.withoutTag("job")
+        assertEquals("# Notiz", out.title)
+        assertEquals("Text hier\nund #idee", out.content)
+        assertEquals(listOf("idee"), extractTags(out))
+    }
+
+    @Test fun `beim Entfernen bleibt ein aehnlicher Tag stehen`() {
+        val n = Note(id = 1, title = "T", content = "#job #jobsuche")
+        assertEquals(listOf("jobsuche"), extractTags(n.withoutTag("job")))
+    }
+
     @Test fun `ohne Tags bleibt die Leiste leer`() {
         assertEquals(emptyList<String>(), collectTags(listOf(note("nichts"), note("auch nichts"))))
         assertFalse(noteHasTag(note("nichts"), "job"))
