@@ -81,8 +81,14 @@
     <string name="icon_minimalist">Minimalistyczny</string>
     <string name="icon_playful">Zabawny</string>
 
-    <string name="section_finance_tab">Karta Finanse</string>
-    <string name="show_finance_tab">Pokaż kartę Finanse</string>
+    <string name="menu_features">Funkcje</string>
+    <string name="menu_features_subtitle">Wydatki &amp; uważność</string>
+    <string name="show_mindfulness">Uważność</string>
+    <string name="section_mindfulness">Medytacja, wdzięczność i nastrój</string>
+    <string name="section_finance_tab">Przychody i wydatki</string>
+    <string name="feature_finance_description">Z obsługą wielu walut.</string>
+    <string name="feature_mindfulness_description">Otwiera się długim naciśnięciem dzisiejszej daty.</string>
+    <string name="show_finance_tab">Finanse</string>
     <string name="section_categories">Kategorie i koszty stałe</string>
     <string name="recurring_costs_label">Koszty stałe:</string>
     <string name="per_month">/ miesiąc</string>
@@ -320,7 +326,13 @@
         <item>Nd</item>
     </string-array>
 
+    <string name="mindfulness_hint">Długie naciśnięcie dzisiejszej daty otwiera medytację, wdzięczność i nastrój.</string>
     <string name="meditation_title">Witaj w teraźniejszości.</string>
+    <string name="meditation_quote_label">Cytat dnia</string>
+    <string name="meditation_section_meditation">Medytacja</string>
+    <string name="meditation_section_mood">Nastrój</string>
+    <string name="meditation_section_gratitude">Wdzięczność</string>
+    <string name="meditation_section_sleep">Sen</string>
     <string name="meditation_timer_card">Minutnik medytacji</string>
     <string name="meditation_gratitude_card">Dziennik wdzięczności</string>
     <string name="meditation_mood_card">Nastrój</string>
@@ -370,6 +382,9 @@
     </plurals>
     <string name="meditation_avg_mood">Śr. nastrój</string>
     <string name="meditation_minutes_label">min</string>
+    <string name="meditation_hours_label">godz.</string>
+    <string name="meditation_journal_day_singular">Dzień</string>
+    <string name="meditation_journal_day_plural">Dni</string>
     <string name="meditation_journal_singular">Wpis</string>
     <string name="meditation_journal_plural">Wpisy</string>
     <string name="meditation_mood_all">Ø Łącznie</string>

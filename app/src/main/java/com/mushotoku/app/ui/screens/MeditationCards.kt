@@ -78,9 +78,24 @@ internal val MOOD_COLORS = listOf(
 )
 
 @Composable
-internal fun QuoteHero(quote: String, isDark: Boolean) {
-    val textColor  = if (isDark) Color.White.copy(alpha = 0.88f)         else Color(0xFF2B1A5C)
-    val markColor  = if (isDark) Color(0xFF9B7BD7).copy(alpha = 0.40f)   else Color(0xFF7C5CBF).copy(alpha = 0.32f)
+internal fun MindSectionLabel(text: String, centered: Boolean = false) {
+    val colors = LocalAppColors.current
+    Text(
+        text          = text.uppercase(),
+        fontSize      = 11.sp,
+        fontWeight    = FontWeight.SemiBold,
+        color         = colors.onSurfaceSecondary,
+        letterSpacing = 1.2.sp,
+        textAlign     = if (centered) TextAlign.Center else TextAlign.Start,
+        modifier      = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
+    )
+}
+
+@Composable
+internal fun QuoteHero(quote: String, accent: Color) {
+    val colors    = LocalAppColors.current
+    val textColor = colors.onSurface
+    val markColor = accent.copy(alpha = 0.35f)
 
     Column(
         modifier = Modifier
@@ -146,7 +161,8 @@ internal fun GratitudeCard(
     glassBorder: Color,
     isDark: Boolean,
     onSave: (String, String, String) -> Unit,
-    onArchive: () -> Unit
+    onArchive: () -> Unit,
+    onFieldFocused: () -> Unit = {}
 ) {
     val colors = LocalAppColors.current
     var e1 by remember(entry?.date) { mutableStateOf(entry?.entry1 ?: "") }
@@ -205,7 +221,8 @@ internal fun GratitudeCard(
                 value         = value,
                 hint          = strings.meditationGratitudeHint(n),
                 onValueChange = setter,
-                isDark        = isDark
+                isDark        = isDark,
+                onFocused     = onFieldFocused
             )
             if (n < 3) Spacer(Modifier.height(8.dp))
         }
@@ -227,7 +244,8 @@ private fun GratitudeField(
     value: String,
     hint: String,
     onValueChange: (String) -> Unit,
-    isDark: Boolean
+    isDark: Boolean,
+    onFocused: () -> Unit = {}
 ) {
     val colors      = LocalAppColors.current
     var isFocused   by remember { mutableStateOf(false) }
@@ -245,7 +263,10 @@ private fun GratitudeField(
             .border(0.5.dp, fieldBorder, shape)
             .clip(shape)
             .background(fieldBg)
-            .onFocusChanged { isFocused = it.isFocused },
+            .onFocusChanged {
+                isFocused = it.isFocused
+                if (it.isFocused) onFocused()
+            },
         maxLines      = 3,
         decorationBox = { innerTextField ->
             Box(Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {

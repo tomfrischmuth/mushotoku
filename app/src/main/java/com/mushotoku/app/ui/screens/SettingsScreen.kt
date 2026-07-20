@@ -41,7 +41,7 @@ import com.mushotoku.app.data.Category
 import com.mushotoku.app.ui.theme.LocalAppColors
 import kotlinx.collections.immutable.ImmutableList
 
-enum class SettingsSection { Darstellung, Kalender, Finanzen, Sicherheit, Export, Daten, Lizenzen }
+enum class SettingsSection { Darstellung, Features, Kalender, Finanzen, Sicherheit, Export, Daten, Lizenzen }
 
 @Composable
 fun SettingsScreen(
@@ -49,6 +49,7 @@ fun SettingsScreen(
     settings: AppSettings,
     onClose: () -> Unit,
     onSetFinanceEnabled: (Boolean) -> Unit,
+    onSetMindfulnessEnabled: (Boolean) -> Unit,
     onSetCategoryEnabled: (Category, Boolean) -> Unit,
     onSetCategoryRecurringCost: (Category, Double) -> Unit,
     onAddCategory: (name: String, group: String) -> Unit,
@@ -87,6 +88,7 @@ fun SettingsScreen(
     val title: String = when (selectedSection) {
         null                    -> strings.settings
         SettingsSection.Darstellung -> strings.menuDisplay
+        SettingsSection.Features    -> strings.menuFeatures
         SettingsSection.Kalender    -> strings.menuCalendar
         SettingsSection.Finanzen    -> strings.menuFinance
         SettingsSection.Sicherheit  -> strings.menuSecurity
@@ -101,6 +103,12 @@ fun SettingsScreen(
     }
 
     BackHandler(enabled = selectedSection != null) { selectedSection = null }
+
+    LaunchedEffect(settings.financeTabEnabled) {
+        if (!settings.financeTabEnabled && selectedSection == SettingsSection.Finanzen) {
+            selectedSection = null
+        }
+    }
 
     val focusManager = LocalFocusManager.current
 
@@ -126,7 +134,11 @@ fun SettingsScreen(
         }
 
         when (selectedSection) {
-            null -> SettingsMainMenu(strings = strings, onSelect = { selectedSection = it })
+            null -> SettingsMainMenu(
+                strings     = strings,
+                showFinance = settings.financeTabEnabled,
+                onSelect    = { selectedSection = it }
+            )
             SettingsSection.Darstellung -> DarstellungSection(
                 settings = settings,
                 onSetThemeMode = onSetThemeMode,
@@ -135,6 +147,11 @@ fun SettingsScreen(
                 onSetConfirmDelete = onSetConfirmDelete,
                 onSetHaptic = onSetHaptic,
                 onSetNewNoteStartsWithTitle = onSetNewNoteStartsWithTitle
+            )
+            SettingsSection.Features -> FeaturesSection(
+                settings = settings,
+                onSetFinanceEnabled = onSetFinanceEnabled,
+                onSetMindfulnessEnabled = onSetMindfulnessEnabled
             )
             SettingsSection.Finanzen -> FinanzenSection(
                 categories = categories,

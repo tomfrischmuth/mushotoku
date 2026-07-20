@@ -39,6 +39,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.material.icons.filled.SelfImprovement
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
@@ -82,7 +86,9 @@ fun TaskScreen(
     onUpdateHabit: (Habit) -> Unit,
     onDeleteHabit: (Habit) -> Unit,
     confirmDeleteEnabled: Boolean = true,
-    onOpenLinkedNote: (Task) -> Unit = {}
+    onOpenLinkedNote: (Task) -> Unit = {},
+    /** Shown on an empty day until the mindfulness view has been opened once. */
+    showMindfulnessHint: Boolean = false
 ) {
     val strings      = LocalAppStrings.current
     val focusManager = LocalFocusManager.current
@@ -178,6 +184,11 @@ fun TaskScreen(
             .pointerInput(Unit) { detectTapGestures { focusManager.clearFocus() } }
     ) {
         Spacer(Modifier.height(contentPadding.calculateTopPadding() + 12.dp))
+        val dayIsEmpty = appointments.isEmpty() && taskItems.isEmpty() &&
+            habits.isEmpty() && holidayNames.isEmpty()
+        if (showMindfulnessHint && dayIsEmpty) {
+            MindfulnessHint()
+        }
         if (appointments.isNotEmpty() || holidayNames.isNotEmpty()) {
             Text(
                 text = strings.appointmentsSection.uppercase(),
@@ -339,6 +350,38 @@ private fun HolidayItem(name: String) {
         Text(
             text = strings.allDay,
             fontSize = 13.sp,
+            color = colors.onSurfaceSecondary
+        )
+    }
+}
+
+/**
+ * A long press on today's date opens the mindfulness view — a gesture nobody
+ * finds by chance, so an empty day says it out loud until it has been used.
+ */
+@Composable
+private fun MindfulnessHint() {
+    val strings = LocalAppStrings.current
+    val colors  = LocalAppColors.current
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 8.dp)
+            .clip(RoundedCornerShape(14.dp))
+            .background(colors.background)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = Icons.Default.SelfImprovement,
+            contentDescription = null,
+            tint = colors.accent,
+            modifier = Modifier.size(22.dp)
+        )
+        Spacer(Modifier.width(12.dp))
+        Text(
+            text = strings.mindfulnessHint,
+            fontSize = 14.sp,
             color = colors.onSurfaceSecondary
         )
     }

@@ -95,6 +95,25 @@ internal data class StampAnchor(
  * The cursor is allowed to sit one character past the stamp: inserting adds a
  * trailing space, and the cursor comes to rest behind it.
  */
+/**
+ * Takes the stamp the anchor points at back out, together with the space that
+ * was written behind it — the third tap on the button, which undoes the first
+ * two. Returns null when the stamp is no longer where the anchor says.
+ */
+internal fun removeStamp(tfv: TextFieldValue, anchor: StampAnchor): TextFieldValue? {
+    val end = anchor.start + anchor.text.length
+    if (anchor.start < 0 || end > tfv.text.length) return null
+    if (!tfv.text.regionMatches(anchor.start, anchor.text, 0, anchor.text.length)) return null
+
+    val tail = tfv.selection.start - end
+    if (tail !in 0..1) return null
+    if (tail == 1 && tfv.text.getOrNull(end) != ' ') return null
+
+    val cutTo  = if (tfv.text.getOrNull(end) == ' ') end + 1 else end
+    val newText = tfv.text.substring(0, anchor.start) + tfv.text.substring(cutTo)
+    return TextFieldValue(newText, TextRange(anchor.start))
+}
+
 internal fun toggleStamp(
     tfv: TextFieldValue,
     anchor: StampAnchor,

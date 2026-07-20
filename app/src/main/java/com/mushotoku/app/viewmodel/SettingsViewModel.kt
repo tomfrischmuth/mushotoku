@@ -81,6 +81,16 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
 
+    fun setMindfulnessEnabled(enabled: Boolean) = viewModelScope.launch {
+        repo.updateSettings(settings.value.copy(mindfulnessEnabled = enabled))
+    }
+
+    fun markMindfulnessHintSeen() = viewModelScope.launch {
+        if (!settings.value.mindfulnessHintSeen) {
+            repo.updateSettings(settings.value.copy(mindfulnessHintSeen = true))
+        }
+    }
+
     fun setNewNoteStartsWithTitle(withTitle: Boolean) = viewModelScope.launch {
         repo.updateSettings(settings.value.copy(newNoteStartsWithTitle = withTitle))
     }

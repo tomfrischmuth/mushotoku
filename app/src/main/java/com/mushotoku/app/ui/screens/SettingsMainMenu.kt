@@ -37,6 +37,7 @@ import androidx.compose.material.icons.filled.MonetizationOn
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Storage
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -49,7 +50,11 @@ import androidx.compose.ui.unit.sp
 import com.mushotoku.app.ui.theme.LocalAppColors
 
 @Composable
-internal fun SettingsMainMenu(strings: AppStrings, onSelect: (SettingsSection) -> Unit) {
+internal fun SettingsMainMenu(
+    strings: AppStrings,
+    showFinance: Boolean,
+    onSelect: (SettingsSection) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,20 +71,31 @@ internal fun SettingsMainMenu(strings: AppStrings, onSelect: (SettingsSection) -
         )
         Spacer(Modifier.height(10.dp))
         SettingsMenuRow(
+            icon = Icons.Default.Tune,
+            iconColor = Color(0xFF00B8D4),
+            label = strings.menuFeatures,
+            subtitle = strings.menuFeaturesSubtitle,
+            onClick = { onSelect(SettingsSection.Features) }
+        )
+        Spacer(Modifier.height(10.dp))
+        SettingsMenuRow(
             icon = Icons.Default.CalendarMonth,
             iconColor = Color(0xFFFF7043),
             label = strings.menuCalendar,
             subtitle = strings.menuCalendarSubtitle,
             onClick = { onSelect(SettingsSection.Kalender) }
         )
-        Spacer(Modifier.height(10.dp))
-        SettingsMenuRow(
-            icon = Icons.Default.MonetizationOn,
-            iconColor = Color(0xFF00C853),
-            label = strings.menuFinance,
-            subtitle = strings.menuFinanceSubtitle,
-            onClick = { onSelect(SettingsSection.Finanzen) }
-        )
+        // Nothing to set up while the tab itself is switched off.
+        if (showFinance) {
+            Spacer(Modifier.height(10.dp))
+            SettingsMenuRow(
+                icon = Icons.Default.MonetizationOn,
+                iconColor = Color(0xFF00C853),
+                label = strings.menuFinance,
+                subtitle = strings.menuFinanceSubtitle,
+                onClick = { onSelect(SettingsSection.Finanzen) }
+            )
+        }
         Spacer(Modifier.height(10.dp))
         SettingsMenuRow(
             icon = Icons.Default.Lock,

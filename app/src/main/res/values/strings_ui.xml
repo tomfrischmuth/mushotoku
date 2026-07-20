@@ -81,8 +81,14 @@
     <string name="icon_minimalist">Minimalist</string>
     <string name="icon_playful">Playful</string>
 
-    <string name="section_finance_tab">Finance Tab</string>
-    <string name="show_finance_tab">Show Finance Tab</string>
+    <string name="menu_features">Features</string>
+    <string name="menu_features_subtitle">Expense tracker &amp; mindfulness</string>
+    <string name="show_mindfulness">Mindfulness</string>
+    <string name="section_mindfulness">Meditation, gratitude and mood</string>
+    <string name="section_finance_tab">Income &amp; Expenses</string>
+    <string name="feature_finance_description">With support for multiple currencies.</string>
+    <string name="feature_mindfulness_description">Opens with a long press on today’s date.</string>
+    <string name="show_finance_tab">Finance</string>
     <string name="section_categories">Categories &amp; Recurring Costs</string>
     <string name="recurring_costs_label">Recurring Costs:</string>
     <string name="per_month">/ month</string>
@@ -304,7 +310,13 @@
         <item>Su</item>
     </string-array>
 
+    <string name="mindfulness_hint">A long press on today’s date opens meditation, gratitude and mood.</string>
     <string name="meditation_title">Welcome to the Now.</string>
+    <string name="meditation_quote_label">Daily quote</string>
+    <string name="meditation_section_meditation">Meditation</string>
+    <string name="meditation_section_mood">Mood</string>
+    <string name="meditation_section_gratitude">Gratitude</string>
+    <string name="meditation_section_sleep">Sleep</string>
     <string name="meditation_timer_card">Meditation Timer</string>
     <string name="meditation_gratitude_card">Gratitude Journal</string>
     <string name="meditation_mood_card">Mood</string>
@@ -346,6 +358,9 @@
     </plurals>
     <string name="meditation_avg_mood">Avg mood</string>
     <string name="meditation_minutes_label">min</string>
+    <string name="meditation_hours_label">h</string>
+    <string name="meditation_journal_day_singular">Day</string>
+    <string name="meditation_journal_day_plural">Days</string>
     <string name="meditation_journal_singular">Entry</string>
     <string name="meditation_journal_plural">Entries</string>
     <string name="meditation_mood_all">Ø Overall</string>

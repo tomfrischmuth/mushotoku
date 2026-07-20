@@ -362,6 +362,7 @@ fun MushotokuApp(
                         onUpdateHabit        = { habitsVm.updateHabit(it) },
                         onDeleteHabit        = { habitsVm.deleteHabit(it) },
                         confirmDeleteEnabled = settings.confirmDeleteEnabled,
+                        showMindfulnessHint  = settings.mindfulnessEnabled && !settings.mindfulnessHintSeen,
                         onOpenLinkedNote     = { task ->
                             task.linkedNoteId?.let { noteId ->
                                 notes.firstOrNull { it.id == noteId }?.let { editingNote = it }
@@ -469,7 +470,11 @@ fun MushotokuApp(
                 financeTabEnabled = settings.financeTabEnabled,
                 glassDividerColor = glassDividerColor,
                 onDateSelected    = { vm.selectDate(it) },
-                onTodayLongPress  = { showMeditation = true },
+                onTodayLongPress  = {
+                    if (settings.mindfulnessEnabled) {
+                        showMeditation = true; settingsVm.markMindfulnessHintSeen()
+                    }
+                },
                 onTabChange       = {
                     if (it == AppTab.TODAY || it == AppTab.FINANCE) {
                         vm.selectDate(java.time.LocalDate.now())
@@ -532,7 +537,6 @@ fun MushotokuApp(
                 AppTab.TODAY -> TodayTopBar(
                     modifier       = topBarModifier,
                     selectedDate   = selectedDate,
-                    onOpenMindfulness = { showMeditation = true },
                     onOpenCalendar = {
                         vm.setCalendarMonth(YearMonth.from(selectedDate))
                         showCalendar = true
@@ -620,6 +624,7 @@ fun MushotokuApp(
                     settings                   = settings,
                     onClose                    = { showSettings = false },
                     onSetFinanceEnabled        = { settingsVm.setFinanceTabEnabled(it) },
+                    onSetMindfulnessEnabled    = { settingsVm.setMindfulnessEnabled(it) },
                     onSetCategoryEnabled       = { cat, enabled -> financeVm.setCategoryEnabled(cat, enabled) },
                     onSetCategoryRecurringCost = { cat, cost -> financeVm.setCategoryRecurringCost(cat, cost) },
                     onAddCategory              = { name, group -> financeVm.addCustomCategory(name, group) },

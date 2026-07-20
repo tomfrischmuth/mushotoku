@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.mushotoku.app.ui.theme.LocalAppColors
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -52,11 +53,14 @@ import java.time.LocalDate
 import kotlinx.collections.immutable.ImmutableList
 
 private enum class MoodPeriod { ALL, MONTH, WEEK }
+private enum class TimeUnit { MINUTES, HOURS }
+private enum class JournalUnit { ENTRIES, DAYS }
 
 @Composable
 internal fun StatsRow(
     meditatedMinutes: Int,
-    journalCount: Int,
+    journalEntries: Int,
+    journalDays: Int,
     allMoods: ImmutableList<MoodEntry>,
     strings: AppStrings,
     hazeState: HazeState,
@@ -64,7 +68,9 @@ internal fun StatsRow(
     glassBorder: Color,
     isDark: Boolean
 ) {
-    var moodPeriod by remember { mutableStateOf(MoodPeriod.ALL) }
+    var moodPeriod  by remember { mutableStateOf(MoodPeriod.ALL) }
+    var timeUnit    by remember { mutableStateOf(TimeUnit.MINUTES) }
+    var journalUnit by remember { mutableStateOf(JournalUnit.ENTRIES) }
 
     val today   = LocalDate.now().toEpochDay()
     val avgMood = when (moodPeriod) {
@@ -90,24 +96,46 @@ internal fun StatsRow(
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        // Long practice reads better in hours, a first sitting in minutes — so
+        // the chip lets its reader choose, the way the mood chip already does.
+        val hours = meditatedMinutes / 60.0
         StatChip(
             emoji       = "🧘",
-            value       = if (meditatedMinutes > 0) "$meditatedMinutes" else "–",
-            label       = strings.meditationMinutesLabel,
+            value       = when {
+                meditatedMinutes <= 0        -> "–"
+                timeUnit == TimeUnit.MINUTES -> "$meditatedMinutes"
+                hours % 1.0 == 0.0           -> "${hours.toInt()}"
+                else                         -> "%.1f".format(hours)
+            },
+            label       = if (timeUnit == TimeUnit.MINUTES) strings.meditationMinutesLabel
+                          else strings.meditationHoursLabel,
             hazeState   = hazeState,
             glassStyle  = glassStyle,
             glassBorder = glassBorder,
             isDark      = isDark,
+            onClick     = {
+                timeUnit = if (timeUnit == TimeUnit.MINUTES) TimeUnit.HOURS else TimeUnit.MINUTES
+            },
             modifier    = Modifier.weight(1f)
         )
+        val journalValue = if (journalUnit == JournalUnit.ENTRIES) journalEntries else journalDays
         StatChip(
             emoji       = "📖",
-            value       = if (journalCount > 0) "$journalCount" else "–",
-            label       = if (journalCount == 1) strings.meditationJournalSingular else strings.meditationJournalPlural,
+            value       = if (journalValue > 0) "$journalValue" else "–",
+            label       = when {
+                journalUnit == JournalUnit.DAYS && journalValue == 1 -> strings.meditationJournalDaySingular
+                journalUnit == JournalUnit.DAYS                      -> strings.meditationJournalDayPlural
+                journalValue == 1                                    -> strings.meditationJournalSingular
+                else                                                 -> strings.meditationJournalPlural
+            },
             hazeState   = hazeState,
             glassStyle  = glassStyle,
             glassBorder = glassBorder,
             isDark      = isDark,
+            onClick     = {
+                journalUnit = if (journalUnit == JournalUnit.ENTRIES) JournalUnit.DAYS
+                              else JournalUnit.ENTRIES
+            },
             modifier    = Modifier.weight(1f)
         )
         StatChip(
@@ -141,8 +169,8 @@ private fun StatChip(
     modifier: Modifier = Modifier
 ) {
     val shape      = RoundedCornerShape(18.dp)
-    val valueColor = if (isDark) Color.White.copy(alpha = 0.90f) else Color(0xFF2B1A5C)
-    val labelColor = if (isDark) Color.White.copy(alpha = 0.48f) else Color(0xFF7A6A9A)
+    val valueColor = LocalAppColors.current.onSurface
+    val labelColor = LocalAppColors.current.onSurfaceSecondary
 
     Column(
         modifier = modifier

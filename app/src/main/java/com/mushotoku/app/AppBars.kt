@@ -35,7 +35,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.filled.Savings
-import androidx.compose.material.icons.filled.SelfImprovement
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.HorizontalDivider
@@ -72,7 +71,6 @@ private val AccentBlue = Color(0xFF3D5AFE)
 internal fun TodayTopBar(
     modifier: Modifier,
     selectedDate: LocalDate,
-    onOpenMindfulness: () -> Unit,
     onOpenCalendar: () -> Unit,
     onOpenSettings: () -> Unit
 ) {
@@ -91,9 +89,6 @@ internal fun TodayTopBar(
         title    = dayLabel,
         subtitle = selectedDate.format(DateTimeFormatter.ofPattern("d. MMMM yyyy", strings.locale)),
         trailing = {
-            IconButton(onClick = soundClick(onOpenMindfulness)) {
-                Icon(Icons.Default.SelfImprovement, contentDescription = strings.meditationTitle, tint = AccentBlue)
-            }
             IconButton(onClick = soundClick(onOpenCalendar)) {
                 Icon(Icons.Default.CalendarMonth, contentDescription = strings.calendarTitle, tint = AccentBlue)
             }

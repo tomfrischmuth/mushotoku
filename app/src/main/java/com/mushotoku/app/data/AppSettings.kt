@@ -27,6 +27,8 @@ import kotlinx.serialization.Serializable
 data class AppSettings(
     @PrimaryKey val id: Int = 1,
     val financeTabEnabled: Boolean = true,
+    /** Whether the mindfulness view can be reached at all. */
+    val mindfulnessEnabled: Boolean = true,
     val themeMode: String = "DARK",
     val fontScale: Float  = 1.0f,
     val language: String  = "AUTO",
@@ -46,7 +48,8 @@ data class AppSettings(
     val holidayCountry: String = "",
     val holidayRegion: String = "",
     val includeHolidaysInExport: Boolean = true,
-    /** Whether the All/Routines/Lists/Notes switch is shown at all. */
     /** Where the cursor starts in a new note: the title, or straight into the text. */
-    val newNoteStartsWithTitle: Boolean = true,
+    val newNoteStartsWithTitle: Boolean = false,
+    /** Whether the pointer to the mindfulness view has been shown already. */
+    val mindfulnessHintSeen: Boolean = false,
 )

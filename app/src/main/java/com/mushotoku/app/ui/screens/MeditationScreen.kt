@@ -32,10 +32,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.*
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.launch
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -55,13 +64,26 @@ import dev.chrisbanes.haze.rememberHazeState
 
 private fun bgIsDark(r: Float, g: Float, b: Float) = r + g + b < 1.5f
 
+/**
+ * A warm orange for the whole mindfulness corner: it sets these screens apart
+ * from the app's businesslike blue without needing a background of their own.
+ */
+private val MindfulAccentLight = Color(0xFFD97328)
+private val MindfulAccentDark  = Color(0xFFE8974E)
+
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MeditationScreen(
     vm: MeditationViewModel,
     strings: AppStrings,
     onClose: () -> Unit
 ) {
-    val colors         = LocalAppColors.current
+    val baseColors = LocalAppColors.current
+    val warm = if (bgIsDark(baseColors.background.red, baseColors.background.green, baseColors.background.blue))
+        MindfulAccentDark else MindfulAccentLight
+    val colors = remember(baseColors, warm) {
+        baseColors.copy(accent = warm, accentContainer = warm.copy(alpha = 0.16f))
+    }
     val focusManager   = LocalFocusManager.current
     val timerState            by vm.timerState.collectAsStateWithLifecycle()
     val todayGratitude        by vm.todayGratitude.collectAsStateWithLifecycle()
@@ -76,6 +98,16 @@ fun MeditationScreen(
     var showSleepLab by remember { mutableStateOf(false) }
     val sleepCaffeineVm: SleepCaffeineViewModel = viewModel()
 
+    // Registered after the one in the scaffold, so it takes the gesture first:
+    // back leaves the screen that is open, not the whole mindfulness view.
+    BackHandler(enabled = showTimer || showArchive || showSleepLab) {
+        when {
+            showSleepLab -> showSleepLab = false
+            showArchive  -> showArchive = false
+            showTimer    -> showTimer = false
+        }
+    }
+
     LaunchedEffect(timerState.isRunning, timerState.isPaused) {
         if (timerState.isRunning || timerState.isPaused) showTimer = true
     }
@@ -88,58 +120,45 @@ fun MeditationScreen(
 
     val hazeState = rememberHazeState()
 
-    val bgGradient = if (isDark) {
-        Brush.verticalGradient(listOf(Color(0xFF0C0B17), Color(0xFF0F1024), Color(0xFF0A0E1E)))
-    } else {
-        Brush.verticalGradient(listOf(Color(0xFFEAE6F5), Color(0xFFEDF1FA), Color(0xFFE5ECF6)))
-    }
-
-    val glassStyle = if (isDark) HazeStyle(
+    // The cards keep their soft look, but over the app's own background rather
+    // than a colour scheme of their own.
+    val glassStyle = HazeStyle(
         blurRadius   = 22.dp,
-        tints        = listOf(HazeTint(Color(0xFF0D0B1E).copy(alpha = 0.60f))),
-        fallbackTint = HazeTint(Color(0xFF1A1830))
-    ) else HazeStyle(
-        blurRadius   = 22.dp,
-        tints        = listOf(HazeTint(Color.White.copy(alpha = 0.50f))),
-        fallbackTint = HazeTint(Color(0xFFF2EFF8))
+        tints        = listOf(HazeTint(colors.surface.copy(alpha = 0.86f))),
+        fallbackTint = HazeTint(colors.surface)
     )
 
-    val glassBorder  = if (isDark) Color.White.copy(alpha = 0.10f) else Color.White.copy(alpha = 0.70f)
-    val headerTint   = if (isDark) Color.White.copy(alpha = 0.82f) else Color(0xFF3A2668)
-    val orbTop       = if (isDark) Color(0xFF5E35B1).copy(alpha = 0.16f) else Color(0xFF9575CD).copy(alpha = 0.20f)
-    val orbBottom    = if (isDark) Color(0xFF1A237E).copy(alpha = 0.18f) else Color(0xFF3D5AFE).copy(alpha = 0.16f)
+    val glassBorder = colors.divider.copy(alpha = if (isDark) 0.45f else 0.70f)
+    val headerTint  = colors.onSurface
 
-    val journalCount = allGratitude.size
+    // Writing in the journal should lift the whole card above the keyboard,
+    // down to the middle of the gap before the next one — then all three lines
+    // are in view, whichever one is being written.
+    val gratitudeInView = remember { BringIntoViewRequester() }
+    val scope           = rememberCoroutineScope()
+    val density         = LocalDensity.current
+    var gratitudeSize   by remember { mutableStateOf(IntSize.Zero) }
 
+    // One row per day, up to three thoughts in each.
+    val journalDays    = allGratitude.size
+    val journalEntries = allGratitude.sumOf { it.filledCount }
+
+    CompositionLocalProvider(LocalAppColors provides colors) {
     Box(Modifier.fillMaxSize()) {
 
         Box(
             Modifier
                 .fillMaxSize()
-                .background(bgGradient)
+                .background(colors.background)
                 .hazeSource(hazeState)
-        ) {
-            Box(
-                Modifier
-                    .size(300.dp)
-                    .absoluteOffset(x = 110.dp, y = (-55).dp)
-                    .clip(CircleShape)
-                    .background(orbTop)
-                    .align(Alignment.TopEnd)
-            )
-            Box(
-                Modifier
-                    .size(240.dp)
-                    .absoluteOffset(x = (-70).dp, y = 55.dp)
-                    .clip(CircleShape)
-                    .background(orbBottom)
-                    .align(Alignment.BottomStart)
-            )
-        }
+        )
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                // The journal is written into, so the page has to make room for
+                // the keyboard and keep the line being typed in view.
+                .imePadding()
                 .verticalScroll(rememberScrollState())
                 .navigationBarsPadding()
                 .pointerInput(Unit) { detectTapGestures { focusManager.clearFocus() } }
@@ -168,25 +187,16 @@ fun MeditationScreen(
                 )
             }
 
-            Spacer(Modifier.height(40.dp))
+            Spacer(Modifier.height(28.dp))
 
-            QuoteHero(quote = todayQuote, isDark = isDark)
+            MindSectionLabel(strings.meditationQuoteLabel, centered = true)
+            Spacer(Modifier.height(10.dp))
+            QuoteHero(quote = todayQuote, accent = colors.accent)
 
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(28.dp))
 
-            StatsRow(
-                meditatedMinutes = totalMeditatedMinutes,
-                journalCount     = journalCount,
-                allMoods         = allMoods,
-                strings          = strings,
-                hazeState        = hazeState,
-                glassStyle       = glassStyle,
-                glassBorder      = glassBorder,
-                isDark           = isDark
-            )
-
-            Spacer(Modifier.height(16.dp))
-
+            MindSectionLabel(strings.meditationSectionMeditation)
+            Spacer(Modifier.height(8.dp))
             MindfulnessCard(
                 hazeState   = hazeState,
                 glassStyle  = glassStyle,
@@ -231,19 +241,22 @@ fun MeditationScreen(
 
             Spacer(Modifier.height(12.dp))
 
-            GratitudeCard(
-                entry       = todayGratitude,
-                strings     = strings,
-                hazeState   = hazeState,
-                glassStyle  = glassStyle,
-                glassBorder = glassBorder,
-                isDark      = isDark,
-                onSave      = { e1, e2, e3 -> vm.saveGratitude(e1, e2, e3) },
-                onArchive   = { showArchive = true }
+            StatsRow(
+                meditatedMinutes = totalMeditatedMinutes,
+                journalEntries   = journalEntries,
+                journalDays      = journalDays,
+                allMoods         = allMoods,
+                strings          = strings,
+                hazeState        = hazeState,
+                glassStyle       = glassStyle,
+                glassBorder      = glassBorder,
+                isDark           = isDark
             )
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(24.dp))
 
+            MindSectionLabel(strings.meditationSectionMood)
+            Spacer(Modifier.height(8.dp))
             MoodCard(
                 todayMood   = todayMood,
                 recentMoods = recentMoods,
@@ -254,8 +267,45 @@ fun MeditationScreen(
                 onSelect    = { vm.saveMood(it) }
             )
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(24.dp))
 
+            MindSectionLabel(strings.meditationSectionGratitude)
+            Spacer(Modifier.height(8.dp))
+            Box(
+                Modifier
+                    .onSizeChanged { gratitudeSize = it }
+                    .bringIntoViewRequester(gratitudeInView)
+            ) {
+            GratitudeCard(
+                entry       = todayGratitude,
+                strings     = strings,
+                hazeState   = hazeState,
+                glassStyle  = glassStyle,
+                glassBorder = glassBorder,
+                isDark      = isDark,
+                onSave      = { e1, e2, e3 -> vm.saveGratitude(e1, e2, e3) },
+                onArchive   = { showArchive = true },
+                onFieldFocused = {
+                    scope.launch {
+                        // Half of the 24 dp that separates this card from the next.
+                        val below = with(density) { 12.dp.toPx() }
+                        gratitudeInView.bringIntoView(
+                            Rect(
+                                left   = 0f,
+                                top    = 0f,
+                                right  = gratitudeSize.width.toFloat(),
+                                bottom = gratitudeSize.height + below
+                            )
+                        )
+                    }
+                }
+            )
+            }
+
+            Spacer(Modifier.height(24.dp))
+
+            MindSectionLabel(strings.meditationSectionSleep)
+            Spacer(Modifier.height(8.dp))
             MindfulnessCard(
                 hazeState   = hazeState,
                 glassStyle  = glassStyle,
@@ -305,5 +355,6 @@ fun MeditationScreen(
             onDelete = { vm.deleteGratitude(it) },
             onClose  = { showArchive = false }
         )
+    }
     }
 }

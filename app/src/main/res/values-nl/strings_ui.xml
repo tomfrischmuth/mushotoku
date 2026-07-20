@@ -81,8 +81,14 @@
     <string name="icon_minimalist">Minimalistisch</string>
     <string name="icon_playful">Speels</string>
 
-    <string name="section_finance_tab">Tabblad Financiën</string>
-    <string name="show_finance_tab">Tabblad Financiën tonen</string>
+    <string name="menu_features">Functies</string>
+    <string name="menu_features_subtitle">Uitgaven &amp; aandacht</string>
+    <string name="show_mindfulness">Aandacht</string>
+    <string name="section_mindfulness">Meditatie, dankbaarheid en stemming</string>
+    <string name="section_finance_tab">Inkomsten en uitgaven</string>
+    <string name="feature_finance_description">Met ondersteuning voor meerdere valuta’s.</string>
+    <string name="feature_mindfulness_description">Opent met lang drukken op de datum van vandaag.</string>
+    <string name="show_finance_tab">Financiën</string>
     <string name="section_categories">Categorieën en vaste lasten</string>
     <string name="recurring_costs_label">Vaste lasten:</string>
     <string name="per_month">/ maand</string>
@@ -304,7 +310,13 @@
         <item>Zo</item>
     </string-array>
 
+    <string name="mindfulness_hint">Lang drukken op de datum van vandaag opent meditatie, dankbaarheid en stemming.</string>
     <string name="meditation_title">Welkom in het nu.</string>
+    <string name="meditation_quote_label">Citaat van de dag</string>
+    <string name="meditation_section_meditation">Meditatie</string>
+    <string name="meditation_section_mood">Stemming</string>
+    <string name="meditation_section_gratitude">Dankbaarheid</string>
+    <string name="meditation_section_sleep">Slaap</string>
     <string name="meditation_timer_card">Meditatietimer</string>
     <string name="meditation_gratitude_card">Dankbaarheidsdagboek</string>
     <string name="meditation_mood_card">Stemming</string>
@@ -346,6 +358,9 @@
     </plurals>
     <string name="meditation_avg_mood">Gem. stemming</string>
     <string name="meditation_minutes_label">min</string>
+    <string name="meditation_hours_label">u</string>
+    <string name="meditation_journal_day_singular">Dag</string>
+    <string name="meditation_journal_day_plural">Dagen</string>
     <string name="meditation_journal_singular">Vermelding</string>
     <string name="meditation_journal_plural">Vermeldingen</string>
     <string name="meditation_mood_all">Ø Totaal</string>

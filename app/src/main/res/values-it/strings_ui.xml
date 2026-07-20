@@ -81,8 +81,14 @@
     <string name="icon_minimalist">Minimalista</string>
     <string name="icon_playful">Giocoso</string>
 
-    <string name="section_finance_tab">Scheda Finanze</string>
-    <string name="show_finance_tab">Mostra scheda Finanze</string>
+    <string name="menu_features">Funzioni</string>
+    <string name="menu_features_subtitle">Spese &amp; consapevolezza</string>
+    <string name="show_mindfulness">Consapevolezza</string>
+    <string name="section_mindfulness">Meditazione, gratitudine e umore</string>
+    <string name="section_finance_tab">Entrate e uscite</string>
+    <string name="feature_finance_description">Con supporto per più valute.</string>
+    <string name="feature_mindfulness_description">Si apre con una pressione prolungata sulla data di oggi.</string>
+    <string name="show_finance_tab">Finanze</string>
     <string name="section_categories">Categorie e costi fissi</string>
     <string name="recurring_costs_label">Costi fissi:</string>
     <string name="per_month">/ mese</string>
@@ -304,7 +310,13 @@
         <item>Dom</item>
     </string-array>
 
+    <string name="mindfulness_hint">Una pressione prolungata sulla data di oggi apre meditazione, gratitudine e umore.</string>
     <string name="meditation_title">Benvenuto nel presente.</string>
+    <string name="meditation_quote_label">Citazione del giorno</string>
+    <string name="meditation_section_meditation">Meditazione</string>
+    <string name="meditation_section_mood">Umore</string>
+    <string name="meditation_section_gratitude">Gratitudine</string>
+    <string name="meditation_section_sleep">Sonno</string>
     <string name="meditation_timer_card">Timer di meditazione</string>
     <string name="meditation_gratitude_card">Diario della gratitudine</string>
     <string name="meditation_mood_card">Umore</string>
@@ -346,6 +358,9 @@
     </plurals>
     <string name="meditation_avg_mood">Umore medio</string>
     <string name="meditation_minutes_label">min</string>
+    <string name="meditation_hours_label">h</string>
+    <string name="meditation_journal_day_singular">Giorno</string>
+    <string name="meditation_journal_day_plural">Giorni</string>
     <string name="meditation_journal_singular">Voce</string>
     <string name="meditation_journal_plural">Voci</string>
     <string name="meditation_mood_all">Ø Totale</string>

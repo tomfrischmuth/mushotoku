@@ -147,12 +147,22 @@ internal fun NoteEditor(
     }
 
     /**
-     * Timestamps are what turns a note into a diary. Tapping stamps the time;
-     * tapping again swaps that same stamp between time and date, so the button
-     * corrects itself rather than piling stamps up.
+     * Timestamps are what turns a note into a diary. The button runs through
+     * the same three states a list marker does: time, date and time, then gone
+     * again — so a stamp written by mistake needs no deleting by hand.
      */
     fun insertTimestamp(withDate: Boolean) {
         val anchor = stampAnchor
+        // The third tap takes the stamp back out; a long press wants the date
+        // whatever came before.
+        if (!withDate && anchor != null && anchor.withDate) {
+            val cleared = removeStamp(text, anchor)
+            if (cleared != null) {
+                text = cleared
+                stampAnchor = null
+                return
+            }
+        }
         // A long press always wants the date; a tap flips to the other form.
         val nextWithDate = if (withDate) true else anchor?.let { !it.withDate } ?: false
         val rewritten = anchor?.let { toggleStamp(text, it, renderStamp(it.at, nextWithDate)) }

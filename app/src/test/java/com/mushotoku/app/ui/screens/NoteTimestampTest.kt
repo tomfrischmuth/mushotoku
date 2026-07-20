@@ -116,4 +116,28 @@ class NoteTimestampTest {
         assertEquals(0, stampLengthAt("test Jul 20, 2026 \u00b7 5:31 PM", 0))
         assertEquals("Jul 20, 2026 \u00b7 5:31 PM", stampAt("test Jul 20, 2026 \u00b7 5:31 PM", 5))
     }
+
+    // --- Der dritte Tipp nimmt den Stempel wieder heraus ---
+
+    @Test fun `der Stempel verschwindet samt Leerzeichen`() {
+        val tfv = TextFieldValue("Notiz 09:25 ", TextRange(12))
+        val out = removeStamp(tfv, anchor(6, "09:25"))
+        assertEquals("Notiz ", out?.text)
+        assertEquals(6, out?.selection?.start)
+    }
+
+    @Test fun `Text hinter dem Stempel rueckt nach`() {
+        val tfv = TextFieldValue("a 09:25 b", TextRange(7))
+        assertEquals("a b", removeStamp(tfv, anchor(2, "09:25"))?.text)
+    }
+
+    @Test fun `ein veraenderter Stempel wird nicht entfernt`() {
+        val tfv = TextFieldValue("Notiz 09:26 ", TextRange(12))
+        assertNull(removeStamp(tfv, anchor(6, "09:25")))
+    }
+
+    @Test fun `weit entfernt vom Stempel bleibt alles stehen`() {
+        val tfv = TextFieldValue("Notiz 09:25 weiter", TextRange(18))
+        assertNull(removeStamp(tfv, anchor(6, "09:25")))
+    }
 }

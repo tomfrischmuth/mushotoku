@@ -251,28 +251,6 @@ internal fun FinanzenSection(
 
         Spacer(Modifier.height(20.dp))
 
-        SectionLabel(strings.sectionFinanceTab)
-        Card(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = colors.surface),
-            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(strings.showFinanceTab, fontSize = 15.sp, color = colors.onSurface, modifier = Modifier.weight(1f))
-                Switch(
-                    checked = settings.financeTabEnabled,
-                    onCheckedChange = soundCheck(onSetFinanceEnabled),
-                    colors = SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = colors.accent)
-                )
-            }
-        }
-
-        Spacer(Modifier.height(20.dp))
-
         SectionLabel(strings.sectionCategories)
         grouped.forEach { (group, cats) ->
             val expanded = expandedGroups[group] == true

@@ -30,7 +30,7 @@ import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
 
 @Database(
     entities = [Task::class, Note::class, Expense::class, Category::class, AppSettings::class, Habit::class, HabitLog::class, GratitudeEntry::class, MoodEntry::class, CaffeineDose::class, RecurringCostHistory::class, AdditionalIncome::class],
-    version = 3,
+    version = 5,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -58,7 +58,7 @@ abstract class AppDatabase : RoomDatabase() {
             override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL("ALTER TABLE notes ADD COLUMN color INTEGER NOT NULL DEFAULT 0")
                 connection.execSQL(
-                    "ALTER TABLE app_settings ADD COLUMN newNoteStartsWithTitle INTEGER NOT NULL DEFAULT 1"
+                    "ALTER TABLE app_settings ADD COLUMN newNoteStartsWithTitle INTEGER NOT NULL DEFAULT 0"
                 )
             }
         }
@@ -79,11 +79,33 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        /**
+         * The pointer to the mindfulness view is meant for someone opening the
+         * app for the first time, so everyone already here counts as having
+         * seen it.
+         */
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(connection: SQLiteConnection) {
+                connection.execSQL(
+                    "ALTER TABLE app_settings ADD COLUMN mindfulnessHintSeen INTEGER NOT NULL DEFAULT 1"
+                )
+            }
+        }
+
+        /** Mindfulness can now be switched off, the way finance already could. */
+        private val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(connection: SQLiteConnection) {
+                connection.execSQL(
+                    "ALTER TABLE app_settings ADD COLUMN mindfulnessEnabled INTEGER NOT NULL DEFAULT 1"
+                )
+            }
+        }
+
         fun build(context: Context, dek: ByteArray): AppDatabase {
             val factory = SupportOpenHelperFactory(SqlCipherKey.rawKeyBytes(dek))
             return Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "mushotoku.db")
                 .openHelperFactory(factory)
-                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                 .fallbackToDestructiveMigration(dropAllTables = true)
                 .fallbackToDestructiveMigrationOnDowngrade(dropAllTables = true)
                 .build()

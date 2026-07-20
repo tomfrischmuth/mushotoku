@@ -81,8 +81,14 @@
     <string name="icon_minimalist">Minimalista</string>
     <string name="icon_playful">Divertido</string>
 
-    <string name="section_finance_tab">Separador Finanças</string>
-    <string name="show_finance_tab">Mostrar separador Finanças</string>
+    <string name="menu_features">Funcionalidades</string>
+    <string name="menu_features_subtitle">Despesas &amp; atenção plena</string>
+    <string name="show_mindfulness">Atenção plena</string>
+    <string name="section_mindfulness">Meditação, gratidão e humor</string>
+    <string name="section_finance_tab">Receitas e despesas</string>
+    <string name="feature_finance_description">Com suporte para várias moedas.</string>
+    <string name="feature_mindfulness_description">Abre com uma pressão longa na data de hoje.</string>
+    <string name="show_finance_tab">Finanças</string>
     <string name="section_categories">Categorias e custos fixos</string>
     <string name="recurring_costs_label">Custos fixos:</string>
     <string name="per_month">/ mês</string>
@@ -304,7 +310,13 @@
         <item>Dom</item>
     </string-array>
 
+    <string name="mindfulness_hint">Uma pressão longa na data de hoje abre meditação, gratidão e humor.</string>
     <string name="meditation_title">Bem-vindo ao presente.</string>
+    <string name="meditation_quote_label">Citação do dia</string>
+    <string name="meditation_section_meditation">Meditação</string>
+    <string name="meditation_section_mood">Humor</string>
+    <string name="meditation_section_gratitude">Gratidão</string>
+    <string name="meditation_section_sleep">Sono</string>
     <string name="meditation_timer_card">Temporizador de meditação</string>
     <string name="meditation_gratitude_card">Diário de gratidão</string>
     <string name="meditation_mood_card">Humor</string>
@@ -346,6 +358,9 @@
     </plurals>
     <string name="meditation_avg_mood">Humor médio</string>
     <string name="meditation_minutes_label">min</string>
+    <string name="meditation_hours_label">h</string>
+    <string name="meditation_journal_day_singular">Dia</string>
+    <string name="meditation_journal_day_plural">Dias</string>
     <string name="meditation_journal_singular">Registo</string>
     <string name="meditation_journal_plural">Registos</string>
     <string name="meditation_mood_all">Ø Total</string>

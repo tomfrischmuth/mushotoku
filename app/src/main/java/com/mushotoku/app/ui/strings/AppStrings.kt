@@ -94,6 +94,12 @@ class AppStrings(private val ctx: Context) {
     val iconPlayful get() = s(R.string.icon_playful)
     val sectionFinanceTab get() = s(R.string.section_finance_tab)
     val showFinanceTab get() = s(R.string.show_finance_tab)
+    val featureFinanceDescription get() = s(R.string.feature_finance_description)
+    val featureMindfulnessDescription get() = s(R.string.feature_mindfulness_description)
+    val menuFeatures get() = s(R.string.menu_features)
+    val menuFeaturesSubtitle get() = s(R.string.menu_features_subtitle)
+    val showMindfulness get() = s(R.string.show_mindfulness)
+    val sectionMindfulness get() = s(R.string.section_mindfulness)
     val sectionCategories get() = s(R.string.section_categories)
     val recurringCostsLabel get() = s(R.string.recurring_costs_label)
     val perMonth get() = s(R.string.per_month)
@@ -294,7 +300,13 @@ class AppStrings(private val ctx: Context) {
     val categoryName: (String, String) -> String = { id, fallback ->
         categoryResId(id)?.let { s(it) } ?: fallback
     }
+    val mindfulnessHint get() = s(R.string.mindfulness_hint)
     val meditationTitle get() = s(R.string.meditation_title)
+    val meditationQuoteLabel get() = s(R.string.meditation_quote_label)
+    val meditationSectionMeditation get() = s(R.string.meditation_section_meditation)
+    val meditationSectionMood get() = s(R.string.meditation_section_mood)
+    val meditationSectionGratitude get() = s(R.string.meditation_section_gratitude)
+    val meditationSectionSleep get() = s(R.string.meditation_section_sleep)
     val meditationTimerCard get() = s(R.string.meditation_timer_card)
     val meditationGratitudeCard get() = s(R.string.meditation_gratitude_card)
     val meditationMoodCard get() = s(R.string.meditation_mood_card)
@@ -325,6 +337,9 @@ class AppStrings(private val ctx: Context) {
     val meditationStreak: (Int) -> String = { n -> q(R.plurals.meditation_streak, n) }
     val meditationBestStreak: (Int) -> String = { n -> q(R.plurals.meditation_best_streak, n) }
     val meditationMinutesLabel get() = s(R.string.meditation_minutes_label)
+    val meditationHoursLabel get() = s(R.string.meditation_hours_label)
+    val meditationJournalDaySingular get() = s(R.string.meditation_journal_day_singular)
+    val meditationJournalDayPlural get() = s(R.string.meditation_journal_day_plural)
     val meditationJournalSingular get() = s(R.string.meditation_journal_singular)
     val meditationJournalPlural get() = s(R.string.meditation_journal_plural)
     val meditationMoodAll get() = s(R.string.meditation_mood_all)

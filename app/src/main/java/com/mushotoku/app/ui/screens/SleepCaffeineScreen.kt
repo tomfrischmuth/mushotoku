@@ -191,6 +191,40 @@ fun SleepCaffeineScreen(
 
             GlassCard(hazeState, glassStyle, glassBorder) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("🎨", fontSize = 18.sp)
+                    Spacer(Modifier.width(10.dp))
+                    Text(strings.sleepLabPersonalization, color = colors.onSurface, fontSize = 16.sp, fontWeight = FontWeight.Medium)
+                }
+                Spacer(Modifier.height(14.dp))
+
+                Text(strings.sleepLabBedtimeLabel, color = colors.onSurfaceSecondary, fontSize = 13.sp)
+                Spacer(Modifier.height(8.dp))
+                TimeChip(
+                    text = bedtime.format(HM),
+                    accent = colors.accent,
+                    onClick = { showTimePicker(context, bedtime) { vm.setDesiredBedtime(it) } },
+                )
+
+                Spacer(Modifier.height(16.dp))
+                Text(strings.sleepLabMetabolism, color = colors.onSurfaceSecondary, fontSize = 13.sp)
+                Spacer(Modifier.height(8.dp))
+                FlowRowPresets {
+                    METABOLISM_OPTIONS.forEach { (option, labelOf) ->
+                        SelectableChip(
+                            text = labelOf(strings),
+                            selected = option == metabolism,
+                            accent = colors.accent,
+                            isDark = isDark,
+                            onClick = { vm.setMetabolism(option) },
+                        )
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(12.dp))
+
+            GlassCard(hazeState, glassStyle, glassBorder) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text("☕", fontSize = 18.sp)
                     Spacer(Modifier.width(10.dp))
                     Text(strings.sleepLabCaffeineTitle, color = colors.onSurface, fontSize = 16.sp, fontWeight = FontWeight.Medium)
@@ -243,40 +277,6 @@ fun SleepCaffeineScreen(
                             isDark = isDark,
                             drinkable = preset.mg <= hint.budgetNowMg,
                             onClick = { vm.addDose(preset.mg, label) },
-                        )
-                    }
-                }
-            }
-
-            Spacer(Modifier.height(12.dp))
-
-            GlassCard(hazeState, glassStyle, glassBorder) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("🎨", fontSize = 18.sp)
-                    Spacer(Modifier.width(10.dp))
-                    Text(strings.sleepLabPersonalization, color = colors.onSurface, fontSize = 16.sp, fontWeight = FontWeight.Medium)
-                }
-                Spacer(Modifier.height(14.dp))
-
-                Text(strings.sleepLabBedtimeLabel, color = colors.onSurfaceSecondary, fontSize = 13.sp)
-                Spacer(Modifier.height(8.dp))
-                TimeChip(
-                    text = bedtime.format(HM),
-                    accent = colors.accent,
-                    onClick = { showTimePicker(context, bedtime) { vm.setDesiredBedtime(it) } },
-                )
-
-                Spacer(Modifier.height(16.dp))
-                Text(strings.sleepLabMetabolism, color = colors.onSurfaceSecondary, fontSize = 13.sp)
-                Spacer(Modifier.height(8.dp))
-                FlowRowPresets {
-                    METABOLISM_OPTIONS.forEach { (option, labelOf) ->
-                        SelectableChip(
-                            text = labelOf(strings),
-                            selected = option == metabolism,
-                            accent = colors.accent,
-                            isDark = isDark,
-                            onClick = { vm.setMetabolism(option) },
                         )
                     }
                 }
