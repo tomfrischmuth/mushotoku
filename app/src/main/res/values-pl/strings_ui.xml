@@ -232,6 +232,10 @@
     <string name="notes_unpin_action">Odepnij</string>
     <string name="notes_checklist_hint">Dodaj pozycję</string>
     <string name="notes_insert_timestamp">Wstaw godzinę (przytrzymaj, aby wstawić datę)</string>
+    <string name="notes_list_dash">Lista z myślnikami</string>
+    <string name="notes_list_bullet">Lista punktowana</string>
+    <string name="notes_list_numbered">Lista numerowana</string>
+    <string name="notes_list_checkbox">Lista kontrolna</string>
 
     <string name="dialog_new_appointment">Nowy termin</string>
     <string name="dialog_new_task">Nowe zadanie</string>

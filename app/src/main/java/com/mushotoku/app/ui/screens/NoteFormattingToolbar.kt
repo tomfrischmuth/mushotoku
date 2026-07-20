@@ -53,6 +53,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -79,17 +81,13 @@ internal fun FormattingToolbar(
     canUndo: Boolean,
     onApplyPrefix: (String) -> Unit,
     onApplyInline: (String) -> Unit,
+    onApplyNumbered: () -> Unit,
     onInsertTimestamp: (withDate: Boolean) -> Unit,
     onUndo: () -> Unit
 ) {
     val colors  = LocalAppColors.current
     val strings = LocalAppStrings.current
-    val activeFormat = when {
-        currentLine.startsWith("### ") -> "h3"
-        currentLine.startsWith("## ")  -> "h2"
-        currentLine.startsWith("# ")   -> "h1"
-        else                           -> "text"
-    }
+    val activeFormat = activeToolbarFormat(currentLine)
 
     Surface(
         color           = colors.surface,
@@ -117,6 +115,34 @@ internal fun FormattingToolbar(
 
                 FormatChip("B", fontWeight = FontWeight.Bold)                { onApplyInline("**") }
                 FormatChip("I", fontStyle  = FontStyle.Italic)               { onApplyInline("*") }
+
+                ToolbarDivider(colors.divider)
+
+                // One chip per list kind, each labelled with the marker it produces.
+                FormatChip(
+                    "-",
+                    selected    = activeFormat == "dash",
+                    fontWeight  = FontWeight.Bold,
+                    description = strings.notesListDash
+                ) { onApplyPrefix("- ") }
+                FormatChip(
+                    Bullet.toString(),
+                    selected    = activeFormat == "bullet",
+                    fontWeight  = FontWeight.Bold,
+                    description = strings.notesListBullet
+                ) { onApplyPrefix("* ") }
+                FormatChip(
+                    "1.",
+                    selected    = activeFormat == "number",
+                    fontWeight  = FontWeight.Bold,
+                    description = strings.notesListNumbered,
+                    onClick     = onApplyNumbered
+                )
+                FormatChip(
+                    EmptyBox.toString(),
+                    selected    = activeFormat == "check",
+                    description = strings.notesListCheckbox
+                ) { onApplyPrefix("- [ ] ") }
 
                 ToolbarDivider(colors.divider)
 
@@ -198,11 +224,15 @@ private fun FormatChip(
     fontStyle: FontStyle = FontStyle.Normal,
     textDecoration: TextDecoration? = null,
     fontFamily: FontFamily? = null,
+    description: String? = null,
     onClick: () -> Unit
 ) {
     FilterChip(
         selected = selected,
         onClick  = soundClick(onClick),
+        // Glyph labels like "•" or "☐" say nothing out loud, so name them.
+        modifier = if (description == null) Modifier
+                   else Modifier.semantics { contentDescription = description },
         label    = {
             // A single-letter chip would stay narrower than the 48dp minimum
             // touch target and get padded with invisible space, widening the

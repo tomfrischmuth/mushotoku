@@ -30,6 +30,19 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 import com.mushotoku.app.ui.theme.AppColors
 
+/** Body text metrics, shared by the editor and the read view so both stay in step. */
+internal val NoteBodySize       = 17.sp
+internal val NoteBodyLineHeight = 30.sp
+
+internal const val Bullet     = '•'  // •
+internal const val EmptyBox   = '☐'  // ☐
+internal const val CheckedBox = '☑'  // ☑
+
+/** Bullets and boxes are drawn larger than the body text so they read as symbols, not letters. */
+internal val BulletStyle   = SpanStyle(color = NoteAccent, fontWeight = FontWeight.Bold, fontSize = 19.sp)
+internal val CheckboxStyle = SpanStyle(color = NoteAccent, fontSize = 21.sp)
+internal val DashStyle     = SpanStyle(color = NoteAccent, fontWeight = FontWeight.Bold)
+
 internal class MarkdownVisualTransformation(
     private val colors: AppColors,
     private val cursorLine: Int
@@ -55,6 +68,12 @@ private class MarkdownBuilder(sourceLen: Int) {
     fun hide() { srcToVis[srcIdx] = visIdx; srcIdx++ }
     fun show(s: String) = s.forEach { show(it) }
     fun hide(n: Int) = repeat(n) { hide() }
+
+    /** Draws [visible] in place of the next source character, one for one. */
+    fun substitute(visible: Char) {
+        srcToVis[srcIdx] = visIdx; visToSrc.add(srcIdx)
+        sb.append(visible); srcIdx++; visIdx++
+    }
 
     fun <R> styled(style: SpanStyle, block: () -> R): R {
         sb.pushStyle(style); val r = block(); sb.pop(); return r
@@ -107,20 +126,34 @@ private fun renderMarkdown(raw: String, colors: AppColors, activeLineIdx: Int, m
                     appendInline(line.substring(2), mb, show, colors)
                 }
             }
+            // List markers stay visible on every line: hiding them once the
+            // cursor moves away would make the list itself disappear. They are
+            // drawn as real bullets and boxes rather than their raw syntax.
             line.startsWith("- [x] ") || line.startsWith("- [X] ") -> {
-                if (show) mb.styled(SpanStyle(color = accent)) { mb.show(line.substring(0, 6)) } else mb.hide(6)
+                mb.styled(CheckboxStyle) { mb.substitute(CheckedBox); mb.hide(4); mb.show(' ') }
                 mb.styled(SpanStyle(color = muted, textDecoration = TextDecoration.LineThrough)) {
                     appendInline(line.substring(6), mb, show, colors)
                 }
             }
             line.startsWith("- [ ] ") -> {
-                if (show) mb.styled(SpanStyle(color = accent)) { mb.show(line.substring(0, 6)) } else mb.hide(6)
+                mb.styled(CheckboxStyle) { mb.substitute(EmptyBox); mb.hide(4); mb.show(' ') }
                 appendInline(line.substring(6), mb, show, colors)
             }
-            line.startsWith("- ") || line.startsWith("* ") -> {
-                if (show) mb.styled(SpanStyle(color = accent)) { mb.show(line[0]); mb.show(' ') }
-                else mb.hide(2)
+            // A dash stays a dash: it is its own kind of list, not a bullet.
+            line.startsWith("- ") -> {
+                mb.styled(DashStyle) { mb.show('-'); mb.show(' ') }
                 appendInline(line.substring(2), mb, show, colors)
+            }
+            line.startsWith("* ") -> {
+                mb.styled(BulletStyle) { mb.substitute(Bullet); mb.show(' ') }
+                appendInline(line.substring(2), mb, show, colors)
+            }
+            numberedPrefixLength(line) > 0 -> {
+                val n = numberedPrefixLength(line)
+                mb.styled(SpanStyle(color = accent, fontWeight = FontWeight.Bold)) {
+                    mb.show(line.substring(0, n))
+                }
+                appendInline(line.substring(n), mb, show, colors)
             }
             line == "---" || line == "***" || line == "___" -> {
                 if (show) mb.styled(SpanStyle(color = muted)) { mb.show(line) } else mb.hide(line.length)

@@ -21,6 +21,46 @@ package com.mushotoku.app.ui.screens
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 
+private val NumberedPrefix = Regex("""^(\d{1,9})\. """)
+
+/** Length of a leading "12. " marker, or 0 when the line does not start one. */
+internal fun numberedPrefixLength(line: String): Int =
+    NumberedPrefix.find(line)?.value?.length ?: 0
+
+/** The number a "12. " marker carries, or null when there is none. */
+internal fun numberedPrefixValue(line: String): Int? =
+    NumberedPrefix.find(line)?.groupValues?.get(1)?.toIntOrNull()
+
+/** The toolbar format the given line currently carries. */
+internal fun activeToolbarFormat(line: String): String = when {
+    line.startsWith("### ")     -> "h3"
+    line.startsWith("## ")      -> "h2"
+    line.startsWith("# ")       -> "h1"
+    line.startsWith("- [ ] ") ||
+        line.startsWith("- [x] ") ||
+        line.startsWith("- [X] ")   -> "check"
+    line.startsWith("- ")       -> "dash"
+    line.startsWith("* ")       -> "bullet"
+    numberedPrefixLength(line) > 0 -> "number"
+    else                        -> "text"
+}
+
+/**
+ * Numbers the current line, continuing from the line above instead of always
+ * restarting at one.
+ */
+internal fun applyNumberedPrefix(tfv: TextFieldValue): TextFieldValue {
+    val text      = tfv.text
+    val cursor    = tfv.selection.start.coerceIn(0, text.length)
+    val lineStart = text.lastIndexOf('\n', cursor - 1) + 1
+    val prevEnd   = lineStart - 1
+    val next = if (prevEnd <= 0) 1 else {
+        val prevStart = text.lastIndexOf('\n', prevEnd - 1) + 1
+        (numberedPrefixValue(text.substring(prevStart, prevEnd))?.plus(1)) ?: 1
+    }
+    return applyLinePrefix(tfv, "$next. ")
+}
+
 internal fun applyLinePrefix(tfv: TextFieldValue, prefix: String): TextFieldValue {
     val text = tfv.text
     val cursor = tfv.selection.start.coerceIn(0, text.length)
@@ -36,6 +76,7 @@ internal fun applyLinePrefix(tfv: TextFieldValue, prefix: String): TextFieldValu
         lineContent.startsWith("- [ ] ") -> lineContent.substring(6)
         lineContent.startsWith("- ")   -> lineContent.substring(2)
         lineContent.startsWith("* ")   -> lineContent.substring(2)
+        numberedPrefixLength(lineContent) > 0 -> lineContent.substring(numberedPrefixLength(lineContent))
         else                           -> lineContent
     }
     val newLine = if (prefix.isEmpty()) stripped else "$prefix$stripped"
@@ -167,9 +208,18 @@ internal fun autoContinueList(old: TextFieldValue, new: TextFieldValue): TextFie
             "- [ ] " to prevLine.substring(6)
         prevLine.startsWith("- ") -> "- " to prevLine.substring(2)
         prevLine.startsWith("* ") -> "* " to prevLine.substring(2)
+        numberedPrefixLength(prevLine) > 0 -> {
+            val n = numberedPrefixValue(prevLine)!!
+            "${n + 1}. " to prevLine.substring(numberedPrefixLength(prevLine))
+        }
         else -> return new
     }
-    if (content.isBlank()) return new
+    // Enter on an item that was never filled in ends the list: the marker the
+    // previous Enter added disappears again and no new line is opened.
+    if (content.isBlank()) {
+        val cleared = old.text.removeRange(lineStart, old.selection.start)
+        return TextFieldValue(cleared, TextRange(lineStart))
+    }
     val before = new.text.substring(0, insertPos + 1)
     val after  = new.text.substring(insertPos + 1)
     val result = before + prefix + after

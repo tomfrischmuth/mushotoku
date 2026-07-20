@@ -222,6 +222,10 @@
     <string name="notes_unpin_action">Loslösen</string>
     <string name="notes_checklist_hint">Punkt hinzufügen</string>
     <string name="notes_insert_timestamp">Uhrzeit einfügen (lang drücken für Datum)</string>
+    <string name="notes_list_dash">Spiegelstrich-Liste</string>
+    <string name="notes_list_bullet">Punkt-Liste</string>
+    <string name="notes_list_numbered">Nummerierte Liste</string>
+    <string name="notes_list_checkbox">Checkliste</string>
 
     <string name="dialog_new_appointment">Neuer Termin</string>
     <string name="dialog_new_task">Neue Aufgabe</string>

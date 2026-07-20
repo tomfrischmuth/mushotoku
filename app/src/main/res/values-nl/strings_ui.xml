@@ -222,6 +222,10 @@
     <string name="notes_unpin_action">Losmaken</string>
     <string name="notes_checklist_hint">Item toevoegen</string>
     <string name="notes_insert_timestamp">Tijd invoegen (lang indrukken voor datum)</string>
+    <string name="notes_list_dash">Lijst met streepjes</string>
+    <string name="notes_list_bullet">Lijst met opsommingstekens</string>
+    <string name="notes_list_numbered">Genummerde lijst</string>
+    <string name="notes_list_checkbox">Checklist</string>
 
     <string name="dialog_new_appointment">Nieuwe afspraak</string>
     <string name="dialog_new_task">Nieuwe taak</string>

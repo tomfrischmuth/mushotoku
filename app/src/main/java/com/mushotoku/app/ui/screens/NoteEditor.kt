@@ -250,6 +250,7 @@ internal fun NoteEditor(
                 canUndo       = canUndo,
                 onApplyPrefix = { prefix -> text = applyLinePrefix(text, prefix) },
                 onApplyInline = { marker -> text = applyInlineFormat(text, marker) },
+                onApplyNumbered = { text = applyNumberedPrefix(text) },
                 onInsertTimestamp = ::insertTimestamp,
                 onUndo        = ::undo
             )
@@ -273,7 +274,14 @@ internal fun NoteEditor(
             NoteReadView(
                 rawText          = text.text,
                 modifier         = Modifier.weight(1f),
-                onToggleCheckbox = ::toggleCheckbox
+                onToggleCheckbox = ::toggleCheckbox,
+                // Tapping the note opens the editor right where the finger landed.
+                onTapText        = { rawOffset ->
+                    text = text.copy(
+                        selection = TextRange(rawOffset.coerceIn(0, text.text.length))
+                    )
+                    isEditing = true
+                }
             )
         }
 
@@ -303,9 +311,9 @@ private fun NoteMarkdownEditField(
             .padding(top = 16.dp, bottom = 8.dp)
             .focusRequester(focusRequester),
         textStyle = TextStyle(
-            fontSize   = 16.sp,
+            fontSize   = NoteBodySize,
             color      = colors.onSurface,
-            lineHeight = 28.sp
+            lineHeight = NoteBodyLineHeight
         ),
         cursorBrush          = SolidColor(NoteAccent),
         visualTransformation = MarkdownVisualTransformation(colors, cursorLine),
@@ -313,7 +321,7 @@ private fun NoteMarkdownEditField(
             if (value.text.isEmpty()) {
                 Text(
                     text  = strings.notesContentHint,
-                    style = TextStyle(fontSize = 16.sp, color = colors.onSurfaceTertiary, lineHeight = 28.sp)
+                    style = TextStyle(fontSize = NoteBodySize, color = colors.onSurfaceTertiary, lineHeight = NoteBodyLineHeight)
                 )
             }
             inner()

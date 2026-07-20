@@ -222,6 +222,10 @@
     <string name="notes_unpin_action">Détacher</string>
     <string name="notes_checklist_hint">Ajouter un élément</string>
     <string name="notes_insert_timestamp">Insérer l\'heure (appui long pour la date)</string>
+    <string name="notes_list_dash">Liste à tirets</string>
+    <string name="notes_list_bullet">Liste à puces</string>
+    <string name="notes_list_numbered">Liste numérotée</string>
+    <string name="notes_list_checkbox">Liste de cases à cocher</string>
 
     <string name="dialog_new_appointment">Nouveau rendez-vous</string>
     <string name="dialog_new_task">Nouvelle tâche</string>

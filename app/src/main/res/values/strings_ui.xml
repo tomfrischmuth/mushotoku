@@ -222,6 +222,10 @@
     <string name="notes_unpin_action">Unpin</string>
     <string name="notes_checklist_hint">Add item</string>
     <string name="notes_insert_timestamp">Insert time (long-press for date)</string>
+    <string name="notes_list_dash">Dash list</string>
+    <string name="notes_list_bullet">Bulleted list</string>
+    <string name="notes_list_numbered">Numbered list</string>
+    <string name="notes_list_checkbox">Checklist</string>
 
     <string name="dialog_new_appointment">New Appointment</string>
     <string name="dialog_new_task">New Task</string>
