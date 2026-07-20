@@ -31,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.AnnotatedString
@@ -62,6 +63,9 @@ private class ReadViewBuilder {
         text.forEachIndexed { i, c -> sb.append(c); visToRaw.add(rawStart + i) }
     }
 
+    /** Adds a character with no counterpart in the source, mapped to [rawAt]. */
+    fun insert(c: Char, rawAt: Int) { sb.append(c); visToRaw.add(rawAt) }
+
     /** Appends decoration that has no counterpart in the source, all of it pointing at [rawAt]. */
     fun substitute(text: String, rawAt: Int) {
         text.forEach { sb.append(it); visToRaw.add(rawAt) }
@@ -79,10 +83,10 @@ private fun appendInlineReadMode(
     text: String,
     rawStart: Int,
     b: ReadViewBuilder,
-    muted: Color,
-    subtle: Color,
-    codeBackground: Color
+    colors: AppColors
 ) {
+    val subtle         = colors.onSurfaceSecondary
+    val codeBackground = colors.surfaceVariant
     var i = 0
     while (i < text.length) {
         when {
@@ -122,6 +126,19 @@ private fun appendInlineReadMode(
                     i = close + 1
                 } else { b.append(text[i].toString(), rawStart + i); i++ }
             }
+            text.startsWith("$TagEscape#", i) -> {
+                b.append("#", rawStart + i + 1)
+                i += 2
+            }
+            tagLengthAt(text, i) > 0 -> {
+                val len = tagLengthAt(text, i)
+                b.styled(TagSpacerStyle) { b.insert(TagSpacer, rawStart + i) }
+                val from = b.length
+                b.styled(tagStyle(colors)) { b.append(text.substring(i, i + len), rawStart + i) }
+                b.sb.addStringAnnotation(TagPillAnnotation, "", from, b.length)
+                b.styled(TagSpacerStyle) { b.insert(TagSpacer, rawStart + i + len) }
+                i += len
+            }
             else -> { b.append(text[i].toString(), rawStart + i); i++ }
         }
     }
@@ -143,27 +160,24 @@ internal fun buildReadView(rawText: String, colors: AppColors): ReadView {
         if (idx > 0) b.append("\n", lineStart - 1)
         val body = { prefix: Int, style: SpanStyle? ->
             val render = {
-                appendInlineReadMode(
-                    line.substring(prefix), lineStart + prefix, b, muted, subtle, colors.surfaceVariant
-                )
+                appendInlineReadMode(line.substring(prefix), lineStart + prefix, b, colors)
             }
             if (style == null) render() else b.styled(style) { render() }
         }
         when {
-            line.startsWith("# ")   -> body(2, SpanStyle(fontSize = 26.sp, fontWeight = FontWeight.Bold))
-            line.startsWith("## ")  -> body(3, SpanStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold))
-            line.startsWith("### ") -> body(4, SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold))
+            line.startsWith("# ")   -> body(2, Heading1Style)
+            line.startsWith("## ")  -> body(3, Heading2Style)
+            line.startsWith("### ") -> body(4, Heading3Style)
             line.startsWith("> ")   -> body(2, SpanStyle(color = subtle, fontStyle = FontStyle.Italic))
-            line.startsWith("- [x] ") || line.startsWith("- [X] ") -> {
+            checkStateOf(line) != null -> {
                 val from = b.length
-                b.styled(CheckboxStyle) { b.substitute("$CheckedBox ", lineStart) }
-                body(6, SpanStyle(color = muted, textDecoration = TextDecoration.LineThrough))
-                b.sb.addStringAnnotation("checkbox", idx.toString(), from, b.length)
-            }
-            line.startsWith("- [ ] ") -> {
-                val from = b.length
-                b.styled(CheckboxStyle) { b.substitute("$EmptyBox ", lineStart) }
-                body(6, null)
+                b.styled(checkPlaceholderStyle(NoteBodySize)) {
+                    b.substitute("$CheckPlaceholder ", lineStart)
+                }
+                if (checkStateOf(line) == CheckState.DONE)
+                    body(ChecklistPrefixLength, SpanStyle(color = muted, textDecoration = TextDecoration.LineThrough))
+                else
+                    body(ChecklistPrefixLength, null)
                 b.sb.addStringAnnotation("checkbox", idx.toString(), from, b.length)
             }
             line.startsWith("- ") -> {
@@ -209,13 +223,22 @@ internal fun NoteReadView(
             modifier = modifier
                 .fillMaxWidth()
                 .verticalScroll(scrollState)
-                .padding(horizontal = 24.dp)
-                .padding(top = 20.dp, bottom = 16.dp)
+                .padding(horizontal = NoteBodyPaddingH)
+                .padding(top = NoteBodyPaddingTop, bottom = NoteBodyPaddingBottom)
+                .drawBehind {
+                    val result = layoutResult ?: return@drawBehind
+                    drawTagPills(result, colors.surfaceVariant, NoteBodySize)
+                    drawCheckBoxes(result, checkStatesIn(rawText), NoteBodySize.toPx())
+                }
                 .pointerInput(annotated) {
                     detectTapGestures { tapOffset ->
                         layoutResult?.let { layout ->
                             val offset = layout.getOffsetForPosition(tapOffset)
-                            val checkbox = annotated
+                            // A tap below the text still resolves to the last
+                            // character, which would let the empty space beneath
+                            // the note toggle its final check item.
+                            val onText = tapOffset.y <= layout.getLineBottom(layout.lineCount - 1)
+                            val checkbox = if (!onText) null else annotated
                                 .getStringAnnotations("checkbox", offset, offset).firstOrNull()
                             when {
                                 // Ticking off an item wins over opening the editor.
@@ -236,8 +259,8 @@ internal fun NoteReadView(
                 modifier = modifier
                     .fillMaxWidth()
                     .verticalScroll(scrollState)
-                    .padding(horizontal = 24.dp)
-                    .padding(top = 20.dp, bottom = 16.dp),
+                    .padding(horizontal = NoteBodyPaddingH)
+                    .padding(top = NoteBodyPaddingTop, bottom = NoteBodyPaddingBottom),
                 style = TextStyle(fontSize = NoteBodySize, color = colors.onSurface, lineHeight = NoteBodyLineHeight)
             )
         }

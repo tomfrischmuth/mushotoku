@@ -226,6 +226,10 @@
     <string name="notes_list_bullet">Bulleted list</string>
     <string name="notes_list_numbered">Numbered list</string>
     <string name="notes_list_checkbox">Checklist</string>
+    <string name="notes_tag_remove">Not a tag</string>
+    <string name="notes_no_title">No title yet</string>
+    <string name="task_moved_tomorrow">Moved to tomorrow</string>
+    <string name="undo">Undo</string>
 
     <string name="dialog_new_appointment">New Appointment</string>
     <string name="dialog_new_task">New Task</string>

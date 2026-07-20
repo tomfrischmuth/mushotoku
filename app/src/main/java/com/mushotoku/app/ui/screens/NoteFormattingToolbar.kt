@@ -88,6 +88,10 @@ internal fun FormattingToolbar(
     val colors  = LocalAppColors.current
     val strings = LocalAppStrings.current
     val activeFormat = activeToolbarFormat(currentLine)
+    // Pressing the button of the format a line already has takes it off again.
+    val toggle: (String, String) -> Unit = { key, prefix ->
+        onApplyPrefix(if (activeFormat == key) "" else prefix)
+    }
 
     Surface(
         color           = colors.surface,
@@ -124,25 +128,25 @@ internal fun FormattingToolbar(
                     selected    = activeFormat == "dash",
                     fontWeight  = FontWeight.Bold,
                     description = strings.notesListDash
-                ) { onApplyPrefix("- ") }
+                ) { toggle("dash", "- ") }
                 FormatChip(
                     Bullet.toString(),
                     selected    = activeFormat == "bullet",
                     fontWeight  = FontWeight.Bold,
                     description = strings.notesListBullet
-                ) { onApplyPrefix("* ") }
+                ) { toggle("bullet", "* ") }
                 FormatChip(
                     "1.",
                     selected    = activeFormat == "number",
                     fontWeight  = FontWeight.Bold,
                     description = strings.notesListNumbered,
-                    onClick     = onApplyNumbered
+                    onClick     = { if (activeFormat == "number") onApplyPrefix("") else onApplyNumbered() }
                 )
                 FormatChip(
                     EmptyBox.toString(),
                     selected    = activeFormat == "check",
                     description = strings.notesListCheckbox
-                ) { onApplyPrefix("- [ ] ") }
+                ) { toggle("check", "- [ ] ") }
 
                 ToolbarDivider(colors.divider)
 

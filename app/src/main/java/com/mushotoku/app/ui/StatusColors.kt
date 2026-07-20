@@ -16,25 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mushotoku.app.data
+package com.mushotoku.app.ui
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import kotlinx.serialization.Serializable
+import androidx.compose.ui.graphics.Color
 
-@Serializable enum class NoteType { NOTE, LIST, ROUTINE }
-
-@Serializable
-@Entity(tableName = "notes")
-data class Note(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val title: String,
-    val content: String = "",
-    val type: NoteType = NoteType.NOTE,
-    val createdAt: Long = 0L,
-    val updatedAt: Long = 0L,
-    val isPinned: Boolean = false,
-    /** Index into the note colour palette; 0 means no colour. */
-    val color: Int = 0,
-    val isDeleted: Boolean = false
-)
+/**
+ * The three states of the task light, shared so notes and tasks cannot drift
+ * apart. Red means untouched, yellow started, green done.
+ */
+val StatusRed    = Color(0xFFE53935)
+val StatusYellow = Color(0xFFFFB300)
+val StatusGreen  = Color(0xFF43A047)

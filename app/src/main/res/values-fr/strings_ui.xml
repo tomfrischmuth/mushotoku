@@ -226,6 +226,10 @@
     <string name="notes_list_bullet">Liste à puces</string>
     <string name="notes_list_numbered">Liste numérotée</string>
     <string name="notes_list_checkbox">Liste de cases à cocher</string>
+    <string name="notes_tag_remove">Pas une étiquette</string>
+    <string name="notes_no_title">Pas encore de titre</string>
+    <string name="task_moved_tomorrow">Déplacé à demain</string>
+    <string name="undo">Annuler</string>
 
     <string name="dialog_new_appointment">Nouveau rendez-vous</string>
     <string name="dialog_new_task">Nouvelle tâche</string>

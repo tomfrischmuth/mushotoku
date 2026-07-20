@@ -64,6 +64,15 @@ class NotesViewModel(app: Application) : AndroidViewModel(app) {
         repo.updateNote(note.copy(updatedAt = System.currentTimeMillis()))
     }
 
+    /**
+     * Colouring leaves [Note.updatedAt] alone: it says nothing about the note's
+     * content, and touching it would jump the note to the top of the list.
+     */
+    fun setColor(notes: List<Note>, color: Int) = viewModelScope.launch {
+        notes.filter { it.color != color }
+            .forEach { repo.updateNote(it.copy(color = color)) }
+    }
+
     fun pinNote(note: Note) = viewModelScope.launch {
         repo.updateNote(note.copy(isPinned = !note.isPinned))
     }

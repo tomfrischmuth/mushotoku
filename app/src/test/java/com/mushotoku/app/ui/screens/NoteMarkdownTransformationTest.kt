@@ -45,11 +45,11 @@ class NoteMarkdownTransformationTest {
         assertEquals("- Milch\n• Butter", render("- Milch\n* Butter", cursorLine = 9))
     }
 
-    @Test fun `Checkboxen werden als Kaestchen gezeichnet`() {
-        val raw = "- [ ] offen\n- [x] erledigt"
-        assertEquals("☐ offen\n☑ erledigt", render(raw, cursorLine = 0))
-        assertEquals("☐ offen\n☑ erledigt", render(raw, cursorLine = 1))
-        assertEquals("☑ erledigt", render("- [X] erledigt", cursorLine = 0))
+    @Test fun `Checkboxen werden zum Platzhalter fuer die Ampel`() {
+        val raw = "- [ ] offen\n- [/] laeuft\n- [x] erledigt"
+        val box = CheckPlaceholder
+        assertEquals("$box offen\n$box laeuft\n$box erledigt", render(raw, cursorLine = 0))
+        assertEquals("$box erledigt", render("- [X] erledigt", cursorLine = 0))
     }
 
     @Test fun `Nummerierte Listen behalten ihre Zahl`() {
@@ -61,7 +61,7 @@ class NoteMarkdownTransformationTest {
     @Test fun `Cursor landet hinter dem Kaestchen`() {
         val raw = "- [ ] A"
         val t = MarkdownVisualTransformation(DarkAppColors, 0).filter(AnnotatedString(raw))
-        assertEquals("☐ A", t.text.text)
+        assertEquals("$CheckPlaceholder A", t.text.text)
         // The four hidden characters collapse onto the box, "A" keeps its place.
         assertEquals(2, t.offsetMapping.originalToTransformed(6))
         assertEquals(6, t.offsetMapping.transformedToOriginal(2))
@@ -79,6 +79,32 @@ class NoteMarkdownTransformationTest {
     @Test fun `Inline-Auszeichnung in einer Liste wird weiterhin versteckt`() {
         assertEquals("- fett", render("- **fett**", cursorLine = 99))
         assertEquals("- **fett**", render("- **fett**", cursorLine = 0))
+    }
+
+    @Test fun `ein Tag bekommt Luft, solange er eine Pille hat`() {
+        val sp = TagSpacer
+        // "#job" sits mid-line and is boxed, "#idee" is still being typed.
+        assertEquals("Notiz $sp#job$sp und #idee", render("Notiz #job und #idee", cursorLine = 0))
+        assertEquals("Notiz $sp#job$sp und $sp#idee$sp", render("Notiz #job und #idee", cursorLine = 1))
+        assertEquals("C#code", render("C#code", cursorLine = 0))
+    }
+
+    @Test fun `ein entwerteter Tag zeigt das Doppelkreuz ohne Pille`() {
+        val out = MarkdownVisualTransformation(DarkAppColors, 0)
+            .filter(AnnotatedString("Text \\#job"))
+        assertEquals("Text #job", out.text.text)
+        assertEquals(
+            emptyList<String>(),
+            out.text.getStringAnnotations(TagPillAnnotation, 0, out.text.length).map { it.item }
+        )
+    }
+
+    @Test fun `eine Pille wird im Text markiert`() {
+        val out = MarkdownVisualTransformation(DarkAppColors, 9)
+            .filter(AnnotatedString("Text #job"))
+        val marks = out.text.getStringAnnotations(TagPillAnnotation, 0, out.text.length)
+        assertEquals(1, marks.size)
+        assertEquals("#job", out.text.text.substring(marks[0].start, marks[0].end))
     }
 
     @Test fun `Cursor-Positionen bleiben auf die Quelle abbildbar`() {

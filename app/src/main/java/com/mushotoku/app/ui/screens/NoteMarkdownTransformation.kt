@@ -18,6 +18,7 @@
 
 package com.mushotoku.app.ui.screens
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -27,21 +28,54 @@ import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mushotoku.app.ui.theme.AppColors
 
 /** Body text metrics, shared by the editor and the read view so both stay in step. */
-internal val NoteBodySize       = 17.sp
-internal val NoteBodyLineHeight = 30.sp
+internal val NoteBodySize       = 18.sp
+internal val NoteBodyLineHeight = 31.sp
+
+/** Same insets in both modes, otherwise the text shifts when switching. */
+internal val NoteBodyPaddingH      = 24.dp
+internal val NoteBodyPaddingTop    = 20.dp
+internal val NoteBodyPaddingBottom = 16.dp
+
+/**
+ * Heading sizes, shared for the same reason. H3 sits clearly above the 17sp
+ * body; at its former 18sp only the weight told them apart.
+ */
+internal val Heading1Style = SpanStyle(fontSize = 27.sp, fontWeight = FontWeight.Bold)
+internal val Heading2Style = SpanStyle(fontSize = 23.sp, fontWeight = FontWeight.Bold)
+internal val Heading3Style = SpanStyle(fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+
+/**
+ * Sits either side of a tag in the rendering only, never in the note itself.
+ * The pill is drawn wider than its letters, so without it the neighbouring text
+ * would come to rest on the pill's edge.
+ *
+ * An ordinary space, widened by letter spacing: a wider space character would
+ * be missing from the font and drag in a fallback, which shifts the whole
+ * line's metrics.
+ */
+internal const val TagSpacer = ' '
+internal val TagSpacerStyle = SpanStyle(letterSpacing = 5.sp)
+
+/** Marks the tag ranges that get a pill, for the drawing pass to pick up. */
+internal const val TagPillAnnotation = "tagPill"
 
 internal const val Bullet     = '•'  // •
 internal const val EmptyBox   = '☐'  // ☐
-internal const val CheckedBox = '☑'  // ☑
 
-/** Bullets and boxes are drawn larger than the body text so they read as symbols, not letters. */
-internal val BulletStyle   = SpanStyle(color = NoteAccent, fontWeight = FontWeight.Bold, fontSize = 19.sp)
-internal val CheckboxStyle = SpanStyle(color = NoteAccent, fontSize = 21.sp)
+/** The bullet is drawn larger than the body text so it reads as a symbol, not a letter. */
+internal val BulletStyle   = SpanStyle(color = NoteAccent, fontWeight = FontWeight.Bold, fontSize = 20.sp)
 internal val DashStyle     = SpanStyle(color = NoteAccent, fontWeight = FontWeight.Bold)
+
+/**
+ * Tags are greyed here; the pill of a finished tag is drawn behind the text,
+ * since a span style could only paint a square background.
+ */
+internal fun tagStyle(colors: AppColors) = SpanStyle(color = colors.onSurfaceSecondary)
 
 internal class MarkdownVisualTransformation(
     private val colors: AppColors,
@@ -68,6 +102,16 @@ private class MarkdownBuilder(sourceLen: Int) {
     fun hide() { srcToVis[srcIdx] = visIdx; srcIdx++ }
     fun show(s: String) = s.forEach { show(it) }
     fun hide(n: Int) = repeat(n) { hide() }
+
+    /**
+     * Adds a character that has no counterpart in the source. It maps to the
+     * position it precedes, so the cursor never lands inside it.
+     */
+    fun insert(c: Char) { visToSrc.add(srcIdx); sb.append(c); visIdx++ }
+
+    val visibleIndex get() = visIdx
+
+    fun annotate(tag: String, from: Int, to: Int) = sb.addStringAnnotation(tag, "", from, to)
 
     /** Draws [visible] in place of the next source character, one for one. */
     fun substitute(visible: Char) {
@@ -104,19 +148,19 @@ private fun renderMarkdown(raw: String, colors: AppColors, activeLineIdx: Int, m
         when {
             line.startsWith("# ") -> {
                 if (show) mb.styled(SpanStyle(color = muted)) { mb.show("# ") } else mb.hide(2)
-                mb.styled(SpanStyle(fontSize = 26.sp, fontWeight = FontWeight.Bold)) {
+                mb.styled(Heading1Style) {
                     appendInline(line.substring(2), mb, show, colors)
                 }
             }
             line.startsWith("## ") -> {
                 if (show) mb.styled(SpanStyle(color = muted)) { mb.show("## ") } else mb.hide(3)
-                mb.styled(SpanStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold)) {
+                mb.styled(Heading2Style) {
                     appendInline(line.substring(3), mb, show, colors)
                 }
             }
             line.startsWith("### ") -> {
                 if (show) mb.styled(SpanStyle(color = muted)) { mb.show("### ") } else mb.hide(4)
-                mb.styled(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold)) {
+                mb.styled(Heading3Style) {
                     appendInline(line.substring(4), mb, show, colors)
                 }
             }
@@ -129,15 +173,18 @@ private fun renderMarkdown(raw: String, colors: AppColors, activeLineIdx: Int, m
             // List markers stay visible on every line: hiding them once the
             // cursor moves away would make the list itself disappear. They are
             // drawn as real bullets and boxes rather than their raw syntax.
-            line.startsWith("- [x] ") || line.startsWith("- [X] ") -> {
-                mb.styled(CheckboxStyle) { mb.substitute(CheckedBox); mb.hide(4); mb.show(' ') }
-                mb.styled(SpanStyle(color = muted, textDecoration = TextDecoration.LineThrough)) {
-                    appendInline(line.substring(6), mb, show, colors)
+            checkStateOf(line) != null -> {
+                val state = checkStateOf(line)!!
+                mb.styled(checkPlaceholderStyle(NoteBodySize)) {
+                    mb.substitute(CheckPlaceholder); mb.hide(4); mb.show(' ')
                 }
-            }
-            line.startsWith("- [ ] ") -> {
-                mb.styled(CheckboxStyle) { mb.substitute(EmptyBox); mb.hide(4); mb.show(' ') }
-                appendInline(line.substring(6), mb, show, colors)
+                if (state == CheckState.DONE) {
+                    mb.styled(SpanStyle(color = muted, textDecoration = TextDecoration.LineThrough)) {
+                        appendInline(line.substring(ChecklistPrefixLength), mb, show, colors)
+                    }
+                } else {
+                    appendInline(line.substring(ChecklistPrefixLength), mb, show, colors)
+                }
             }
             // A dash stays a dash: it is its own kind of list, not a bullet.
             line.startsWith("- ") -> {
@@ -213,6 +260,26 @@ private fun appendInline(text: String, mb: MarkdownBuilder, showSyntax: Boolean,
                     else mb.hide()
                     i = close + 1
                 } else { mb.show(text[i]); i++ }
+            }
+            // An escaped hash is ordinary text: the backslash disappears and
+            // the "#" stays behind.
+            text.startsWith("$TagEscape#", i) -> {
+                mb.hide(); mb.show('#')
+                i += 2
+            }
+            tagLengthAt(text, i) > 0 -> {
+                val len = tagLengthAt(text, i)
+                // Spaced only where a pill is actually drawn, so the text does
+                // not jump sideways the moment a tag is finished.
+                val boxed = !(i + len >= text.length && showSyntax)
+                if (boxed) mb.styled(TagSpacerStyle) { mb.insert(TagSpacer) }
+                val from = mb.visibleIndex
+                mb.styled(tagStyle(colors)) { mb.show(text.substring(i, i + len)) }
+                if (boxed) {
+                    mb.annotate(TagPillAnnotation, from, mb.visibleIndex)
+                    mb.styled(TagSpacerStyle) { mb.insert(TagSpacer) }
+                }
+                i += len
             }
             else -> { mb.show(text[i]); i++ }
         }

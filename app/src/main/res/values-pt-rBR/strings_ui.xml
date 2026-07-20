@@ -226,6 +226,10 @@
     <string name="notes_list_bullet">Lista com marcadores</string>
     <string name="notes_list_numbered">Lista numerada</string>
     <string name="notes_list_checkbox">Lista de verificação</string>
+    <string name="notes_tag_remove">Não é uma tag</string>
+    <string name="notes_no_title">Ainda sem título</string>
+    <string name="task_moved_tomorrow">Movido para amanhã</string>
+    <string name="undo">Desfazer</string>
 
     <string name="dialog_new_appointment">Novo compromisso</string>
     <string name="dialog_new_task">Nova tarefa</string>

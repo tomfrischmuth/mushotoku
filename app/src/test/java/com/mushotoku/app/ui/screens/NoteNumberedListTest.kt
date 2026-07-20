@@ -63,6 +63,7 @@ class NoteNumberedListTest {
         assertEquals("- a\n- ", pressEnter("- a"))
         assertEquals("- [ ] a\n- [ ] ", pressEnter("- [ ] a"))
         assertEquals("- [x] a\n- [ ] ", pressEnter("- [x] a"))
+        assertEquals("- [/] a\n- [ ] ", pressEnter("- [/] a"))
     }
 
     @Test fun `Fliesstext bleibt unangetastet`() {

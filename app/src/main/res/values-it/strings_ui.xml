@@ -226,6 +226,10 @@
     <string name="notes_list_bullet">Elenco puntato</string>
     <string name="notes_list_numbered">Elenco numerato</string>
     <string name="notes_list_checkbox">Lista di controllo</string>
+    <string name="notes_tag_remove">Non è un tag</string>
+    <string name="notes_no_title">Ancora senza titolo</string>
+    <string name="task_moved_tomorrow">Spostato a domani</string>
+    <string name="undo">Annulla</string>
 
     <string name="dialog_new_appointment">Nuovo appuntamento</string>
     <string name="dialog_new_task">Nuova attività</string>

@@ -33,8 +33,10 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DeleteSweep
+import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.filled.Savings
 import androidx.compose.material.icons.filled.SelfImprovement
+import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -56,7 +58,9 @@ import com.mushotoku.app.ui.components.soundClick
 import com.mushotoku.app.ui.components.BottomBar
 import com.mushotoku.app.ui.components.DateSlider
 import com.mushotoku.app.ui.components.NoteTypeFilter
+import com.mushotoku.app.ui.screens.NoteColorPicker
 import com.mushotoku.app.ui.screens.NoteEditorBarState
+import com.mushotoku.app.ui.screens.matchesTypeFilter
 import com.mushotoku.app.ui.strings.LocalAppStrings
 import com.mushotoku.app.ui.theme.LocalAppColors
 import java.time.LocalDate
@@ -111,10 +115,15 @@ internal fun NotesTopBar(
     noteTypeFilter: NoteType?,
     onClearSelection: () -> Unit,
     onDeleteSelected: () -> Unit,
+    onPinSelected: () -> Unit,
+    onSetColor: (Int) -> Unit,
     onOpenTrash: () -> Unit,
     onOpenSettings: () -> Unit
 ) {
     val strings = LocalAppStrings.current
+    // With every selected note already pinned, the action unpins instead.
+    val allSelectedPinned = selectedNoteIds.isNotEmpty() &&
+        notes.filter { it.id in selectedNoteIds }.all { it.isPinned }
     if (noteEditorActive && editorBar != null) {
         AppTopBar(
             modifier = modifier,
@@ -136,8 +145,11 @@ internal fun NotesTopBar(
             }
         )
     } else if (selectedNoteIds.isNotEmpty()) {
+        // The colours live in the bar itself: putting them in the list would
+        // either sit out of sight or drag the reader away from the note.
+        val selected = notes.filter { it.id in selectedNoteIds }
+        Column(modifier = modifier) {
         AppTopBar(
-            modifier = modifier,
             title    = strings.notesSelected(selectedNoteIds.size),
             leading  = {
                 IconButton(onClick = soundClick(onClearSelection)) {
@@ -145,23 +157,38 @@ internal fun NotesTopBar(
                 }
             },
             trailing = {
+                // Grid cards cannot be swiped, so pinning lives here.
+                IconButton(onClick = soundClick(onPinSelected)) {
+                    Icon(
+                        imageVector = if (allSelectedPinned) Icons.Default.PushPin else Icons.Outlined.PushPin,
+                        contentDescription = if (allSelectedPinned) strings.notesUnpinAction
+                                             else strings.notesPinAction,
+                        tint = AccentBlue
+                    )
+                }
                 IconButton(onClick = soundClick(onDeleteSelected)) {
                     Icon(Icons.Default.DeleteSweep, contentDescription = strings.notesDeleteSelected, tint = AccentBlue)
                 }
             }
         )
+            NoteColorPicker(
+                current  = selected.map { it.color }.distinct().singleOrNull(),
+                onPick   = onSetColor,
+                modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 10.dp)
+            )
+        }
     } else {
         AppTopBar(
             modifier = modifier,
             title    = strings.tabNotes,
             subtitle = if (noteTypeFilter == null)
                 strings.notesCountByType(
-                    notes.count { it.type == NoteType.ROUTINE },
-                    notes.count { it.type == NoteType.LIST },
-                    notes.count { it.type == NoteType.NOTE }
+                    notes.count { matchesTypeFilter(it, NoteType.ROUTINE) },
+                    notes.count { matchesTypeFilter(it, NoteType.LIST) },
+                    notes.count { matchesTypeFilter(it, NoteType.NOTE) }
                 )
             else noteTypeFilter.let { filter ->
-                strings.notesCountFor(filter, notes.count { it.type == filter })
+                strings.notesCountFor(filter, notes.count { matchesTypeFilter(it, filter) })
             },
             trailing = {
                 IconButton(onClick = soundClick(onOpenTrash)) {

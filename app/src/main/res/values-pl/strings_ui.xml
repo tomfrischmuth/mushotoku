@@ -236,6 +236,10 @@
     <string name="notes_list_bullet">Lista punktowana</string>
     <string name="notes_list_numbered">Lista numerowana</string>
     <string name="notes_list_checkbox">Lista kontrolna</string>
+    <string name="notes_tag_remove">To nie tag</string>
+    <string name="notes_no_title">Jeszcze bez tytułu</string>
+    <string name="task_moved_tomorrow">Przeniesiono na jutro</string>
+    <string name="undo">Cofnij</string>
 
     <string name="dialog_new_appointment">Nowy termin</string>
     <string name="dialog_new_task">Nowe zadanie</string>

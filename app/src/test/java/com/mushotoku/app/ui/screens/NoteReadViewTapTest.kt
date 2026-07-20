@@ -47,7 +47,7 @@ class NoteReadViewTapTest {
 
     @Test fun `hinter einem Kaestchen stimmt die Stelle`() {
         val raw = "# Titel\n- [ ] Aufgabe"
-        assertEquals("Titel\n☐ Aufgabe", view(raw).text.text)
+        assertEquals("Titel\n$CheckPlaceholder Aufgabe", view(raw).text.text)
         assertEquals(14, tapOn(raw, "Aufgabe"))
         assertEquals(raw.indexOf("gabe"), tapOn(raw, "gabe"))
     }

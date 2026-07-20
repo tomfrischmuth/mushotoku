@@ -23,11 +23,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.execSQL
 import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
 
 @Database(
     entities = [Task::class, Note::class, Expense::class, Category::class, AppSettings::class, Habit::class, HabitLog::class, GratitudeEntry::class, MoodEntry::class, CaffeineDose::class, RecurringCostHistory::class, AdditionalIncome::class],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -46,10 +49,21 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun backupDao(): BackupDao
 
     companion object {
+        /**
+         * Adds the note colour. Written out rather than left to the destructive
+         * fallback, which would wipe every note on update.
+         */
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(connection: SQLiteConnection) {
+                connection.execSQL("ALTER TABLE notes ADD COLUMN color INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
         fun build(context: Context, dek: ByteArray): AppDatabase {
             val factory = SupportOpenHelperFactory(SqlCipherKey.rawKeyBytes(dek))
             return Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "mushotoku.db")
                 .openHelperFactory(factory)
+                .addMigrations(MIGRATION_1_2)
                 .fallbackToDestructiveMigration(dropAllTables = true)
                 .fallbackToDestructiveMigrationOnDowngrade(dropAllTables = true)
                 .build()

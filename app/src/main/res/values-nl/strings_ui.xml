@@ -226,6 +226,10 @@
     <string name="notes_list_bullet">Lijst met opsommingstekens</string>
     <string name="notes_list_numbered">Genummerde lijst</string>
     <string name="notes_list_checkbox">Checklist</string>
+    <string name="notes_tag_remove">Geen tag</string>
+    <string name="notes_no_title">Nog geen titel</string>
+    <string name="task_moved_tomorrow">Naar morgen verplaatst</string>
+    <string name="undo">Ongedaan maken</string>
 
     <string name="dialog_new_appointment">Nieuwe afspraak</string>
     <string name="dialog_new_task">Nieuwe taak</string>

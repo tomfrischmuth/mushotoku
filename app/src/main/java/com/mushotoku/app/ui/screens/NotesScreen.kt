@@ -22,11 +22,19 @@ import com.mushotoku.app.ui.components.*
 import com.mushotoku.app.ui.strings.*
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -71,8 +79,6 @@ fun NotesScreen(
     onCreateNote: (String, String, NoteType, (Note) -> Unit) -> Unit,
     onUpdateNote: (Note) -> Unit,
     onDeleteNote: (Note) -> Unit,
-    onPinNote: (Note) -> Unit,
-    confirmDeleteEnabled: Boolean = true,
     hapticEnabled: Boolean = true,
     onEditorActiveChange: (Boolean) -> Unit = {},
     onEditorBarState: ((NoteEditorBarState) -> Unit)? = null,
@@ -111,9 +117,18 @@ fun NotesScreen(
 
     val focusManager = LocalFocusManager.current
     var searchQuery   by remember { mutableStateOf("") }
+    var selectedTag   by remember { mutableStateOf<String?>(null) }
 
-    val (pinned, unpinned) = remember(notes, typeFilter, searchQuery) {
-        val list = if (typeFilter == null) notes else notes.filter { it.type == typeFilter }
+    // The bar offers the tags of the notes currently in view, so it never
+    // suggests a tag that would lead to an empty screen.
+    val tags = remember(notes, typeFilter) {
+        collectTags(notes.filter { matchesTypeFilter(it, typeFilter) })
+    }
+    LaunchedEffect(tags) { if (selectedTag != null && selectedTag !in tags) selectedTag = null }
+
+    val (pinned, unpinned) = remember(notes, typeFilter, searchQuery, selectedTag) {
+        val byType = notes.filter { matchesTypeFilter(it, typeFilter) }
+        val list = selectedTag?.let { tag -> byType.filter { noteHasTag(it, tag) } } ?: byType
         val filtered = if (searchQuery.isBlank()) list
         else list.filter { note ->
             note.title.contains(searchQuery, ignoreCase = true) ||
@@ -147,7 +162,9 @@ fun NotesScreen(
                 creatingNote = false
                 onNavigateToTask(task)
             },
-            hapticEnabled = hapticEnabled
+            hapticEnabled = hapticEnabled,
+            // Every tag in the app, not just the ones the filter shows.
+            knownTags     = remember(notes) { collectTags(notes) }
         )
         return
     }
@@ -163,99 +180,148 @@ fun NotesScreen(
                 }
             }
     ) {
-        LazyColumn(
+        val onTapNote: (Note) -> Unit = { note ->
+            if (isSelectionMode) {
+                val newIds = if (note.id in selectedNoteIds) selectedNoteIds - note.id
+                             else selectedNoteIds + note.id
+                onSelectionChange(newIds)
+            } else editingNote = note
+        }
+        LazyVerticalGrid(
+            columns  = GridCells.Fixed(2),
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(
                 start = 20.dp, end = 20.dp,
                 top   = contentPadding.calculateTopPadding() + 16.dp,
                 bottom = contentPadding.calculateBottomPadding() + 16.dp
-            )
+            ),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement   = Arrangement.spacedBy(12.dp)
         ) {
-            item(key = "search") {
+            item(key = "search", span = { GridItemSpan(maxLineSpan) }) {
                 NoteSearchBar(
                     query         = searchQuery,
                     hint          = strings.notesSearchHint,
                     onQueryChange = { searchQuery = it }
                 )
-                Spacer(Modifier.height(12.dp))
             }
+            if (tags.isNotEmpty()) {
+                item(key = "tags", span = { GridItemSpan(maxLineSpan) }) {
+                    NoteTagBar(
+                        tags     = tags,
+                        selected = selectedTag,
+                        // Tapping the active tag again is the way back to all notes.
+                        onSelect = { tag -> selectedTag = if (selectedTag == tag) null else tag }
+                    )
+                }
+            }
+
             if (pinned.isNotEmpty()) {
-                item(key = "ph") {
+                item(key = "ph", span = { GridItemSpan(maxLineSpan) }) {
                     SectionHeader(
                         label     = strings.notesPinnedSection,
                         collapsed = pinnedCollapsed,
                         accent    = NoteAccent,
                         onClick   = { pinnedCollapsed = !pinnedCollapsed }
                     )
-                    Spacer(Modifier.height(6.dp))
                 }
                 if (!pinnedCollapsed) {
-                    item(key = "pg") {
-                        NoteGroupCard(
-                            notes = pinned,
-                            selectedNoteIds = selectedNoteIds,
-                            linkedNoteIds = linkedNoteToTaskMap.keys,
-                            onTap = { note ->
-                                if (isSelectionMode) {
-                                    val newIds = if (note.id in selectedNoteIds) selectedNoteIds - note.id else selectedNoteIds + note.id
-                                    onSelectionChange(newIds)
-                                } else editingNote = note
-                            },
-                            onLongPress = { note -> onSelectionChange(selectedNoteIds + note.id) },
-                            onPin = onPinNote,
-                            onDelete = onDeleteNote,
-                            confirmDeleteEnabled = confirmDeleteEnabled
+                    items(
+                        items = pinned,
+                        key   = { "p${it.id}" },
+                        span  = { GridItemSpan(maxLineSpan) }
+                    ) { note ->
+                        NoteCard(
+                            note         = note,
+                            isSelected   = note.id in selectedNoteIds,
+                            isLinked     = note.id in linkedNoteToTaskMap.keys,
+                            previewLines = 1,
+                            onTap        = { onTapNote(note) },
+                            onLongPress  = { onSelectionChange(selectedNoteIds + note.id) }
                         )
-                        Spacer(Modifier.height(24.dp))
                     }
-                } else {
-                    item { Spacer(Modifier.height(8.dp)) }
                 }
             }
 
             if (unpinned.isNotEmpty()) {
                 if (pinned.isNotEmpty()) {
-                    item(key = "uh") {
+                    item(key = "uh", span = { GridItemSpan(maxLineSpan) }) {
                         SectionHeader(label = strings.tabNotes, accent = NoteAccent)
-                        Spacer(Modifier.height(6.dp))
                     }
                 }
-                item(key = "ug") {
-                    NoteGroupCard(
-                        notes = unpinned,
-                        selectedNoteIds = selectedNoteIds,
-                        linkedNoteIds = linkedNoteToTaskMap.keys,
-                        onTap = { note ->
-                            if (isSelectionMode) {
-                                val newIds = if (note.id in selectedNoteIds) selectedNoteIds - note.id else selectedNoteIds + note.id
-                                onSelectionChange(newIds)
-                            } else editingNote = note
-                        },
-                        onLongPress = { note -> onSelectionChange(selectedNoteIds + note.id) },
-                        onPin = onPinNote,
-                        onDelete = onDeleteNote,
-                        confirmDeleteEnabled = confirmDeleteEnabled
+                items(unpinned, key = { it.id }) { note ->
+                    NoteCard(
+                        note         = note,
+                        isSelected   = note.id in selectedNoteIds,
+                        isLinked     = note.id in linkedNoteToTaskMap.keys,
+                        previewLines = 2,
+                        onTap        = { onTapNote(note) },
+                        onLongPress  = { onSelectionChange(selectedNoteIds + note.id) }
                     )
                 }
             }
 
             if (total == 0) {
-                item {
+                item(span = { GridItemSpan(maxLineSpan) }) {
                     Box(
-                        Modifier.fillParentMaxWidth().padding(top = 80.dp),
+                        Modifier.fillMaxWidth().padding(top = 80.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text  = if (searchQuery.isNotBlank()) strings.notesNoResults else when (typeFilter) {
-                                NoteType.ROUTINE -> strings.noRoutinesYet
-                                NoteType.LIST    -> strings.noListsYet
-                                else             -> strings.noNotesYet
-                            },
+                            text  = if (searchQuery.isNotBlank() || selectedTag != null) strings.notesNoResults
+                                    else when (typeFilter) {
+                                        NoteType.ROUTINE -> strings.noRoutinesYet
+                                        NoteType.LIST    -> strings.noListsYet
+                                        else             -> strings.noNotesYet
+                                    },
                             color = colors.onSurfaceTertiary,
                             fontSize = 15.sp
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+/**
+ * Tags found in the notes themselves. Deliberately tags only — the note types
+ * keep their own switch in the bottom bar.
+ */
+@Composable
+private fun NoteTagBar(
+    tags: List<String>,
+    selected: String?,
+    onSelect: (String) -> Unit
+) {
+    val colors = LocalAppColors.current
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        tags.forEach { tag ->
+            val isSelected = tag == selected
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(50))
+                    .background(if (isSelected) NoteAccent else colors.surface)
+                    .then(
+                        if (isSelected) Modifier
+                        else Modifier.border(1.dp, colors.divider, RoundedCornerShape(50))
+                    )
+                    // LocalIndication already sounds the tap; soundClick would double it.
+                    .clickable { onSelect(tag) }
+                    .padding(horizontal = 14.dp, vertical = 7.dp)
+            ) {
+                Text(
+                    text       = "#$tag",
+                    fontSize   = 13.sp,
+                    fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
+                    color      = if (isSelected) Color.White else colors.onSurfaceSecondary,
+                    maxLines   = 1
+                )
             }
         }
     }

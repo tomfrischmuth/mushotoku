@@ -17,6 +17,9 @@
  */
 
 package com.mushotoku.app.ui.components
+import com.mushotoku.app.ui.StatusGreen
+import com.mushotoku.app.ui.StatusRed
+import com.mushotoku.app.ui.StatusYellow
 import com.mushotoku.app.ui.components.soundClick
 
 import androidx.compose.animation.animateColorAsState
@@ -55,9 +58,7 @@ import java.time.LocalDate
 import com.mushotoku.app.ui.strings.LocalAppStrings
 import com.mushotoku.app.ui.theme.LocalAppColors
 
-private val StatusRed    = Color(0xFFE53935)
-private val StatusYellow = Color(0xFFFFB300)
-private val StatusGreen  = Color(0xFF43A047)
+
 
 @Composable
 fun TaskItem(
@@ -154,7 +155,7 @@ private fun TaskContent(
                 modifier = Modifier
                     .size(26.dp)
                     .then(
-                        if (task.isDone) Modifier.background(Color(0xFF43A047), CircleShape)
+                        if (task.isDone) Modifier.background(StatusGreen, CircleShape)
                         else Modifier.border(2.dp, Color(0xFFAAAAAA), CircleShape)
                     )
                     .clickable { onStatusClick() },

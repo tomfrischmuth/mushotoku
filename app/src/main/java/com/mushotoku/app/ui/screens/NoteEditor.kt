@@ -19,7 +19,18 @@
 package com.mushotoku.app.ui.screens
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import com.mushotoku.app.ui.components.soundClick
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,13 +50,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -77,7 +91,8 @@ internal fun NoteEditor(
     onBarState: ((NoteEditorBarState) -> Unit)? = null,
     linkedTask: Task? = null,
     onNavigateToTask: (Task) -> Unit = {},
-    hapticEnabled: Boolean = true
+    hapticEnabled: Boolean = true,
+    knownTags: List<String> = emptyList()
 ) {
     val colors  = LocalAppColors.current
     val strings = LocalAppStrings.current
@@ -93,32 +108,55 @@ internal fun NoteEditor(
 
     var isEditing by remember { mutableStateOf(isNew) }
 
-    val initialText = remember(note?.id) {
-        if (note == null) {
-            "# "
-        } else {
-            if (note.content.isNotEmpty()) "${note.title}\n${note.content}" else note.title
-        }
+    // Title and body are kept apart. They used to share one text, where an
+    // empty first line promoted the first body line to title — which quietly
+    // took a checklist item out of the list.
+    var titleText by remember(note?.id) {
+        mutableStateOf(note?.title.orEmpty().stripHeadingMarker())
     }
     var text by remember(note?.id) {
-        mutableStateOf(TextFieldValue(initialText, TextRange(initialText.length)))
+        val body = note?.content.orEmpty()
+        mutableStateOf(TextFieldValue(body, TextRange(body.length)))
     }
 
     val canUndo by remember { derivedStateOf { text.selection.start > 0 || !text.selection.collapsed } }
 
-    // Timestamps are what turns a note into a diary: tap stamps the time,
-    // long-press stamps the date as well.
+    // The stamp just written, so tapping again rewrites it instead of adding a
+    // second one. It only counts while the cursor still sits right behind it.
+    var stampAnchor by remember(note?.id) { mutableStateOf<StampAnchor?>(null) }
+
+    fun renderStamp(at: LocalDateTime, withDate: Boolean): String {
+        val time = at.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(strings.locale))
+        if (!withDate) return time
+        val date = at.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(strings.locale))
+        return "$date $time"
+    }
+
+    /**
+     * Timestamps are what turns a note into a diary. Tapping stamps the time;
+     * tapping again swaps that same stamp between time and date, so the button
+     * corrects itself rather than piling stamps up.
+     */
     fun insertTimestamp(withDate: Boolean) {
-        val now = LocalDateTime.now()
-        val time = now.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(strings.locale))
-        val stamp = if (!withDate) {
-            time
-        } else {
-            val date = now.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(strings.locale))
-            if (hapticEnabled) context.performCheckHaptic()
-            "$date $time"
+        val anchor = stampAnchor
+        // A long press always wants the date; a tap flips to the other form.
+        val nextWithDate = if (withDate) true else anchor?.let { !it.withDate } ?: false
+        val rewritten = anchor?.let { toggleStamp(text, it, renderStamp(it.at, nextWithDate)) }
+
+        if (rewritten != null && anchor != null) {
+            text = rewritten
+            stampAnchor = anchor.copy(text = renderStamp(anchor.at, nextWithDate), withDate = nextWithDate)
+            if (hapticEnabled && nextWithDate) context.performCheckHaptic()
+            return
         }
-        text = insertAtCursor(text, stamp)
+
+        val now = LocalDateTime.now()
+        val stamp = renderStamp(now, withDate)
+        if (hapticEnabled && withDate) context.performCheckHaptic()
+        val inserted = insertAtCursor(text, stamp)
+        text = inserted
+        val start = inserted.text.lastIndexOf(stamp, inserted.selection.start)
+        stampAnchor = if (start < 0) null else StampAnchor(start, stamp, now, withDate)
     }
 
     fun undo() {
@@ -126,30 +164,11 @@ internal fun NoteEditor(
         if (new.text != text.text || new.selection != text.selection) text = new
     }
 
-    fun extractParts(raw: String): Pair<String, String> {
-        val nl = raw.indexOf('\n')
-        val title   = if (nl >= 0) raw.substring(0, nl) else raw
-        val content = if (nl >= 0) raw.substring(nl + 1) else ""
-        return title to content
-    }
-
-    fun persist(raw: String) {
-        val (rawTitle, content) = extractParts(raw)
-        val titleStripped = rawTitle
-            .removePrefix("### ").removePrefix("## ").removePrefix("# ").trim()
-
-        val saveTitle: String
-        val saveContent: String
-        if (titleStripped.isNotBlank()) {
-            saveTitle   = rawTitle.trim()
-            saveContent = content
-        } else {
-            val lines = content.lines()
-            val idx   = lines.indexOfFirst { it.isNotBlank() }
-            if (idx < 0) return
-            saveTitle   = lines[idx].trim()
-            saveContent = lines.drop(idx + 1).joinToString("\n")
-        }
+    fun persist(rawInput: String) {
+        // An item left empty is not saved, so no stray box survives the note.
+        val saveContent = dropEmptyCheckItems(rawInput)
+        val saveTitle   = titleText.trim()
+        if (saveTitle.isBlank() && saveContent.isBlank()) return
 
         val existing = currentNote
         if (existing == null) {
@@ -166,14 +185,13 @@ internal fun NoteEditor(
     }
 
     fun saveAndClose() {
-        val (rawTitle, content) = extractParts(text.text)
-        val titleStripped = rawTitle
-            .removePrefix("### ").removePrefix("## ").removePrefix("# ").trim()
-        val effectiveTitle = titleStripped.ifBlank { content.lines().firstOrNull(String::isNotBlank) }
+        val body     = dropEmptyCheckItems(text.text)
+        val isEmpty  = titleText.isBlank() && body.isBlank()
         val existing = currentNote
         when {
-            effectiveTitle == null && existing != null -> onDelete(existing)
-            effectiveTitle != null                     -> persist(text.text)
+            // An untitled note without a single line is not worth keeping.
+            isEmpty && existing != null -> onDelete(existing)
+            !isEmpty                    -> persist(text.text)
         }
         onClose()
     }
@@ -182,15 +200,10 @@ internal fun NoteEditor(
         val lines = text.text.lines().toMutableList()
         if (lineIndex >= lines.size) return
         val line = lines[lineIndex]
-        lines[lineIndex] = when {
-            line.startsWith("- [ ] ") -> {
-                if (hapticEnabled) context.performCheckHaptic()
-                line.replaceFirst("- [ ] ", "- [x] ")
-            }
-            line.startsWith("- [x] ") || line.startsWith("- [X] ") ->
-                line.replace(Regex("^- \\[[xX]\\] "), "- [ ] ")
-            else -> return
-        }
+        val state = checkStateOf(line) ?: return
+        // Reaching green is the moment worth feeling.
+        if (hapticEnabled && state.next() == CheckState.DONE) context.performCheckHaptic()
+        lines[lineIndex] = cycleCheckLine(line)
         val newText = lines.joinToString("\n")
         text = TextFieldValue(newText, TextRange(text.selection.start.coerceIn(0, newText.length)))
     }
@@ -200,10 +213,10 @@ internal fun NoteEditor(
     // Debounced autosave for new and existing notes alike. For a new note the
     // first non-empty content promotes it to a real DB row (see persist()).
     LaunchedEffect(note?.id) {
-        snapshotFlow { text.text }
+        snapshotFlow { titleText to text.text }
             .drop(1)
             .debounce(700)
-            .collect { persist(it) }
+            .collect { (_, body) -> persist(body) }
     }
 
     val focusRequester = remember { FocusRequester() }
@@ -223,10 +236,7 @@ internal fun NoteEditor(
         text.text.substring(lineStart, lineEnd)
     }
 
-    val noteTitle = remember(text.text) {
-        text.text.lines().firstOrNull().orEmpty()
-            .removePrefix("### ").removePrefix("## ").removePrefix("# ").trim()
-    }
+    val noteTitle = titleText.trim()
     SideEffect {
         onBarState?.invoke(NoteEditorBarState(
             title     = noteTitle,
@@ -255,17 +265,38 @@ internal fun NoteEditor(
                 onUndo        = ::undo
             )
         }
+        if (isEditing) {
+            val prefix = tagPrefixAt(text.text, text.selection.start)
+            val suggestions = remember(prefix, knownTags) {
+                if (prefix == null) emptyList() else tagSuggestions(knownTags, prefix)
+            }
+            // Only once the tag is finished, so the offer does not flicker in
+            // while it is still being typed.
+            val removable = prefix == null && tagRangeAt(text.text, text.selection.start) != null
+            TagSuggestionRow(
+                suggestions = suggestions,
+                showRemove  = removable,
+                onPick      = { tag -> text = completeTag(text, tag) },
+                onRemove    = { text = unmarkTag(text) }
+            )
+        }
         if (linkedTask != null) {
             AppointmentLinkChip(
                 task     = linkedTask,
                 onClick  = { persist(text.text); onNavigateToTask(linkedTask) }
             )
         }
+        NoteTitleField(
+            value    = titleText,
+            onChange = { titleText = it },
+            editable = isEditing
+        )
         if (isEditing) {
             NoteMarkdownEditField(
                 value          = text,
                 onValueChange  = { new ->
-                    text = if (new.text != text.text) autoContinueList(text, new) else new
+                    val continued = if (new.text != text.text) autoContinueList(text, new) else new
+                    text = lowercaseTags(continued)
                 },
                 focusRequester = focusRequester,
                 modifier       = Modifier.weight(1f)
@@ -302,13 +333,22 @@ private fun NoteMarkdownEditField(
         val pos = value.selection.start.coerceIn(0, value.text.length)
         value.text.substring(0, pos).count { it == '\n' }
     }
+    var layout by remember { mutableStateOf<TextLayoutResult?>(null) }
+
     BasicTextField(
         value         = value,
         onValueChange = onValueChange,
+        onTextLayout  = { layout = it },
         modifier      = modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp)
-            .padding(top = 16.dp, bottom = 8.dp)
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = NoteBodyPaddingH)
+            .padding(top = NoteBodyPaddingTop, bottom = NoteBodyPaddingBottom)
+            .drawBehind {
+                val result = layout ?: return@drawBehind
+                drawTagPills(result, colors.surfaceVariant, NoteBodySize)
+                drawCheckBoxes(result, checkStatesIn(value.text), NoteBodySize.toPx())
+            }
             .focusRequester(focusRequester),
         textStyle = TextStyle(
             fontSize   = NoteBodySize,
@@ -327,4 +367,110 @@ private fun NoteMarkdownEditField(
             inner()
         }
     )
+}
+
+/**
+ * Offers the existing tags that continue what is being typed. It only appears
+ * while a tag is open at the cursor, so carrying on writing a new tag of one's
+ * own is never interrupted.
+ */
+@Composable
+private fun TagSuggestionRow(
+    suggestions: List<String>,
+    showRemove: Boolean,
+    onPick: (String) -> Unit,
+    onRemove: () -> Unit
+) {
+    val colors  = LocalAppColors.current
+    val strings = LocalAppStrings.current
+    AnimatedVisibility(visible = suggestions.isNotEmpty() || showRemove) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(horizontal = NoteBodyPaddingH, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            if (showRemove) {
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(colors.surfaceVariant)
+                        // LocalIndication already sounds the tap; soundClick would double it.
+                        .clickable(onClick = onRemove)
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Text(
+                        text     = "✕  ${strings.notesTagRemove}",
+                        fontSize = 13.sp,
+                        color    = colors.onSurfaceSecondary,
+                        maxLines = 1
+                    )
+                }
+            }
+            suggestions.forEach { tag ->
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(colors.surfaceVariant)
+                        .clickable { onPick(tag) }
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Text(
+                        text     = "#$tag",
+                        fontSize = 13.sp,
+                        color    = colors.onSurfaceSecondary,
+                        maxLines = 1
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * The note's title, on its own line above the body. Keeping it separate is what
+ * stops the first body line from being pulled up into the title.
+ */
+@Composable
+private fun NoteTitleField(
+    value: String,
+    onChange: (String) -> Unit,
+    editable: Boolean
+) {
+    val colors  = LocalAppColors.current
+    val strings = LocalAppStrings.current
+    val style = TextStyle(
+        fontSize   = 27.sp,
+        fontWeight = FontWeight.Bold,
+        color      = colors.onSurface
+    )
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = NoteBodyPaddingH)
+            .padding(top = NoteBodyPaddingTop, bottom = 4.dp)
+    ) {
+        if (editable) {
+            BasicTextField(
+                value         = value,
+                onValueChange = { onChange(it.replace("\n", "")) },
+                textStyle     = style,
+                singleLine    = true,
+                cursorBrush   = SolidColor(NoteAccent),
+                modifier      = Modifier.fillMaxWidth(),
+                decorationBox = { inner ->
+                    if (value.isEmpty()) {
+                        Text(strings.notesNoTitle, style = style.copy(color = colors.onSurfaceTertiary))
+                    }
+                    inner()
+                }
+            )
+        } else {
+            Text(
+                text  = value.ifBlank { strings.notesNoTitle },
+                style = if (value.isBlank()) style.copy(color = colors.onSurfaceTertiary) else style
+            )
+        }
+    }
 }

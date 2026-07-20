@@ -226,6 +226,10 @@
     <string name="notes_list_bullet">Punkt-Liste</string>
     <string name="notes_list_numbered">Nummerierte Liste</string>
     <string name="notes_list_checkbox">Checkliste</string>
+    <string name="notes_tag_remove">Kein Tag</string>
+    <string name="notes_no_title">Noch kein Titel</string>
+    <string name="task_moved_tomorrow">Auf morgen verschoben</string>
+    <string name="undo">Rückgängig</string>
 
     <string name="dialog_new_appointment">Neuer Termin</string>
     <string name="dialog_new_task">Neue Aufgabe</string>

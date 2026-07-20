@@ -226,6 +226,8 @@ fun MushotokuApp(
         var openNoteId             by remember { mutableStateOf<Long?>(null) }
 
         val focusManager = LocalFocusManager.current
+        val scope        = rememberCoroutineScope()
+        val taskSnackbar = remember { SnackbarHostState() }
         val anyOverlayOpen = showAddTask || showNewNote || showCalendar || showSettings ||
                 showFinanceOverview || showBudgetOverview || showTrash || showMeditation
         LaunchedEffect(anyOverlayOpen) { if (anyOverlayOpen) focusManager.clearFocus() }
@@ -321,7 +323,21 @@ fun MushotokuApp(
                             if (it.isAppointment) tasksVm.toggleDone(it) else tasksVm.cycleStatus(it)
                         },
                         onTitleSave      = { task, title -> tasksVm.updateTaskTitle(task, title) },
-                        onMoveToTomorrow = { tasksVm.moveToTomorrow(it) },
+                        onMoveToTomorrow = { task ->
+                            // The task leaves Today silently, so offer the way back.
+                            val from = task.date
+                            tasksVm.moveToTomorrow(task)
+                            scope.launch {
+                                val result = taskSnackbar.showSnackbar(
+                                    message     = strings.taskMovedTomorrow,
+                                    actionLabel = strings.undo,
+                                    duration    = SnackbarDuration.Short
+                                )
+                                if (result == SnackbarResult.ActionPerformed) {
+                                    tasksVm.moveToDate(task, from)
+                                }
+                            }
+                        },
                         onReschedule     = { task, date, time -> tasksVm.moveToDate(task, date, time) },
                         onDelete         = { tasksVm.deleteTask(it) },
                         onReorder        = { tasksVm.reorderTasks(it) },
@@ -371,8 +387,6 @@ fun MushotokuApp(
                         onCreateNote          = { t, c, tp, cb -> notesVm.createNote(t, c, tp, cb) },
                         onUpdateNote          = { notesVm.updateNote(it) },
                         onDeleteNote             = { notesVm.deleteNote(it) },
-                        onPinNote                = { notesVm.pinNote(it) },
-                        confirmDeleteEnabled     = settings.confirmDeleteEnabled,
                         hapticEnabled            = settings.hapticFeedbackEnabled,
                         onEditorActiveChange     = { noteEditorActive = it },
                         onEditorBarState         = { noteEditorBarState = it },
@@ -437,6 +451,17 @@ fun MushotokuApp(
                     notes            = notes,
                     noteTypeFilter   = noteTypeFilter,
                     onClearSelection = { selectedNoteIds = emptySet() },
+                    onSetColor = { color ->
+                        notesVm.setColor(notes.filter { it.id in selectedNoteIds }, color)
+                    },
+                    onPinSelected = {
+                        val chosen = notes.filter { it.id in selectedNoteIds }
+                        // All pinned already means the button unpins; pinNote toggles,
+                        // so skip the notes that are already in the wanted state.
+                        val pinning = !chosen.all { it.isPinned }
+                        chosen.filter { it.isPinned != pinning }.forEach { notesVm.pinNote(it) }
+                        selectedNoteIds = emptySet()
+                    },
                     onDeleteSelected = {
                         notes.filter { it.id in selectedNoteIds }.forEach { notesVm.deleteNote(it) }
                         selectedNoteIds = emptySet()
@@ -457,6 +482,16 @@ fun MushotokuApp(
                         showSettings = true
                     }
                 )
+            }
+
+            SnackbarHost(
+                hostState = taskSnackbar,
+                modifier  = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = bottomPadding + 12.dp, start = 16.dp, end = 16.dp)
+            ) { data ->
+                // The action carries the app's accent, like every other one.
+                Snackbar(snackbarData = data, actionContentColor = Color(0xFF3D5AFE))
             }
 
             if (showBottomBar) {

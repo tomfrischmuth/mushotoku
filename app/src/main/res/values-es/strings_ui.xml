@@ -226,6 +226,10 @@
     <string name="notes_list_bullet">Lista con viñetas</string>
     <string name="notes_list_numbered">Lista numerada</string>
     <string name="notes_list_checkbox">Lista de tareas</string>
+    <string name="notes_tag_remove">No es una etiqueta</string>
+    <string name="notes_no_title">Aún sin título</string>
+    <string name="task_moved_tomorrow">Movido a mañana</string>
+    <string name="undo">Deshacer</string>
 
     <string name="dialog_new_appointment">Nueva cita</string>
     <string name="dialog_new_task">Nueva tarea</string>

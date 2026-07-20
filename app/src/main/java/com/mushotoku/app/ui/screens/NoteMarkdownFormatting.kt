@@ -36,9 +36,7 @@ internal fun activeToolbarFormat(line: String): String = when {
     line.startsWith("### ")     -> "h3"
     line.startsWith("## ")      -> "h2"
     line.startsWith("# ")       -> "h1"
-    line.startsWith("- [ ] ") ||
-        line.startsWith("- [x] ") ||
-        line.startsWith("- [X] ")   -> "check"
+    checkStateOf(line) != null  -> "check"
     line.startsWith("- ")       -> "dash"
     line.startsWith("* ")       -> "bullet"
     numberedPrefixLength(line) > 0 -> "number"
@@ -72,8 +70,7 @@ internal fun applyLinePrefix(tfv: TextFieldValue, prefix: String): TextFieldValu
         lineContent.startsWith("## ")  -> lineContent.substring(3)
         lineContent.startsWith("# ")   -> lineContent.substring(2)
         lineContent.startsWith("> ")   -> lineContent.substring(2)
-        lineContent.startsWith("- [x] ") || lineContent.startsWith("- [X] ") -> lineContent.substring(6)
-        lineContent.startsWith("- [ ] ") -> lineContent.substring(6)
+        checkStateOf(lineContent) != null -> lineContent.substring(ChecklistPrefixLength)
         lineContent.startsWith("- ")   -> lineContent.substring(2)
         lineContent.startsWith("* ")   -> lineContent.substring(2)
         numberedPrefixLength(lineContent) > 0 -> lineContent.substring(numberedPrefixLength(lineContent))
@@ -173,8 +170,7 @@ internal fun applyInlineFormat(tfv: TextFieldValue, marker: String): TextFieldVa
         line.startsWith("## ")  -> 3
         line.startsWith("# ")   -> 2
         line.startsWith("> ")   -> 2
-        line.startsWith("- [x] ") || line.startsWith("- [X] ") -> 6
-        line.startsWith("- [ ] ") -> 6
+        checkStateOf(line) != null -> ChecklistPrefixLength
         line.startsWith("- ")   -> 2
         line.startsWith("* ")   -> 2
         else                    -> 0
@@ -202,10 +198,9 @@ internal fun autoContinueList(old: TextFieldValue, new: TextFieldValue): TextFie
     val lineStart = old.text.lastIndexOf('\n', old.selection.start - 1) + 1
     val prevLine  = old.text.substring(lineStart, old.selection.start)
     val (prefix, content) = when {
-        prevLine.startsWith("- [x] ") || prevLine.startsWith("- [X] ") ->
-            "- [ ] " to prevLine.substring(6)
-        prevLine.startsWith("- [ ] ") ->
-            "- [ ] " to prevLine.substring(6)
+        // A new item always starts open, whatever state the one above reached.
+        checkStateOf(prevLine) != null ->
+            CheckState.OPEN.marker to prevLine.substring(ChecklistPrefixLength)
         prevLine.startsWith("- ") -> "- " to prevLine.substring(2)
         prevLine.startsWith("* ") -> "* " to prevLine.substring(2)
         numberedPrefixLength(prevLine) > 0 -> {

@@ -103,6 +103,11 @@ class TasksViewModel(app: Application) : AndroidViewModel(app) {
         repo.updateTask(task.copy(status = next))
     }
 
+    /** Puts a moved task back where it came from, for the undo action. */
+    fun moveToDate(task: Task, epochDay: Long) = viewModelScope.launch {
+        repo.updateTask(task.copy(date = epochDay))
+    }
+
     fun moveToTomorrow(task: Task) = viewModelScope.launch {
         val tomorrow = LocalDate.ofEpochDay(task.date).plusDays(1)
         repo.updateTask(task.copy(date = tomorrow.toEpochDay()))
