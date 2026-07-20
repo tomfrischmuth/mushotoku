@@ -123,4 +123,28 @@ class NoteChecklistTest {
         assertEquals(StatusYellow, CheckState.DOING.color)
         assertEquals(StatusGreen,  CheckState.DONE.color)
     }
+
+    // --- Der Cursor gehört nie vor das Kästchen ---
+
+    @Test fun `vor dem Kaestchen rueckt der Cursor hinter den Marker`() {
+        val text = "- [ ] Milch"
+        assertEquals(6, clampOutOfCheckMarker(text, 0))
+        assertEquals(6, clampOutOfCheckMarker(text, 3))
+    }
+
+    @Test fun `im Text bleibt der Cursor stehen`() {
+        val text = "- [ ] Milch"
+        assertEquals(8, clampOutOfCheckMarker(text, 8))
+    }
+
+    @Test fun `in einer gewoehnlichen Zeile aendert sich nichts`() {
+        val text = "Einkauf\n- [ ] Milch"
+        assertEquals(2, clampOutOfCheckMarker(text, 2))
+    }
+
+    @Test fun `auch in der zweiten Zeile gilt der Marker`() {
+        val text = "Einkauf\n- [x] Milch"
+        assertEquals(14, clampOutOfCheckMarker(text, 8))
+        assertEquals(16, clampOutOfCheckMarker(text, 16))
+    }
 }

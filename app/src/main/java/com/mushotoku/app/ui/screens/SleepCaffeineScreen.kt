@@ -98,37 +98,19 @@ fun SleepCaffeineScreen(
     val isDark = bgDark(colors.background)
     val hazeState = rememberHazeState()
 
-    val bgGradient = if (isDark) {
-        Brush.verticalGradient(listOf(Color(0xFF0B1020), Color(0xFF0E1430), Color(0xFF0A1124)))
-    } else {
-        Brush.verticalGradient(listOf(Color(0xFFE6ECF8), Color(0xFFEDF1FB), Color(0xFFE4ECF7)))
-    }
-    val glassStyle = if (isDark) HazeStyle(
-        blurRadius = 22.dp,
-        tints = listOf(HazeTint(Color(0xFF0C1226).copy(alpha = 0.60f))),
-        fallbackTint = HazeTint(Color(0xFF161B33)),
-    ) else HazeStyle(
-        blurRadius = 22.dp,
-        tints = listOf(HazeTint(Color.White.copy(alpha = 0.50f))),
-        fallbackTint = HazeTint(Color(0xFFEFF2FB)),
+    // Same footing as the mindfulness view it belongs to: the app's own
+    // background, cards in the app's own surface, its warm accent inherited.
+    val glassStyle = HazeStyle(
+        blurRadius   = 22.dp,
+        tints        = listOf(HazeTint(colors.surface.copy(alpha = 0.86f))),
+        fallbackTint = HazeTint(colors.surface),
     )
-    val glassBorder = if (isDark) Color.White.copy(alpha = 0.10f) else Color.White.copy(alpha = 0.70f)
-    val headerTint = if (isDark) Color.White.copy(alpha = 0.82f) else Color(0xFF24306A)
-    val orbTop = if (isDark) Color(0xFF3949AB).copy(alpha = 0.18f) else Color(0xFF7986CB).copy(alpha = 0.20f)
-    val orbBottom = if (isDark) Color(0xFF00838F).copy(alpha = 0.16f) else Color(0xFF4DD0E1).copy(alpha = 0.16f)
+    val glassBorder = colors.divider.copy(alpha = if (isDark) 0.45f else 0.70f)
+    val headerTint  = colors.onSurface
 
     Box(Modifier.fillMaxSize()) {
 
-        Box(Modifier.fillMaxSize().background(bgGradient).hazeSource(hazeState)) {
-            Box(
-                Modifier.size(300.dp).absoluteOffset(x = 110.dp, y = (-60).dp)
-                    .clip(CircleShape).background(orbTop).align(Alignment.TopEnd)
-            )
-            Box(
-                Modifier.size(240.dp).absoluteOffset(x = (-70).dp, y = 60.dp)
-                    .clip(CircleShape).background(orbBottom).align(Alignment.BottomStart)
-            )
-        }
+        Box(Modifier.fillMaxSize().background(colors.background).hazeSource(hazeState))
 
         Column(
             modifier = Modifier
@@ -147,6 +129,9 @@ fun SleepCaffeineScreen(
             }
 
             Spacer(Modifier.height(16.dp))
+
+            MindSectionLabel(strings.meditationSectionSleep)
+            Spacer(Modifier.height(8.dp))
 
             GlassCard(hazeState, glassStyle, glassBorder) {
                 Row(verticalAlignment = Alignment.CenterVertically) {

@@ -87,6 +87,54 @@ internal fun dropEmptyCheckItems(rawText: String): String =
         .filterNot { checkStateOf(it) != null && it.substring(ChecklistPrefixLength).isBlank() }
         .joinToString("\n")
 
+/**
+ * [offset] moved past the marker of the line it sits in. A caret in front of a
+ * box, or in the middle of its markup, is never what a tap was aiming for.
+ */
+internal fun clampOutOfCheckMarker(text: String, offset: Int): Int {
+    val at = offset.coerceIn(0, text.length)
+    val lineStart = text.lastIndexOf('\n', (at - 1).coerceAtLeast(0)).let { if (it < 0) 0 else it + 1 }
+    val line = text.substring(lineStart, text.indexOf('\n', lineStart).let { if (it < 0) text.length else it })
+    if (checkStateOf(line) == null) return at
+    val afterMarker = lineStart + ChecklistPrefixLength
+    return if (at < afterMarker) afterMarker.coerceAtMost(text.length) else at
+}
+
+/**
+ * The line whose box was tapped, or null. Found by where the box is drawn
+ * rather than by which character the finger came closest to: a tap that lands
+ * just beside the box would otherwise slip past it into the text.
+ */
+internal fun checkBoxLineAt(
+    layout: TextLayoutResult,
+    position: Offset,
+    bodyFontPx: Float,
+    rawText: String
+): Int? {
+    val visible = layout.layoutInput.text.text
+    val checkLines = rawText.lines().withIndex().filter { checkStateOf(it.value) != null }.map { it.index }
+    var at = visible.indexOf(CheckPlaceholder)
+    var i = 0
+    while (at >= 0 && i < checkLines.size) {
+        val box  = layout.getBoundingBox(at)
+        val side = box.right - box.left
+        if (side > 0f) {
+            val line    = layout.getLineForOffset(at)
+            val centerY = layout.getLineBaseline(line) - bodyFontPx * CentreAboveBaseline
+            // Half a box of slack all round, and everything to the left of it:
+            // there is nothing else out there to hit.
+            val pad = side * 0.5f
+            val hit = position.x <= box.right + pad &&
+                position.y >= centerY - side / 2f - pad &&
+                position.y <= centerY + side / 2f + pad
+            if (hit) return checkLines[i]
+        }
+        i++
+        at = visible.indexOf(CheckPlaceholder, at + 1)
+    }
+    return null
+}
+
 /** Every check state in [rawText], in the order the lines appear. */
 internal fun checkStatesIn(rawText: String): List<CheckState> =
     rawText.lines().mapNotNull { checkStateOf(it) }

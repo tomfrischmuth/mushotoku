@@ -186,7 +186,6 @@ internal fun buildReadView(rawText: String, colors: AppColors, accent: Color = N
                     body(ChecklistPrefixLength, SpanStyle(color = muted, textDecoration = TextDecoration.LineThrough))
                 else
                     body(ChecklistPrefixLength, null)
-                b.sb.addStringAnnotation("checkbox", idx.toString(), from, b.length)
             }
             line.startsWith("- ") -> {
                 b.styled(dashStyle(accent)) { b.append("- ", lineStart) }
@@ -243,13 +242,14 @@ internal fun NoteReadView(
                             // character, which would let the empty space beneath
                             // the note toggle its final check item.
                             val onText = tapOffset.y <= layout.getLineBottom(layout.lineCount - 1)
-                            val checkbox = if (!onText) null else annotated
-                                .getStringAnnotations("checkbox", offset, offset).firstOrNull()
+                            val boxLine = if (!onText) null else
+                                checkBoxLineAt(layout, tapOffset, NoteBodySize.toPx(), rawText)
                             when {
                                 // Ticking off an item wins over opening the editor.
-                                checkbox != null && onToggleCheckbox != null ->
-                                    onToggleCheckbox(checkbox.item.toInt())
-                                onTapText != null -> onTapText(readView.rawOffset(offset))
+                                boxLine != null && onToggleCheckbox != null ->
+                                    onToggleCheckbox(boxLine)
+                                onTapText != null ->
+                                    onTapText(clampOutOfCheckMarker(rawText, readView.rawOffset(offset)))
                             }
                         }
                     }

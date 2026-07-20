@@ -21,7 +21,6 @@ package com.mushotoku.app.ui.screens
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,7 +50,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -138,6 +141,11 @@ internal fun NoteEditor(
     // Set while the only change so far is a tick, so the note keeps its place
     // in the list. Any typing clears it again.
     var tickOnly by remember(note?.id) { mutableStateOf(false) }
+
+    // Set when the editor was opened by tapping the title, so the caret starts
+    // there rather than in the text — at the letter that was tapped.
+    var editTitle  by remember(note?.id) { mutableStateOf(false) }
+    var titleCaret by remember(note?.id) { mutableStateOf<Int?>(null) }
 
     fun renderStamp(at: LocalDateTime, withDate: Boolean): String {
         val time = at.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(strings.locale))
@@ -256,8 +264,9 @@ internal fun NoteEditor(
         if (isEditing) {
             // A brand-new note starts where the setting says; an existing one
             // always opens in the text, where the work is.
-            val target = if (isNew && startInTitle) titleFocusRequester else focusRequester
+            val target = if (editTitle || (isNew && startInTitle)) titleFocusRequester else focusRequester
             try { target.requestFocus() } catch (_: Exception) {}
+            editTitle = false
         } else {
             keyboard?.hide()
             persist(text.text)
@@ -337,7 +346,10 @@ internal fun NoteEditor(
             focusRequester = titleFocusRequester,
             // Enter in the title carries on into the text, as one would expect
             // from a line that is followed by the note itself.
-            onNext         = { try { focusRequester.requestFocus() } catch (_: Exception) {} }
+            onNext         = { try { focusRequester.requestFocus() } catch (_: Exception) {} },
+            caret          = titleCaret,
+            onCaretUsed    = { titleCaret = null },
+            onTap          = { at -> titleCaret = at; editTitle = true; isEditing = true }
         )
         }
         // The text reaches at least to the bottom of the screen, so tapping the
@@ -350,11 +362,18 @@ internal fun NoteEditor(
                 onValueChange  = { new ->
                     val unboxed = deleteCheckMarker(text, new)
                     if (new.text != text.text) tickOnly = false
-                    text = when {
+                    val next = when {
                         unboxed != null -> unboxed
                         new.text != text.text -> lowercaseTags(autoContinueList(text, new))
                         else -> lowercaseTags(new)
                     }
+                    // A tap on or beside the box would otherwise leave the caret
+                    // in front of the marker, where nothing can be written.
+                    text = if (next.selection.collapsed && next.text == text.text) {
+                        val moved = clampOutOfCheckMarker(next.text, next.selection.start)
+                        if (moved == next.selection.start) next
+                        else next.copy(selection = TextRange(moved))
+                    } else next
                 },
                 focusRequester = focusRequester,
                 modifier       = Modifier.fillMaxWidth().heightIn(min = bodyMinHeight)
@@ -439,7 +458,11 @@ private fun NoteTitleField(
     onChange: (String) -> Unit,
     editable: Boolean,
     focusRequester: FocusRequester,
-    onNext: () -> Unit
+    onNext: () -> Unit,
+    /** Where a tap in the read view landed, so the caret starts there. */
+    caret: Int? = null,
+    onCaretUsed: () -> Unit = {},
+    onTap: (Int) -> Unit = {}
 ) {
     val colors  = LocalAppColors.current
     val strings = LocalAppStrings.current
@@ -455,30 +478,58 @@ private fun NoteTitleField(
             .padding(top = NoteBodyPaddingTop, bottom = 4.dp)
     ) {
         if (editable) {
+            // The field keeps its own selection; the editor only knows the text.
+            var field by remember { mutableStateOf(TextFieldValue(value, TextRange(value.length))) }
+            if (field.text != value) field = field.copy(text = value)
+            LaunchedEffect(caret) {
+                val at = caret ?: return@LaunchedEffect
+                field = field.copy(selection = TextRange(at.coerceIn(0, field.text.length)))
+                onCaretUsed()
+            }
             BasicTextField(
-                value         = value,
+                value         = field,
                 onValueChange = { typed ->
                     // The title wraps, so Enter would insert a line break; it is
                     // taken as the step into the text instead.
-                    if (typed.contains('\n')) {
-                        onChange(typed.replace("\n", ""))
+                    if (typed.text.contains('\n')) {
+                        val cleaned = typed.text.replace("\n", "")
+                        field = typed.copy(
+                            text      = cleaned,
+                            selection = TextRange(typed.selection.start.coerceIn(0, cleaned.length))
+                        )
+                        onChange(cleaned)
                         onNext()
-                    } else onChange(typed)
+                    } else {
+                        field = typed
+                        onChange(typed.text)
+                    }
                 },
                 textStyle     = style,
                 cursorBrush     = SolidColor(NoteAccent),
                 modifier        = Modifier.fillMaxWidth().focusRequester(focusRequester),
                 decorationBox = { inner ->
-                    if (value.isEmpty()) {
+                    if (field.text.isEmpty()) {
                         Text(strings.notesNoTitle, style = style.copy(color = colors.onSurfaceTertiary))
                     }
                     inner()
                 }
             )
         } else {
+            // Reading the title and wanting to change it is the same motion as
+            // with the text below: the tap opens it, at the letter it landed on.
+            var layout by remember { mutableStateOf<TextLayoutResult?>(null) }
             Text(
                 text  = value.ifBlank { strings.notesNoTitle },
-                style = if (value.isBlank()) style.copy(color = colors.onSurfaceTertiary) else style
+                style = if (value.isBlank()) style.copy(color = colors.onSurfaceTertiary) else style,
+                onTextLayout = { layout = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .pointerInput(value) {
+                        detectTapGestures { pos ->
+                            val at = layout?.getOffsetForPosition(pos) ?: value.length
+                            onTap(at.coerceIn(0, value.length))
+                        }
+                    }
             )
         }
     }

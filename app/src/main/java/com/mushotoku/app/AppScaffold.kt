@@ -311,6 +311,8 @@ fun MushotokuApp(
         // to Today.
         BackHandler(enabled = true) {
             when {
+                // Picking notes is a mode of its own; back leaves it.
+                selectedNoteIds.isNotEmpty() -> selectedNoteIds = emptySet()
                 showMeditation -> showMeditation = false
                 showCalendar   -> showCalendar = false
                 showTrash      -> showTrash = false
