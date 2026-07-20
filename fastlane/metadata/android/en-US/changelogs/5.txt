@@ -1,0 +1,3 @@
+- Notes: a new button in the editor toolbar inserts the current time at the cursor. Long-press it to insert the date as well.
+- Finance: added the Israeli new shekel (ILS). You can also define your own currency now: pick the symbol, where it sits, and how amounts are written.
+- Fixed: amounts could use the wrong decimal separator when the device language differed from the selected currency.

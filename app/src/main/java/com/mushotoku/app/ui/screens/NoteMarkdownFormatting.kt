@@ -44,6 +44,25 @@ internal fun applyLinePrefix(tfv: TextFieldValue, prefix: String): TextFieldValu
     return TextFieldValue(newText, TextRange(newCursor))
 }
 
+/**
+ * Drops [insert] in at the cursor (replacing any selection) and pads it with
+ * spaces where it would otherwise collide with surrounding words.
+ */
+internal fun insertAtCursor(tfv: TextFieldValue, insert: String): TextFieldValue {
+    val text = tfv.text
+    val start = tfv.selection.min.coerceIn(0, text.length)
+    val end   = tfv.selection.max.coerceIn(0, text.length)
+    val needsLeadingSpace  = start > 0 && text[start - 1] !in " \n\t"
+    val needsTrailingSpace = end >= text.length || text[end] !in " \n\t"
+    val piece = buildString {
+        if (needsLeadingSpace) append(' ')
+        append(insert)
+        if (needsTrailingSpace) append(' ')
+    }
+    val newText = text.substring(0, start) + piece + text.substring(end)
+    return TextFieldValue(newText, TextRange(start + piece.length))
+}
+
 private fun isWrappedWith(content: String, marker: String): Boolean {
     if (content.length < marker.length * 2 + 1) return false
     if (!content.startsWith(marker) || !content.endsWith(marker)) return false

@@ -56,6 +56,9 @@ import com.mushotoku.app.data.Task
 import com.mushotoku.app.ui.strings.LocalAppStrings
 import com.mushotoku.app.ui.theme.LocalAppColors
 import com.mushotoku.app.util.performCheckHaptic
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
@@ -102,6 +105,21 @@ internal fun NoteEditor(
     }
 
     val canUndo by remember { derivedStateOf { text.selection.start > 0 || !text.selection.collapsed } }
+
+    // Timestamps are what turns a note into a diary: tap stamps the time,
+    // long-press stamps the date as well.
+    fun insertTimestamp(withDate: Boolean) {
+        val now = LocalDateTime.now()
+        val time = now.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(strings.locale))
+        val stamp = if (!withDate) {
+            time
+        } else {
+            val date = now.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(strings.locale))
+            if (hapticEnabled) context.performCheckHaptic()
+            "$date $time"
+        }
+        text = insertAtCursor(text, stamp)
+    }
 
     fun undo() {
         val new = deleteWordBackward(text)
@@ -232,6 +250,7 @@ internal fun NoteEditor(
                 canUndo       = canUndo,
                 onApplyPrefix = { prefix -> text = applyLinePrefix(text, prefix) },
                 onApplyInline = { marker -> text = applyInlineFormat(text, marker) },
+                onInsertTimestamp = ::insertTimestamp,
                 onUndo        = ::undo
             )
         }

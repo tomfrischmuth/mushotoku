@@ -419,6 +419,7 @@ fun MushotokuApp(
                 AppTab.TODAY -> TodayTopBar(
                     modifier       = topBarModifier,
                     selectedDate   = selectedDate,
+                    onOpenMindfulness = { showMeditation = true },
                     onOpenCalendar = {
                         vm.setCalendarMonth(YearMonth.from(selectedDate))
                         showCalendar = true

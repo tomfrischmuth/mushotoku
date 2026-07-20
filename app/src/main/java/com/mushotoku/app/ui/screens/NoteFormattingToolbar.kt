@@ -19,8 +19,13 @@
 package com.mushotoku.app.ui.screens
 import com.mushotoku.app.ui.components.soundClick
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -30,18 +35,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Undo
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ripple
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -54,12 +64,22 @@ import com.mushotoku.app.ui.theme.LocalAppColors
 
 private val ToolbarAccent = Color(0xFF3D5AFE)
 
+/** Material's minimum touch target; chips draw at least this wide so the gaps stay even. */
+private val ChipMinWidth = 48.dp
+
+/** Horizontal padding Material puts around a chip label. */
+private val ChipLabelPadding = 16.dp
+
+/** Widening the label instead of the chip keeps short labels centred. */
+private val ChipLabelMinWidth = ChipMinWidth - ChipLabelPadding * 2
+
 @Composable
 internal fun FormattingToolbar(
     currentLine: String,
     canUndo: Boolean,
     onApplyPrefix: (String) -> Unit,
     onApplyInline: (String) -> Unit,
+    onInsertTimestamp: (withDate: Boolean) -> Unit,
     onUndo: () -> Unit
 ) {
     val colors  = LocalAppColors.current
@@ -97,6 +117,14 @@ internal fun FormattingToolbar(
 
                 FormatChip("B", fontWeight = FontWeight.Bold)                { onApplyInline("**") }
                 FormatChip("I", fontStyle  = FontStyle.Italic)               { onApplyInline("*") }
+
+                ToolbarDivider(colors.divider)
+
+                TimestampChip(
+                    description  = strings.notesInsertTimestamp,
+                    onClick      = { onInsertTimestamp(false) },
+                    onLongClick  = { onInsertTimestamp(true) }
+                )
             }
 
             IconButton(
@@ -113,6 +141,41 @@ internal fun FormattingToolbar(
             }
             Spacer(Modifier.width(4.dp))
         }
+    }
+}
+
+/**
+ * Chip-shaped button that inserts the current time; a long press inserts the
+ * date as well. Built by hand because FilterChip has no long-press hook.
+ */
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun TimestampChip(
+    description: String,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
+) {
+    val shape = RoundedCornerShape(8.dp)
+    Box(
+        modifier = Modifier
+            .height(32.dp)
+            .width(ChipMinWidth)
+            .border(1.dp, ToolbarAccent, shape)
+            .clip(shape)
+            .combinedClickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication  = ripple(),
+                onClick     = soundClick(onClick),
+                onLongClick = soundClick(onLongClick)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector        = Icons.Default.Schedule,
+            contentDescription = description,
+            tint               = ToolbarAccent,
+            modifier           = Modifier.size(18.dp)
+        )
     }
 }
 
@@ -141,14 +204,23 @@ private fun FormatChip(
         selected = selected,
         onClick  = soundClick(onClick),
         label    = {
-            Text(
-                text           = label,
-                fontSize       = 13.sp,
-                fontWeight     = fontWeight,
-                fontStyle      = fontStyle,
-                textDecoration = textDecoration,
-                fontFamily     = fontFamily
-            )
+            // A single-letter chip would stay narrower than the 48dp minimum
+            // touch target and get padded with invisible space, widening the
+            // gaps around it. Giving the label the minimum width instead grows
+            // the chip itself and keeps the letter centred.
+            Box(
+                Modifier.widthIn(min = ChipLabelMinWidth),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text           = label,
+                    fontSize       = 13.sp,
+                    fontWeight     = fontWeight,
+                    fontStyle      = fontStyle,
+                    textDecoration = textDecoration,
+                    fontFamily     = fontFamily
+                )
+            }
         },
         colors = FilterChipDefaults.filterChipColors(
             containerColor         = Color.Transparent,

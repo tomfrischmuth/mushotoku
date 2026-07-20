@@ -29,6 +29,7 @@
     <string name="cancel">Cancelar</string>
     <string name="delete">Eliminar</string>
     <string name="close">Cerrar</string>
+    <string name="save">Guardar</string>
     <string name="export">Exportar</string>
 
     <string name="settings">Ajustes</string>
@@ -107,6 +108,21 @@
     <string name="delete_all_notes_dialog_text">Todas las notas se moverán a la papelera.</string>
 
     <string name="currency_label">Moneda</string>
+    <string name="currency_custom">Personalizada</string>
+    <string name="currency_custom_menu">Personalizada …</string>
+    <string name="currency_custom_title">Moneda personalizada</string>
+    <string name="currency_custom_symbol">Símbolo</string>
+    <string name="currency_custom_position">Posición del símbolo</string>
+    <string name="currency_custom_position_before">Antes del importe</string>
+    <string name="currency_custom_position_after">Después del importe</string>
+    <string name="currency_custom_space">Espacio entre símbolo e importe</string>
+    <string name="currency_custom_decimals">Decimales</string>
+    <string name="currency_custom_decimals_two">Dos (1234,56)</string>
+    <string name="currency_custom_decimals_none">Ninguno (1235)</string>
+    <string name="currency_custom_separator">Separador decimal</string>
+    <string name="currency_custom_separator_dot">Punto (1234.56)</string>
+    <string name="currency_custom_separator_comma">Coma (1234,56)</string>
+    <string name="currency_custom_preview">Vista previa</string>
     <string name="section_salary">Sueldo</string>
     <string name="salary_amount_label">Sueldo neto mensual</string>
     <string name="salary_day_label">Día de cobro</string>
@@ -205,6 +221,7 @@
     <string name="notes_pin_action">Fijar</string>
     <string name="notes_unpin_action">Desfijar</string>
     <string name="notes_checklist_hint">Añadir elemento</string>
+    <string name="notes_insert_timestamp">Insertar hora (mantén pulsado para la fecha)</string>
 
     <string name="dialog_new_appointment">Nueva cita</string>
     <string name="dialog_new_task">Nueva tarea</string>

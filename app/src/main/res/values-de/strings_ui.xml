@@ -29,6 +29,7 @@
     <string name="cancel">Abbrechen</string>
     <string name="delete">Löschen</string>
     <string name="close">Schließen</string>
+    <string name="save">Speichern</string>
     <string name="export">Exportieren</string>
 
     <string name="settings">Einstellungen</string>
@@ -107,6 +108,21 @@
     <string name="delete_all_notes_dialog_text">Alle Notizen werden in den Papierkorb verschoben.</string>
 
     <string name="currency_label">Währung</string>
+    <string name="currency_custom">Eigene</string>
+    <string name="currency_custom_menu">Eigene …</string>
+    <string name="currency_custom_title">Eigene Währung</string>
+    <string name="currency_custom_symbol">Symbol</string>
+    <string name="currency_custom_position">Position des Symbols</string>
+    <string name="currency_custom_position_before">Vor dem Betrag</string>
+    <string name="currency_custom_position_after">Nach dem Betrag</string>
+    <string name="currency_custom_space">Leerzeichen zwischen Symbol und Betrag</string>
+    <string name="currency_custom_decimals">Nachkommastellen</string>
+    <string name="currency_custom_decimals_two">Zwei (1234,56)</string>
+    <string name="currency_custom_decimals_none">Keine (1235)</string>
+    <string name="currency_custom_separator">Dezimaltrennzeichen</string>
+    <string name="currency_custom_separator_dot">Punkt (1234.56)</string>
+    <string name="currency_custom_separator_comma">Komma (1234,56)</string>
+    <string name="currency_custom_preview">Vorschau</string>
     <string name="section_salary">Gehalt</string>
     <string name="salary_amount_label">Monatliches Netto-Gehalt</string>
     <string name="salary_day_label">Gehaltseingang</string>
@@ -205,6 +221,7 @@
     <string name="notes_pin_action">Anpinnen</string>
     <string name="notes_unpin_action">Loslösen</string>
     <string name="notes_checklist_hint">Punkt hinzufügen</string>
+    <string name="notes_insert_timestamp">Uhrzeit einfügen (lang drücken für Datum)</string>
 
     <string name="dialog_new_appointment">Neuer Termin</string>
     <string name="dialog_new_task">Neue Aufgabe</string>

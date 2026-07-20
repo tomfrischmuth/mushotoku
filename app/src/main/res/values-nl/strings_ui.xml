@@ -29,6 +29,7 @@
     <string name="cancel">Annuleren</string>
     <string name="delete">Verwijderen</string>
     <string name="close">Sluiten</string>
+    <string name="save">Opslaan</string>
     <string name="export">Exporteren</string>
 
     <string name="settings">Instellingen</string>
@@ -107,6 +108,21 @@
     <string name="delete_all_notes_dialog_text">Alle notities worden naar de prullenbak verplaatst.</string>
 
     <string name="currency_label">Valuta</string>
+    <string name="currency_custom">Aangepast</string>
+    <string name="currency_custom_menu">Aangepast …</string>
+    <string name="currency_custom_title">Aangepaste valuta</string>
+    <string name="currency_custom_symbol">Symbool</string>
+    <string name="currency_custom_position">Positie van het symbool</string>
+    <string name="currency_custom_position_before">Voor het bedrag</string>
+    <string name="currency_custom_position_after">Na het bedrag</string>
+    <string name="currency_custom_space">Spatie tussen symbool en bedrag</string>
+    <string name="currency_custom_decimals">Decimalen</string>
+    <string name="currency_custom_decimals_two">Twee (1234,56)</string>
+    <string name="currency_custom_decimals_none">Geen (1235)</string>
+    <string name="currency_custom_separator">Decimaalteken</string>
+    <string name="currency_custom_separator_dot">Punt (1234.56)</string>
+    <string name="currency_custom_separator_comma">Komma (1234,56)</string>
+    <string name="currency_custom_preview">Voorbeeld</string>
     <string name="section_salary">Salaris</string>
     <string name="salary_amount_label">Maandelijks nettosalaris</string>
     <string name="salary_day_label">Salarisdag</string>
@@ -205,6 +221,7 @@
     <string name="notes_pin_action">Vastzetten</string>
     <string name="notes_unpin_action">Losmaken</string>
     <string name="notes_checklist_hint">Item toevoegen</string>
+    <string name="notes_insert_timestamp">Tijd invoegen (lang indrukken voor datum)</string>
 
     <string name="dialog_new_appointment">Nieuwe afspraak</string>
     <string name="dialog_new_task">Nieuwe taak</string>

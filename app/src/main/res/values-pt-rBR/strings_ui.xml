@@ -29,6 +29,7 @@
     <string name="cancel">Cancelar</string>
     <string name="delete">Excluir</string>
     <string name="close">Fechar</string>
+    <string name="save">Salvar</string>
     <string name="export">Exportar</string>
 
     <string name="settings">Configurações</string>
@@ -107,6 +108,21 @@
     <string name="delete_all_notes_dialog_text">Todas as notas serão movidas para a lixeira.</string>
 
     <string name="currency_label">Moeda</string>
+    <string name="currency_custom">Personalizada</string>
+    <string name="currency_custom_menu">Personalizada …</string>
+    <string name="currency_custom_title">Moeda personalizada</string>
+    <string name="currency_custom_symbol">Símbolo</string>
+    <string name="currency_custom_position">Posição do símbolo</string>
+    <string name="currency_custom_position_before">Antes do valor</string>
+    <string name="currency_custom_position_after">Depois do valor</string>
+    <string name="currency_custom_space">Espaço entre símbolo e valor</string>
+    <string name="currency_custom_decimals">Casas decimais</string>
+    <string name="currency_custom_decimals_two">Duas (1234,56)</string>
+    <string name="currency_custom_decimals_none">Nenhuma (1235)</string>
+    <string name="currency_custom_separator">Separador decimal</string>
+    <string name="currency_custom_separator_dot">Ponto (1234.56)</string>
+    <string name="currency_custom_separator_comma">Vírgula (1234,56)</string>
+    <string name="currency_custom_preview">Visualização</string>
     <string name="section_salary">Salário</string>
     <string name="salary_amount_label">Salário líquido mensal</string>
     <string name="salary_day_label">Dia do salário</string>
@@ -205,6 +221,7 @@
     <string name="notes_pin_action">Fixar</string>
     <string name="notes_unpin_action">Desafixar</string>
     <string name="notes_checklist_hint">Adicionar item</string>
+    <string name="notes_insert_timestamp">Inserir hora (toque longo para a data)</string>
 
     <string name="dialog_new_appointment">Novo compromisso</string>
     <string name="dialog_new_task">Nova tarefa</string>

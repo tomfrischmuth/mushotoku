@@ -29,6 +29,7 @@
     <string name="cancel">Annulla</string>
     <string name="delete">Elimina</string>
     <string name="close">Chiudi</string>
+    <string name="save">Salva</string>
     <string name="export">Esporta</string>
 
     <string name="settings">Impostazioni</string>
@@ -107,6 +108,21 @@
     <string name="delete_all_notes_dialog_text">Tutte le note saranno spostate nel cestino.</string>
 
     <string name="currency_label">Valuta</string>
+    <string name="currency_custom">Personalizzata</string>
+    <string name="currency_custom_menu">Personalizzata …</string>
+    <string name="currency_custom_title">Valuta personalizzata</string>
+    <string name="currency_custom_symbol">Simbolo</string>
+    <string name="currency_custom_position">Posizione del simbolo</string>
+    <string name="currency_custom_position_before">Prima dell\'importo</string>
+    <string name="currency_custom_position_after">Dopo l\'importo</string>
+    <string name="currency_custom_space">Spazio tra simbolo e importo</string>
+    <string name="currency_custom_decimals">Decimali</string>
+    <string name="currency_custom_decimals_two">Due (1234,56)</string>
+    <string name="currency_custom_decimals_none">Nessuno (1235)</string>
+    <string name="currency_custom_separator">Separatore decimale</string>
+    <string name="currency_custom_separator_dot">Punto (1234.56)</string>
+    <string name="currency_custom_separator_comma">Virgola (1234,56)</string>
+    <string name="currency_custom_preview">Anteprima</string>
     <string name="section_salary">Stipendio</string>
     <string name="salary_amount_label">Stipendio netto mensile</string>
     <string name="salary_day_label">Giorno dello stipendio</string>
@@ -205,6 +221,7 @@
     <string name="notes_pin_action">Fissa</string>
     <string name="notes_unpin_action">Rimuovi</string>
     <string name="notes_checklist_hint">Aggiungi elemento</string>
+    <string name="notes_insert_timestamp">Inserisci l\'ora (tieni premuto per la data)</string>
 
     <string name="dialog_new_appointment">Nuovo appuntamento</string>
     <string name="dialog_new_task">Nuova attività</string>

@@ -29,6 +29,7 @@
     <string name="cancel">Anuluj</string>
     <string name="delete">Usuń</string>
     <string name="close">Zamknij</string>
+    <string name="save">Zapisz</string>
     <string name="export">Eksportuj</string>
 
     <string name="settings">Ustawienia</string>
@@ -107,6 +108,21 @@
     <string name="delete_all_notes_dialog_text">Wszystkie notatki zostaną przeniesione do kosza.</string>
 
     <string name="currency_label">Waluta</string>
+    <string name="currency_custom">Własna</string>
+    <string name="currency_custom_menu">Własna …</string>
+    <string name="currency_custom_title">Własna waluta</string>
+    <string name="currency_custom_symbol">Symbol</string>
+    <string name="currency_custom_position">Pozycja symbolu</string>
+    <string name="currency_custom_position_before">Przed kwotą</string>
+    <string name="currency_custom_position_after">Po kwocie</string>
+    <string name="currency_custom_space">Odstęp między symbolem a kwotą</string>
+    <string name="currency_custom_decimals">Miejsca dziesiętne</string>
+    <string name="currency_custom_decimals_two">Dwa (1234,56)</string>
+    <string name="currency_custom_decimals_none">Brak (1235)</string>
+    <string name="currency_custom_separator">Separator dziesiętny</string>
+    <string name="currency_custom_separator_dot">Kropka (1234.56)</string>
+    <string name="currency_custom_separator_comma">Przecinek (1234,56)</string>
+    <string name="currency_custom_preview">Podgląd</string>
     <string name="section_salary">Wynagrodzenie</string>
     <string name="salary_amount_label">Miesięczne wynagrodzenie netto</string>
     <string name="salary_day_label">Dzień wypłaty</string>
@@ -215,6 +231,7 @@
     <string name="notes_pin_action">Przypnij</string>
     <string name="notes_unpin_action">Odepnij</string>
     <string name="notes_checklist_hint">Dodaj pozycję</string>
+    <string name="notes_insert_timestamp">Wstaw godzinę (przytrzymaj, aby wstawić datę)</string>
 
     <string name="dialog_new_appointment">Nowy termin</string>
     <string name="dialog_new_task">Nowe zadanie</string>

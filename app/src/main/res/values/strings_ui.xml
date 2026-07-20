@@ -29,6 +29,7 @@
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="close">Close</string>
+    <string name="save">Save</string>
     <string name="export">Export</string>
 
     <string name="settings">Settings</string>
@@ -107,6 +108,21 @@
     <string name="delete_all_notes_dialog_text">All notes will be moved to the trash.</string>
 
     <string name="currency_label">Currency</string>
+    <string name="currency_custom">Custom</string>
+    <string name="currency_custom_menu">Custom …</string>
+    <string name="currency_custom_title">Custom currency</string>
+    <string name="currency_custom_symbol">Symbol</string>
+    <string name="currency_custom_position">Symbol position</string>
+    <string name="currency_custom_position_before">Before the amount</string>
+    <string name="currency_custom_position_after">After the amount</string>
+    <string name="currency_custom_space">Space between symbol and amount</string>
+    <string name="currency_custom_decimals">Decimal places</string>
+    <string name="currency_custom_decimals_two">Two (1234.56)</string>
+    <string name="currency_custom_decimals_none">None (1235)</string>
+    <string name="currency_custom_separator">Decimal separator</string>
+    <string name="currency_custom_separator_dot">Point (1234.56)</string>
+    <string name="currency_custom_separator_comma">Comma (1234,56)</string>
+    <string name="currency_custom_preview">Preview</string>
     <string name="section_salary">Salary</string>
     <string name="salary_amount_label">Monthly Net Salary</string>
     <string name="salary_day_label">Salary Day</string>
@@ -205,6 +221,7 @@
     <string name="notes_pin_action">Pin</string>
     <string name="notes_unpin_action">Unpin</string>
     <string name="notes_checklist_hint">Add item</string>
+    <string name="notes_insert_timestamp">Insert time (long-press for date)</string>
 
     <string name="dialog_new_appointment">New Appointment</string>
     <string name="dialog_new_task">New Task</string>

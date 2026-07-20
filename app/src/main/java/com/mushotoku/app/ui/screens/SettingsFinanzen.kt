@@ -83,7 +83,9 @@ internal fun FinanzenSection(
     var showAddDialog by remember { mutableStateOf(false) }
     var showResetDialog by remember { mutableStateOf(false) }
     var currencyExpanded by remember { mutableStateOf(false) }
+    var showCustomCurrencyDialog by remember { mutableStateOf(false) }
     val selectedCurrency = remember(settings.currency) { currencyByCode(settings.currency) }
+    val customSelected = remember(settings.currency) { isCustomCurrency(settings.currency) }
     val expandedGroups = remember { mutableStateMapOf<String, Boolean>() }
 
     var salaryText  by remember(settings.salary) {
@@ -122,7 +124,8 @@ internal fun FinanzenSection(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "${selectedCurrency.code}  ${selectedCurrency.symbol}",
+                        if (customSelected) "${strings.currencyCustom}  ${selectedCurrency.symbol}"
+                        else "${selectedCurrency.code}  ${selectedCurrency.symbol}",
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = colors.onSurface,
@@ -155,6 +158,21 @@ internal fun FinanzenSection(
                             }
                         )
                     }
+                    HorizontalDivider(color = colors.divider)
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                strings.currencyCustomMenu,
+                                fontSize = 14.sp,
+                                color = if (customSelected) colors.accent else colors.onSurface,
+                                fontWeight = if (customSelected) FontWeight.SemiBold else FontWeight.Normal
+                            )
+                        },
+                        onClick = {
+                            currencyExpanded = false
+                            showCustomCurrencyDialog = true
+                        }
+                    )
                 }
             }
         }
@@ -313,6 +331,14 @@ internal fun FinanzenSection(
         }
 
         Spacer(Modifier.height(24.dp))
+    }
+
+    if (showCustomCurrencyDialog) {
+        CustomCurrencyDialog(
+            initial   = selectedCurrency.takeIf { customSelected },
+            onConfirm = { encoded -> onSetCurrency(encoded); showCustomCurrencyDialog = false },
+            onDismiss = { showCustomCurrencyDialog = false }
+        )
     }
 
     if (showAddDialog) {
