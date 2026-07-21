@@ -190,13 +190,16 @@ internal fun NoteEditor(
         }
         // A long press always wants the date; a tap flips to the other form.
         val nextWithDate = if (withDate) true else anchor?.let { !it.withDate } ?: false
-        val rewritten = anchor?.let { toggleStamp(text, it, renderStamp(it.at, nextWithDate)) }
 
-        if (rewritten != null && anchor != null) {
-            text = rewritten
-            stampAnchor = anchor.copy(text = renderStamp(anchor.at, nextWithDate), withDate = nextWithDate)
-            if (hapticEnabled && nextWithDate) context.performCheckHaptic()
-            return
+        if (anchor != null) {
+            val stamp = renderStamp(anchor.at, nextWithDate)
+            val rewritten = toggleStamp(text, anchor, stamp)
+            if (rewritten != null) {
+                text = rewritten
+                stampAnchor = anchor.copy(text = stamp, withDate = nextWithDate)
+                if (hapticEnabled && nextWithDate) context.performCheckHaptic()
+                return
+            }
         }
 
         val now = LocalDateTime.now()
