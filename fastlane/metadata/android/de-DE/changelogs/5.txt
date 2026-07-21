@@ -1,3 +1,8 @@
-- Notizen: Ein neuer Knopf in der Editor-Leiste fügt die aktuelle Uhrzeit an der Cursor-Position ein. Lang drücken fügt zusätzlich das Datum ein.
-- Finanzen: Der israelische neue Schekel (ILS) ist dazugekommen. Außerdem lässt sich jetzt eine eigene Währung festlegen: Symbol, Position und Schreibweise der Beträge bestimmst du selbst.
-- Behoben: Beträge konnten das falsche Dezimaltrennzeichen verwenden, wenn die Gerätesprache nicht zur gewählten Währung passte.
+- Notizen neu gebaut: Raster farbiger Karten
+- Mit #tag Notizen markieren und filtern
+- Listen und Checklisten im Editor, dazu Zeitstempel
+- Schnellfilter für Listen und Zeitstempel-Notizen
+- Finanzen und Achtsamkeit unter Funktionen abschaltbar
+- Finanzen: israelischer Schekel und eigene Währungen
+- Behoben: Dezimaltrennzeichen, Kästchen-Tippen, Karten im Dunkelmodus
+- Sicherheit: Wiederherstellungscode bleibt nicht in Cache oder Zwischenablage

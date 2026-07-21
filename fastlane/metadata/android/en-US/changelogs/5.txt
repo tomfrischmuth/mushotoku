@@ -1,3 +1,8 @@
-- Notes: a new button in the editor toolbar inserts the current time at the cursor. Long-press it to insert the date as well.
-- Finance: added the Israeli new shekel (ILS). You can also define your own currency now: pick the symbol, where it sits, and how amounts are written.
-- Fixed: amounts could use the wrong decimal separator when the device language differed from the selected currency.
+- Notes rebuilt: a grid of coloured cards, with pinning
+- Type #tag anywhere to tag and filter notes
+- Lists and checklists in the editor, plus timestamps
+- Quick filters for lists and timestamped notes
+- New Features setting to toggle Finance and Mindfulness
+- Finance: the Israeli shekel and custom currencies
+- Fixes: decimal separators, checkbox taps, dark-mode cards
+- Security: the recovery code no longer lingers in cache or clipboard
