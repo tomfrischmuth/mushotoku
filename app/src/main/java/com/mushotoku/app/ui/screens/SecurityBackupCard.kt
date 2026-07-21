@@ -18,11 +18,11 @@
 
 package com.mushotoku.app.ui.screens
 
+import com.mushotoku.app.ui.components.rememberDocumentPicker
 import com.mushotoku.app.ui.components.*
 import com.mushotoku.app.ui.strings.*
 
 import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -65,7 +65,7 @@ internal fun BackupCard(s: SecurityStrings) {
     var resultMsg by remember { mutableStateOf<String?>(null) }
     var working by remember { mutableStateOf(false) }
 
-    val createLauncher = rememberLauncherForActivityResult(
+    val saveBackup = rememberDocumentPicker(
         ActivityResultContracts.CreateDocument("application/octet-stream"),
     ) { uri ->
         if (uri != null) {
@@ -73,7 +73,7 @@ internal fun BackupCard(s: SecurityStrings) {
             showExportPassword = true
         }
     }
-    val openLauncher = rememberLauncherForActivityResult(
+    val pickBackup = rememberDocumentPicker(
         ActivityResultContracts.OpenDocument(),
     ) { uri ->
         if (uri != null) {
@@ -86,7 +86,7 @@ internal fun BackupCard(s: SecurityStrings) {
         SecClickRow(
             title = s.createBackup,
             subtitle = s.createBackupHint,
-            onClick = { resultMsg = null; createLauncher.launch(defaultBackupName()) },
+            onClick = { resultMsg = null; saveBackup(defaultBackupName()) },
         )
     }
     Spacer(Modifier.height(10.dp))
@@ -94,7 +94,7 @@ internal fun BackupCard(s: SecurityStrings) {
         SecClickRow(
             title = s.restoreBackup,
             subtitle = s.restoreBackupHint,
-            onClick = { resultMsg = null; openLauncher.launch(arrayOf("*/*")) },
+            onClick = { resultMsg = null; pickBackup(arrayOf("*/*")) },
         )
     }
 

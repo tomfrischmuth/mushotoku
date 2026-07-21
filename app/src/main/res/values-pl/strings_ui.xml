@@ -465,9 +465,9 @@
     <string name="lock_reset_confirm_message">Spowoduje to trwałe i nieodwracalne usunięcie wszystkich danych aplikacji na tym urządzeniu.</string>
     <string name="lock_reset_confirm_button">Usuń wszystko</string>
     <string name="recovery_setup_title">Zapisz kod odzyskiwania</string>
-    <string name="recovery_setup_message">Ten jednorazowy kod to jedyny sposób na odblokowanie danych, jeśli biometria przestanie działać lub zapomnisz hasła. Przechowuj go bezpiecznie: skopiuj do menedżera haseł, udostępnij sobie lub zapisz. Nigdy nie jest przechowywany w czytelnej formie i nie można go dla Ciebie odzyskać.</string>
+    <string name="recovery_setup_message">Ten jednorazowy kod to jedyny sposób na odblokowanie danych, jeśli biometria przestanie działać lub zapomnisz hasła. Przechowuj go bezpiecznie: skopiuj do menedżera haseł, zachowaj jako PDF lub zapisz. Nigdy nie jest przechowywany w czytelnej formie i nie można go dla Ciebie odzyskać.</string>
     <string name="recovery_copy">Kopiuj</string>
-    <string name="recovery_share">Udostępnij</string>
+    <string name="recovery_save_pdf">Zapisz jako PDF</string>
     <string name="recovery_saved_check">Zapisałem swój kod odzyskiwania</string>
     <string name="recovery_continue">Kontynuuj</string>
     <string name="recovery_pdf_title">Twój kod odzyskiwania</string>

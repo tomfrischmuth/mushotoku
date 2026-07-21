@@ -438,9 +438,9 @@
     <string name="lock_reset_confirm_message">Dies löscht alle App-Daten auf diesem Gerät unwiderruflich.</string>
     <string name="lock_reset_confirm_button">Alles löschen</string>
     <string name="recovery_setup_title">Wiederherstellungscode sichern</string>
-    <string name="recovery_setup_message">Dieser einmalige Code ist die einzige Möglichkeit, deine Daten zu entsperren, falls deine Biometrie nicht mehr funktioniert oder du deine Passphrase vergisst. Bewahre ihn sicher auf: in einen Passwortmanager kopieren, an dich selbst teilen oder abschreiben. Er wird nie im Klartext gespeichert und kann nicht für dich wiederhergestellt werden.</string>
+    <string name="recovery_setup_message">Dieser einmalige Code ist die einzige Möglichkeit, deine Daten zu entsperren, falls deine Biometrie nicht mehr funktioniert oder du deine Passphrase vergisst. Bewahre ihn sicher auf: in einen Passwortmanager kopieren, als PDF sichern oder abschreiben. Er wird nie im Klartext gespeichert und kann nicht für dich wiederhergestellt werden.</string>
     <string name="recovery_copy">Kopieren</string>
-    <string name="recovery_share">Teilen</string>
+    <string name="recovery_save_pdf">Als PDF sichern</string>
     <string name="recovery_saved_check">Ich habe meinen Wiederherstellungscode gesichert</string>
     <string name="recovery_continue">Weiter</string>
     <string name="recovery_pdf_title">Dein Wiederherstellungscode</string>

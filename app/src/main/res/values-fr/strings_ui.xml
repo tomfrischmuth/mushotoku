@@ -451,9 +451,9 @@
     <string name="lock_reset_confirm_message">Cette action efface définitivement et irréversiblement toutes les données de l\'appli sur cet appareil.</string>
     <string name="lock_reset_confirm_button">Tout supprimer</string>
     <string name="recovery_setup_title">Enregistrez votre code de récupération</string>
-    <string name="recovery_setup_message">Ce code à usage unique est le seul moyen de déverrouiller vos données si votre biométrie cesse de fonctionner ou si vous oubliez votre phrase secrète. Conservez-le en lieu sûr : copiez-le dans un gestionnaire de mots de passe, partagez-le avec vous-même ou notez-le. Il n\'est jamais conservé en clair et ne peut pas être récupéré pour vous.</string>
+    <string name="recovery_setup_message">Ce code à usage unique est le seul moyen de déverrouiller vos données si votre biométrie cesse de fonctionner ou si vous oubliez votre phrase secrète. Conservez-le en lieu sûr : copiez-le dans un gestionnaire de mots de passe, enregistrez-le en PDF ou notez-le. Il n\'est jamais conservé en clair et ne peut pas être récupéré pour vous.</string>
     <string name="recovery_copy">Copier</string>
-    <string name="recovery_share">Partager</string>
+    <string name="recovery_save_pdf">Enregistrer en PDF</string>
     <string name="recovery_saved_check">J\'ai enregistré mon code de récupération</string>
     <string name="recovery_continue">Continuer</string>
     <string name="recovery_pdf_title">Ton code de récupération</string>

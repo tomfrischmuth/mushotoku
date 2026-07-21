@@ -17,13 +17,13 @@
  */
 
 package com.mushotoku.app.ui.screens
+import com.mushotoku.app.ui.components.rememberDocumentPicker
 import com.mushotoku.app.ui.components.*
 import com.mushotoku.app.ui.*
 
 import com.mushotoku.app.ui.strings.*
 
 import android.content.Intent
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -92,10 +92,10 @@ internal fun ExportSection() {
         pending = null
         if (uri != null && p != null) vm.export(p.first, p.second, p.third, uri)
     }
-    val pdfLauncher = rememberLauncherForActivityResult(
+    val savePdf = rememberDocumentPicker(
         ActivityResultContracts.CreateDocument("application/pdf")
     ) { onSafResult(it) }
-    val zipLauncher = rememberLauncherForActivityResult(
+    val saveZip = rememberDocumentPicker(
         ActivityResultContracts.CreateDocument("application/zip")
     ) { onSafResult(it) }
 
@@ -103,7 +103,7 @@ internal fun ExportSection() {
         dialogExporter = null
         pending = Triple(exporter, format, options)
         val name = "${exporter.defaultBaseName()}_${java.time.LocalDate.now()}.${format.extension()}"
-        if (format == ExportFormat.PDF) pdfLauncher.launch(name) else zipLauncher.launch(name)
+        if (format == ExportFormat.PDF) savePdf(name) else saveZip(name)
     }
 
     fun onCategoryTap(category: ExportCategory) {

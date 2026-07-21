@@ -42,19 +42,25 @@ object SecurityGate {
     @Volatile var relocked: Boolean = false
         private set
 
+    /** How long a detour into a system activity may take before it counts as leaving. */
+    private const val SYSTEM_ACTIVITY_GRACE_MS = 60 * 1000L
+
     /**
-     * True while a system auth prompt (BiometricPrompt) is in front. The
-     * device-credential (PIN/password) confirmation runs in a *separate* system
-     * activity, which takes us through onStop/onStart. That is not the user
-     * backgrounding the app, so we must not record it as a relock trigger — doing
-     * so relocks mid-authentication and fights the unlock that's in progress.
+     * True while a system activity we opened ourselves is in front: the
+     * BiometricPrompt's device-credential confirmation, or one of the document
+     * dialogs. Both run in a *separate* activity, which takes us through
+     * onStop/onStart. That is not the user backgrounding the app, so we must not
+     * treat it as a relock trigger — doing so relocks mid-authentication and
+     * fights the unlock in progress, or interrupts a recovery code being saved.
+     *
+     * It only holds for [SYSTEM_ACTIVITY_GRACE_MS], so leaving the phone on an
+     * open dialog does not keep the app unlocked indefinitely.
      */
     @Volatile var authInProgress: Boolean = false
 
     private fun gateReady(): Boolean = ::keyManager.isInitialized && keyManager.isInitialized()
 
     fun onAppBackgrounded() {
-        if (authInProgress) return
         if (!relocked) backgroundedAt = SystemClock.elapsedRealtime()
     }
 
@@ -66,6 +72,14 @@ object SecurityGate {
         }
         if (backgroundedAt == 0L) return
         val elapsed = SystemClock.elapsedRealtime() - backgroundedAt
+        // A detour into a system activity we opened ourselves is not the user
+        // leaving — but only for as long as such a detour plausibly takes. Beyond
+        // that the phone has been out of the flow long enough to lock, whatever
+        // is still open on top of us.
+        if (authInProgress && elapsed < SYSTEM_ACTIVITY_GRACE_MS) {
+            backgroundedAt = 0L
+            return
+        }
         if (elapsed >= relockTimeoutSeconds * 1000L) relocked = true
     }
 

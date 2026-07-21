@@ -451,9 +451,9 @@
     <string name="lock_reset_confirm_message">Esto borra de forma permanente e irreversible todos los datos de la app en este dispositivo.</string>
     <string name="lock_reset_confirm_button">Borrar todo</string>
     <string name="recovery_setup_title">Guarda tu código de recuperación</string>
-    <string name="recovery_setup_message">Este código de un solo uso es la única forma de desbloquear tus datos si tu biometría deja de funcionar u olvidas tu contraseña. Guárdalo en un lugar seguro: cópialo en un gestor de contraseñas, compártelo contigo mismo o anótalo. Nunca se guarda de forma legible y no se puede recuperar por ti.</string>
+    <string name="recovery_setup_message">Este código de un solo uso es la única forma de desbloquear tus datos si tu biometría deja de funcionar u olvidas tu contraseña. Guárdalo en un lugar seguro: cópialo en un gestor de contraseñas, guárdalo en PDF o anótalo. Nunca se guarda de forma legible y no se puede recuperar por ti.</string>
     <string name="recovery_copy">Copiar</string>
-    <string name="recovery_share">Compartir</string>
+    <string name="recovery_save_pdf">Guardar en PDF</string>
     <string name="recovery_saved_check">He guardado mi código de recuperación</string>
     <string name="recovery_continue">Continuar</string>
     <string name="recovery_pdf_title">Tu código de recuperación</string>

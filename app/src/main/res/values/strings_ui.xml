@@ -438,9 +438,9 @@
     <string name="lock_reset_confirm_message">This permanently and irreversibly erases all app data on this device.</string>
     <string name="lock_reset_confirm_button">Delete everything</string>
     <string name="recovery_setup_title">Save your recovery code</string>
-    <string name="recovery_setup_message">This one-time code is the only way to unlock your data if your biometrics stop working or you forget your passphrase. Store it safely: copy it into a password manager, share it to yourself, or write it down. It is never kept in readable form and cannot be recovered for you.</string>
+    <string name="recovery_setup_message">This one-time code is the only way to unlock your data if your biometrics stop working or you forget your passphrase. Store it safely: copy it into a password manager, save it as a PDF, or write it down. It is never kept in readable form and cannot be recovered for you.</string>
     <string name="recovery_copy">Copy</string>
-    <string name="recovery_share">Share</string>
+    <string name="recovery_save_pdf">Save as PDF</string>
     <string name="recovery_saved_check">I have saved my recovery code</string>
     <string name="recovery_continue">Continue</string>
     <string name="recovery_pdf_title">Your recovery code</string>

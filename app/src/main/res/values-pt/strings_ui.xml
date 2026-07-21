@@ -451,9 +451,9 @@
     <string name="lock_reset_confirm_message">Isto apaga de forma permanente e irreversível todos os dados da aplicação neste dispositivo.</string>
     <string name="lock_reset_confirm_button">Apagar tudo</string>
     <string name="recovery_setup_title">Guarda o teu código de recuperação</string>
-    <string name="recovery_setup_message">Este código de utilização única é a única forma de desbloquear os teus dados se a biometria deixar de funcionar ou se esqueceres a tua frase-passe. Guarda-o num local seguro: copia-o para um gestor de palavras-passe, partilha-o contigo mesmo ou escreve-o. Nunca é guardado de forma legível e não pode ser recuperado por ti.</string>
+    <string name="recovery_setup_message">Este código de utilização única é a única forma de desbloquear os teus dados se a biometria deixar de funcionar ou se esqueceres a tua frase-passe. Guarda-o num local seguro: copia-o para um gestor de palavras-passe, guarda-o em PDF ou escreve-o. Nunca é guardado de forma legível e não pode ser recuperado por ti.</string>
     <string name="recovery_copy">Copiar</string>
-    <string name="recovery_share">Partilhar</string>
+    <string name="recovery_save_pdf">Guardar em PDF</string>
     <string name="recovery_saved_check">Guardei o meu código de recuperação</string>
     <string name="recovery_continue">Continuar</string>
     <string name="recovery_pdf_title">O teu código de recuperação</string>

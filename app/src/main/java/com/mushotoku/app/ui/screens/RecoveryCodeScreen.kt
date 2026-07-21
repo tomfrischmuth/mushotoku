@@ -18,8 +18,12 @@
 
 package com.mushotoku.app.ui.screens
 
+import android.content.ClipData
+import android.content.ClipDescription
 import android.content.Context
-import android.content.Intent
+import android.net.Uri
+import android.os.PersistableBundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -50,9 +54,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -60,15 +64,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.core.content.FileProvider
 import com.mushotoku.app.R
 import com.mushotoku.app.export.RecoveryCodePdf
+import com.mushotoku.app.ui.components.rememberDocumentPicker
 import com.mushotoku.app.ui.components.soundCheck
 import com.mushotoku.app.ui.components.soundClick
 import com.mushotoku.app.ui.theme.LocalAppColors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
+/** Suggested in the save dialog; the user can rename it there. */
+private const val PDF_FILE_NAME = "Mushotoku-Recovery-Code.pdf"
 
 /**
  * One-time display of a freshly generated recovery code. The user must actively
@@ -78,11 +85,14 @@ import kotlinx.coroutines.withContext
 @Composable
 fun RecoveryCodeDialog(code: String, onDone: () -> Unit) {
     val context = LocalContext.current
-    val clipboard = LocalClipboardManager.current
+    val clipboard = LocalClipboard.current
     val colors = LocalAppColors.current
     val s = remember(context) { recoveryStrings(context) }
     val scope = rememberCoroutineScope()
     var saved by remember { mutableStateOf(false) }
+    val savePdf = rememberDocumentPicker(
+        ActivityResultContracts.CreateDocument("application/pdf")
+    ) { uri -> uri?.let { scope.launch { writeRecoveryPdf(context, code, it) } } }
 
     Dialog(
         onDismissRequest = { /* must be acknowledged */ },
@@ -137,11 +147,13 @@ fun RecoveryCodeDialog(code: String, onDone: () -> Unit) {
             )
             Spacer(Modifier.height(16.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                OutlinedButton(onClick = soundClick { clipboard.setText(AnnotatedString(code)) }) {
+                OutlinedButton(onClick = soundClick {
+                    scope.launch { clipboard.setClipEntry(sensitiveClip(s.title, code).toClipEntry()) }
+                }) {
                     Text(s.copy)
                 }
-                OutlinedButton(onClick = soundClick { scope.launch { shareRecoveryPdf(context, code) } }) {
-                    Text(s.share)
+                OutlinedButton(onClick = soundClick { savePdf(PDF_FILE_NAME) }) {
+                    Text(s.savePdf)
                 }
             }
             Spacer(Modifier.height(28.dp))
@@ -168,24 +180,36 @@ fun RecoveryCodeDialog(code: String, onDone: () -> Unit) {
     }
 }
 
-private suspend fun shareRecoveryPdf(context: Context, code: String) {
-    val file = withContext(Dispatchers.IO) { RecoveryCodePdf.create(context, code) }
-    val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
-    val intent = Intent(Intent.ACTION_SEND).apply {
-        type = "application/pdf"
-        putExtra(Intent.EXTRA_STREAM, uri)
-        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+/**
+ * Writes the sheet to the folder the user picked. Sharing the file instead would
+ * only offer whatever app happens to accept a PDF — on a plain Android that is
+ * the print service and Bluetooth, with no way to simply keep the file.
+ */
+private suspend fun writeRecoveryPdf(context: Context, code: String, target: Uri) {
+    withContext(Dispatchers.IO) {
+        context.contentResolver.openOutputStream(target)?.use {
+            RecoveryCodePdf.writeTo(context, code, it)
+        }
     }
-    context.startActivity(
-        Intent.createChooser(intent, null).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
-    )
 }
+
+/**
+ * The recovery code opens the whole database, so the clip is marked sensitive:
+ * Android then keeps it out of the paste preview and out of clipboard history
+ * instead of putting it on screen for everyone in the room to read.
+ */
+private fun sensitiveClip(label: String, code: String): ClipData =
+    ClipData.newPlainText(label, code).apply {
+        description.extras = PersistableBundle().apply {
+            putBoolean(ClipDescription.EXTRA_IS_SENSITIVE, true)
+        }
+    }
 
 private class RecoveryStrings(
     val title: String,
     val message: String,
     val copy: String,
-    val share: String,
+    val savePdf: String,
     val savedCheck: String,
     val continueLabel: String,
 )
@@ -194,7 +218,7 @@ private fun recoveryStrings(ctx: Context) = RecoveryStrings(
     title = ctx.getString(R.string.recovery_setup_title),
     message = ctx.getString(R.string.recovery_setup_message),
     copy = ctx.getString(R.string.recovery_copy),
-    share = ctx.getString(R.string.recovery_share),
+    savePdf = ctx.getString(R.string.recovery_save_pdf),
     savedCheck = ctx.getString(R.string.recovery_saved_check),
     continueLabel = ctx.getString(R.string.recovery_continue),
 )

@@ -451,9 +451,9 @@
     <string name="lock_reset_confirm_message">Isso apaga de forma permanente e irreversível todos os dados do app neste dispositivo.</string>
     <string name="lock_reset_confirm_button">Apagar tudo</string>
     <string name="recovery_setup_title">Salve seu código de recuperação</string>
-    <string name="recovery_setup_message">Este código de uso único é a única forma de desbloquear seus dados se a biometria parar de funcionar ou você esquecer a senha. Guarde-o em local seguro: copie para um gerenciador de senhas, compartilhe com você mesmo ou anote. Ele nunca é armazenado de forma legível e não pode ser recuperado para você.</string>
+    <string name="recovery_setup_message">Este código de uso único é a única forma de desbloquear seus dados se a biometria parar de funcionar ou você esquecer a senha. Guarde-o em local seguro: copie para um gerenciador de senhas, salve como PDF ou anote. Ele nunca é armazenado de forma legível e não pode ser recuperado para você.</string>
     <string name="recovery_copy">Copiar</string>
-    <string name="recovery_share">Compartilhar</string>
+    <string name="recovery_save_pdf">Salvar em PDF</string>
     <string name="recovery_saved_check">Salvei meu código de recuperação</string>
     <string name="recovery_continue">Continuar</string>
     <string name="recovery_pdf_title">Seu código de recuperação</string>

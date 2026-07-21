@@ -437,9 +437,9 @@
     <string name="lock_reset_confirm_message">Hiermee worden alle app-gegevens op dit apparaat permanent en onherstelbaar gewist.</string>
     <string name="lock_reset_confirm_button">Alles verwijderen</string>
     <string name="recovery_setup_title">Bewaar je herstelcode</string>
-    <string name="recovery_setup_message">Deze eenmalige code is de enige manier om je gegevens te ontgrendelen als je biometrie niet meer werkt of je je wachtwoordzin vergeet. Bewaar hem veilig: kopieer hem naar een wachtwoordmanager, deel hem met jezelf of schrijf hem op. Hij wordt nooit leesbaar opgeslagen en kan niet voor je worden hersteld.</string>
+    <string name="recovery_setup_message">Deze eenmalige code is de enige manier om je gegevens te ontgrendelen als je biometrie niet meer werkt of je je wachtwoordzin vergeet. Bewaar hem veilig: kopieer hem naar een wachtwoordmanager, sla hem op als pdf of schrijf hem op. Hij wordt nooit leesbaar opgeslagen en kan niet voor je worden hersteld.</string>
     <string name="recovery_copy">Kopiëren</string>
-    <string name="recovery_share">Delen</string>
+    <string name="recovery_save_pdf">Opslaan als pdf</string>
     <string name="recovery_saved_check">Ik heb mijn herstelcode opgeslagen</string>
     <string name="recovery_continue">Doorgaan</string>
     <string name="recovery_pdf_title">Je herstelcode</string>

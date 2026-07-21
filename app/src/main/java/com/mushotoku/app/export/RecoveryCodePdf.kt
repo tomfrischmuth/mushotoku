@@ -34,7 +34,7 @@ import androidx.core.graphics.withSave
 import androidx.core.graphics.withTranslation
 import com.mushotoku.app.R
 import com.mushotoku.app.ui.brand.LetterPaths
-import java.io.File
+import java.io.OutputStream
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -60,7 +60,8 @@ object RecoveryCodePdf {
     )
     private val ENSO_STOPS = floatArrayOf(0f, 0.25f, 0.5f, 0.75f, 1f)
 
-    fun create(context: Context, code: String): File {
+    /** Writes the one-page A4 sheet with [code] to [out]; the caller owns the stream. */
+    fun writeTo(context: Context, code: String, out: OutputStream) {
         val doc = PdfDocument()
         val page = doc.startPage(PdfDocument.PageInfo.Builder(PAGE_W, PAGE_H, 1).create())
         val canvas = page.canvas
@@ -116,11 +117,8 @@ object RecoveryCodePdf {
         }
 
         doc.finishPage(page)
-
-        val file = File(context.cacheDir, "Mushotoku-Recovery-Code.pdf")
-        file.outputStream().use { doc.writeTo(it) }
+        doc.writeTo(out)
         doc.close()
-        return file
     }
 
     private fun drawWordmark(canvas: Canvas, left: Float, top: Float, width: Float) {

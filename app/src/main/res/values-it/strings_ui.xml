@@ -451,9 +451,9 @@
     <string name="lock_reset_confirm_message">Questa operazione elimina in modo permanente e irreversibile tutti i dati dell\'app su questo dispositivo.</string>
     <string name="lock_reset_confirm_button">Elimina tutto</string>
     <string name="recovery_setup_title">Salva il codice di ripristino</string>
-    <string name="recovery_setup_message">Questo codice monouso è l\'unico modo per sbloccare i tuoi dati se la biometria smette di funzionare o dimentichi la passphrase. Conservalo in un luogo sicuro: copialo in un gestore di password, condividilo con te stesso o annotalo. Non viene mai conservato in forma leggibile e non può essere recuperato per te.</string>
+    <string name="recovery_setup_message">Questo codice monouso è l\'unico modo per sbloccare i tuoi dati se la biometria smette di funzionare o dimentichi la passphrase. Conservalo in un luogo sicuro: copialo in un gestore di password, salvalo in PDF o annotalo. Non viene mai conservato in forma leggibile e non può essere recuperato per te.</string>
     <string name="recovery_copy">Copia</string>
-    <string name="recovery_share">Condividi</string>
+    <string name="recovery_save_pdf">Salva in PDF</string>
     <string name="recovery_saved_check">Ho salvato il mio codice di ripristino</string>
     <string name="recovery_continue">Continua</string>
     <string name="recovery_pdf_title">Il tuo codice di ripristino</string>
