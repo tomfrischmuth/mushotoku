@@ -86,7 +86,7 @@
     <string name="show_mindfulness">Mindfulness</string>
     <string name="section_mindfulness">Meditation, gratitude and mood</string>
     <string name="section_finance_tab">Income &amp; Expenses</string>
-    <string name="feature_finance_description">With support for multiple currencies.</string>
+    <string name="feature_finance_description">Tracks income and expenses, with reports.</string>
     <string name="feature_mindfulness_description">Opens with a long press on today’s date.</string>
     <string name="show_finance_tab">Finance</string>
     <string name="section_categories">Categories &amp; Recurring Costs</string>

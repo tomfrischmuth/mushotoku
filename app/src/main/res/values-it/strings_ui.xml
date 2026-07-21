@@ -86,7 +86,7 @@
     <string name="show_mindfulness">Consapevolezza</string>
     <string name="section_mindfulness">Meditazione, gratitudine e umore</string>
     <string name="section_finance_tab">Entrate e uscite</string>
-    <string name="feature_finance_description">Con supporto per più valute.</string>
+    <string name="feature_finance_description">Registra entrate e uscite, con resoconti.</string>
     <string name="feature_mindfulness_description">Si apre con una pressione prolungata sulla data di oggi.</string>
     <string name="show_finance_tab">Finanze</string>
     <string name="section_categories">Categorie e costi fissi</string>

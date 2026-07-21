@@ -86,7 +86,7 @@
     <string name="show_mindfulness">Pleine conscience</string>
     <string name="section_mindfulness">Méditation, gratitude et humeur</string>
     <string name="section_finance_tab">Revenus et dépenses</string>
-    <string name="feature_finance_description">Avec la prise en charge de plusieurs devises.</string>
+    <string name="feature_finance_description">Suit les revenus et les dépenses, avec des rapports.</string>
     <string name="feature_mindfulness_description">S’ouvre avec un appui long sur la date du jour.</string>
     <string name="show_finance_tab">Finances</string>
     <string name="section_categories">Catégories et charges fixes</string>

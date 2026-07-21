@@ -86,7 +86,7 @@
     <string name="show_mindfulness">Achtsamkeit</string>
     <string name="section_mindfulness">Meditation, Dankbarkeit und Stimmung</string>
     <string name="section_finance_tab">Einnahmen &amp; Ausgaben</string>
-    <string name="feature_finance_description">Mit Unterstützung für mehrere Währungen.</string>
+    <string name="feature_finance_description">Erfasst Einnahmen und Ausgaben, mit Auswertungen.</string>
     <string name="feature_mindfulness_description">Öffnet sich mit einem langen Druck auf das heutige Datum.</string>
     <string name="show_finance_tab">Finanzen</string>
     <string name="section_categories">Kategorien &amp; Laufende Kosten</string>

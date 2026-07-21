@@ -86,7 +86,7 @@
     <string name="show_mindfulness">Atención plena</string>
     <string name="section_mindfulness">Meditación, gratitud y estado de ánimo</string>
     <string name="section_finance_tab">Ingresos y gastos</string>
-    <string name="feature_finance_description">Con soporte para varias monedas.</string>
+    <string name="feature_finance_description">Registra ingresos y gastos, con informes.</string>
     <string name="feature_mindfulness_description">Se abre con una pulsación larga en la fecha de hoy.</string>
     <string name="show_finance_tab">Finanzas</string>
     <string name="section_categories">Categorías y gastos fijos</string>

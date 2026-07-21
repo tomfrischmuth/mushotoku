@@ -86,7 +86,7 @@
     <string name="show_mindfulness">Uważność</string>
     <string name="section_mindfulness">Medytacja, wdzięczność i nastrój</string>
     <string name="section_finance_tab">Przychody i wydatki</string>
-    <string name="feature_finance_description">Z obsługą wielu walut.</string>
+    <string name="feature_finance_description">Śledzi przychody i wydatki, z raportami.</string>
     <string name="feature_mindfulness_description">Otwiera się długim naciśnięciem dzisiejszej daty.</string>
     <string name="show_finance_tab">Finanse</string>
     <string name="section_categories">Kategorie i koszty stałe</string>
