@@ -46,6 +46,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -355,7 +356,7 @@ internal fun NoteEditor(
         // note, not to the chrome, so it scrolls away with the text.
         BoxWithConstraints(Modifier.weight(1f)) {
         val viewportHeight = maxHeight
-        var headerPx by remember { mutableStateOf(0) }
+        var headerPx by remember { mutableIntStateOf(0) }
         val headerHeight = with(LocalDensity.current) { headerPx.toDp() }
         Column(Modifier.verticalScroll(rememberScrollState())) {
         Box(Modifier.onSizeChanged { headerPx = it.height }) {

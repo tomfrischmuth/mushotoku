@@ -146,6 +146,7 @@
     <string name="budget_additional_income_row">+ Rendas adicionais</string>
     <plurals name="budget_days_left">
         <item quantity="one">Falta %d dia</item>
+        <item quantity="many">Faltam %d de dias</item>
         <item quantity="other">Faltam %d dias</item>
     </plurals>
 
@@ -188,15 +189,18 @@
     <string name="trash_restore_confirm_title">Restaurar?</string>
     <plurals name="trash_restore_confirm_text">
         <item quantity="one">%d nota volta para as suas notas.</item>
+        <item quantity="many">%d de notas voltam para as suas notas.</item>
         <item quantity="other">%d notas voltam para as suas notas.</item>
     </plurals>
     <string name="trash_delete_confirm_title">Excluir definitivamente?</string>
     <plurals name="trash_delete_confirm_text">
         <item quantity="one">%d nota será excluída para sempre. Não é possível desfazer.</item>
+        <item quantity="many">%d de notas serão excluídas para sempre. Não é possível desfazer.</item>
         <item quantity="other">%d notas serão excluídas para sempre. Não é possível desfazer.</item>
     </plurals>
     <plurals name="trash_tag_text">
         <item quantity="one">%d nota na lixeira tem esta tag.</item>
+        <item quantity="many">%d de notas na lixeira têm esta tag.</item>
         <item quantity="other">%d notas na lixeira têm esta tag.</item>
     </plurals>
     <string name="trash_restore_all">Restaurar tudo</string>
@@ -207,7 +211,7 @@
     <string name="no_lists_yet">Ainda sem listas. Toque em + para adicionar uma.</string>
     <string name="delete_note_dialog_title">Excluir nota?</string>
     <string name="delete_note_dialog_text">\"%1$s\" será movida para a lixeira.</string>
-    <string name="add_content_hint">Adicionar conteúdo...</string>
+    <string name="add_content_hint">Adicionar conteúdo…</string>
     <string name="note_type_note">Nota</string>
     <string name="note_type_list">Lista</string>
     <string name="note_type_routine">Rotina</string>
@@ -217,18 +221,22 @@
     <string name="no_notes">Sem notas</string>
     <plurals name="notes_count">
         <item quantity="one">%d nota</item>
+        <item quantity="many">%d de notas</item>
         <item quantity="other">%d notas</item>
     </plurals>
     <plurals name="notes_count_routine">
         <item quantity="one">%d rotina</item>
+        <item quantity="many">%d de rotinas</item>
         <item quantity="other">%d rotinas</item>
     </plurals>
     <plurals name="notes_count_list">
         <item quantity="one">%d lista</item>
+        <item quantity="many">%d de listas</item>
         <item quantity="other">%d listas</item>
     </plurals>
     <plurals name="notes_count_note">
         <item quantity="one">%d nota</item>
+        <item quantity="many">%d de notas</item>
         <item quantity="other">%d notas</item>
     </plurals>
     <string name="notes_pinned_section">Fixadas</string>
@@ -240,7 +248,11 @@
     <string name="notes_no_results">Sem resultados</string>
     <string name="notes_done">Concluído</string>
     <string name="notes_edit">Editar</string>
-    <string name="notes_selected">%1$d selecionadas</string>
+    <plurals name="notes_selected">
+        <item quantity="one">%d selecionada</item>
+        <item quantity="many">%d selecionadas</item>
+        <item quantity="other">%d selecionadas</item>
+    </plurals>
     <string name="notes_delete_selected">Mover seleção para a lixeira</string>
     <string name="notes_pin_action">Fixar</string>
     <string name="notes_unpin_action">Desafixar</string>
@@ -254,7 +266,11 @@
     <string name="tag_delete">Excluir tag</string>
     <string name="tag_delete_text">Remover “#%1$s” de todas as notas. As notas permanecem.</string>
     <string name="tag_delete_with_notes">Excluir tag e notas</string>
-    <string name="tag_delete_with_notes_text">Excluir “#%1$s” e as %2$d notas com ela. Não é possível desfazer.</string>
+    <plurals name="tag_delete_with_notes_text">
+        <item quantity="one">Excluir “#%1$s” e a %2$d nota com ela. Não é possível desfazer.</item>
+        <item quantity="many">Excluir “#%1$s” e as %2$d de notas com ela. Não é possível desfazer.</item>
+        <item quantity="other">Excluir “#%1$s” e as %2$d notas com ela. Não é possível desfazer.</item>
+    </plurals>
     <string name="notes_no_title">Ainda sem título</string>
     <string name="notes_tag_hint">Adicionar tags …</string>
     <string name="section_notes">Notas</string>
@@ -342,18 +358,22 @@
     <string name="meditation_month_days">%1$d de 30 dias</string>
     <plurals name="meditation_minutes">
         <item quantity="one">%d min</item>
+        <item quantity="many">%d de min</item>
         <item quantity="other">%d min</item>
     </plurals>
     <plurals name="meditation_week_entries">
         <item quantity="one">%d registro</item>
+        <item quantity="many">%d de registros</item>
         <item quantity="other">%d registros</item>
     </plurals>
     <plurals name="meditation_streak">
         <item quantity="one">%d dia seguido</item>
+        <item quantity="many">%d de dias seguidos</item>
         <item quantity="other">%d dias seguidos</item>
     </plurals>
     <plurals name="meditation_best_streak">
         <item quantity="one">Melhor sequência: %d dia</item>
+        <item quantity="many">Melhor sequência: %d de dias</item>
         <item quantity="other">Melhor sequência: %d dias</item>
     </plurals>
     <string name="meditation_avg_mood">Humor médio</string>
@@ -526,10 +546,12 @@
     <string name="reminder_now">Agora · %1$s</string>
     <plurals name="reminder_in_hours">
         <item quantity="one">Em %1$d hora · %2$s</item>
+        <item quantity="many">Em %1$d de horas · %2$s</item>
         <item quantity="other">Em %1$d horas · %2$s</item>
     </plurals>
     <plurals name="reminder_in_minutes">
         <item quantity="one">Em %1$d minuto · %2$s</item>
+        <item quantity="many">Em %1$d de minutos · %2$s</item>
         <item quantity="other">Em %1$d minutos · %2$s</item>
     </plurals>
 

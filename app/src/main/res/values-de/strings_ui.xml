@@ -15,7 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="tab_today">Heute</string>
     <string name="tab_finance">Finanzen</string>
@@ -207,7 +207,7 @@
     <string name="no_lists_yet">Noch keine Liste. Tippe + um eine hinzuzufügen.</string>
     <string name="delete_note_dialog_title">Notiz löschen?</string>
     <string name="delete_note_dialog_text">\"%1$s\" wird in den Papierkorb verschoben.</string>
-    <string name="add_content_hint">Inhalt hinzufügen...</string>
+    <string name="add_content_hint">Inhalt hinzufügen…</string>
     <string name="note_type_note">Notiz</string>
     <string name="note_type_list">Liste</string>
     <string name="note_type_routine">Routine</string>
@@ -240,7 +240,10 @@
     <string name="notes_no_results">Keine Treffer</string>
     <string name="notes_done">Fertig</string>
     <string name="notes_edit">Bearbeiten</string>
-    <string name="notes_selected">%1$d ausgewählt</string>
+    <plurals name="notes_selected">
+        <item quantity="one">%d ausgewählt</item>
+        <item quantity="other">%d ausgewählt</item>
+    </plurals>
     <string name="notes_delete_selected">Ausgewählte in Papierkorb</string>
     <string name="notes_pin_action">Anpinnen</string>
     <string name="notes_unpin_action">Loslösen</string>
@@ -254,7 +257,10 @@
     <string name="tag_delete">Tag löschen</string>
     <string name="tag_delete_text">„#%1$s“ aus allen Notizen entfernen. Die Notizen selbst bleiben.</string>
     <string name="tag_delete_with_notes">Tag und Notizen löschen</string>
-    <string name="tag_delete_with_notes_text">„#%1$s“ und alle %2$d Notizen damit löschen. Das lässt sich nicht rückgängig machen.</string>
+    <plurals name="tag_delete_with_notes_text">
+        <item quantity="one">„#%1$s“ und die %2$d Notiz damit löschen. Das lässt sich nicht rückgängig machen.</item>
+        <item quantity="other">„#%1$s“ und alle %2$d Notizen damit löschen. Das lässt sich nicht rückgängig machen.</item>
+    </plurals>
     <string name="notes_no_title">Noch kein Titel</string>
     <string name="notes_tag_hint">Tags hinzufügen …</string>
     <string name="section_notes">Notizen</string>
@@ -348,7 +354,8 @@
         <item quantity="one">%d Eintrag</item>
         <item quantity="other">%d Einträge</item>
     </plurals>
-    <plurals name="meditation_streak">
+    <!-- "in Folge" here means "in a row"; lint mistakes it for the preposition "infolge". -->
+    <plurals name="meditation_streak" tools:ignore="Typos">
         <item quantity="one">%d Tag in Folge</item>
         <item quantity="other">%d Tage in Folge</item>
     </plurals>

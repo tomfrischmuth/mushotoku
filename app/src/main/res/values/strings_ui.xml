@@ -15,7 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="tab_today">Today</string>
     <string name="tab_finance">Finance</string>
@@ -207,7 +207,7 @@
     <string name="no_lists_yet">No list yet. Tap + to add one.</string>
     <string name="delete_note_dialog_title">Delete Note?</string>
     <string name="delete_note_dialog_text">\"%1$s\" will be moved to the trash.</string>
-    <string name="add_content_hint">Add content...</string>
+    <string name="add_content_hint">Add content…</string>
     <string name="note_type_note">Note</string>
     <string name="note_type_list">List</string>
     <string name="note_type_routine">Routine</string>
@@ -240,7 +240,10 @@
     <string name="notes_no_results">No results</string>
     <string name="notes_done">Done</string>
     <string name="notes_edit">Edit</string>
-    <string name="notes_selected">%1$d selected</string>
+    <plurals name="notes_selected">
+        <item quantity="one">%d selected</item>
+        <item quantity="other">%d selected</item>
+    </plurals>
     <string name="notes_delete_selected">Move selected to trash</string>
     <string name="notes_pin_action">Pin</string>
     <string name="notes_unpin_action">Unpin</string>
@@ -254,7 +257,10 @@
     <string name="tag_delete">Delete tag</string>
     <string name="tag_delete_text">Remove “#%1$s” from every note. The notes themselves stay.</string>
     <string name="tag_delete_with_notes">Delete tag and notes</string>
-    <string name="tag_delete_with_notes_text">Delete “#%1$s” and all %2$d notes carrying it. This cannot be undone.</string>
+    <plurals name="tag_delete_with_notes_text">
+        <item quantity="one">Delete “#%1$s” and the %2$d note carrying it. This cannot be undone.</item>
+        <item quantity="other">Delete “#%1$s” and all %2$d notes carrying it. This cannot be undone.</item>
+    </plurals>
     <string name="notes_no_title">No title yet</string>
     <string name="notes_tag_hint">Add tags …</string>
     <string name="section_notes">Notes</string>
@@ -370,7 +376,8 @@
     <string name="delete_all_mindfulness_dialog_title">Delete mindfulness data?</string>
     <string name="delete_all_mindfulness_dialog_text">All gratitude entries and mood history will be permanently deleted.</string>
     <string name="meditation_hint">Tip: Long-press today\'s date to open the mindfulness functions.</string>
-    <string name="meditation_notif_remaining">%1$02d:%2$02d remaining</string>
+    <!-- A mm:ss countdown, not a count of things, so it is no candidate for plurals. -->
+    <string name="meditation_notif_remaining" tools:ignore="PluralsCandidate">%1$02d:%2$02d remaining</string>
     <string name="meditation_notif_stop">Stop</string>
     <string name="meditation_sound_label">Sound</string>
     <string name="meditation_sound_warm">Warm</string>

@@ -53,11 +53,11 @@ private const val CENTER = RANGE
 @Composable
 fun DateSlider(
     selectedDate: LocalDate,
-    today: LocalDate = LocalDate.now(),
     onDateSelected: (LocalDate) -> Unit,
+    modifier: Modifier = Modifier,
+    today: LocalDate = LocalDate.now(),
     onTodayLongPress: (() -> Unit)? = null,
-    scrollToSelectedTrigger: Int = 0,
-    modifier: Modifier = Modifier
+    scrollToSelectedTrigger: Int = 0
 ) {
     val listState = rememberLazyListState()
     val scope     = rememberCoroutineScope()

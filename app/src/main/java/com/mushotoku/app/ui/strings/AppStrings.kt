@@ -33,6 +33,7 @@ class AppStrings(private val ctx: Context) {
     private fun s(id: Int): String = ctx.getString(id)
     private fun s(id: Int, vararg args: Any?): String = ctx.getString(id, *args)
     private fun q(id: Int, n: Int): String = ctx.resources.getQuantityString(id, n, n)
+    private fun q(id: Int, n: Int, vararg args: Any?): String = ctx.resources.getQuantityString(id, n, *args)
     private fun arr(id: Int): List<String> = ctx.resources.getStringArray(id).toList()
 
     val tabToday get() = s(R.string.tab_today)
@@ -235,7 +236,7 @@ class AppStrings(private val ctx: Context) {
     val notesNoResults get() = s(R.string.notes_no_results)
     val notesDone get() = s(R.string.notes_done)
     val notesEdit get() = s(R.string.notes_edit)
-    val notesSelected: (Int) -> String = { n -> s(R.string.notes_selected, n) }
+    val notesSelected: (Int) -> String = { n -> q(R.plurals.notes_selected, n) }
     val notesDeleteSelected get() = s(R.string.notes_delete_selected)
     val notesPinAction get() = s(R.string.notes_pin_action)
     val notesUnpinAction get() = s(R.string.notes_unpin_action)
@@ -249,7 +250,7 @@ class AppStrings(private val ctx: Context) {
     val tagDelete get() = s(R.string.tag_delete)
     val tagDeleteText: (String) -> String = { tag -> s(R.string.tag_delete_text, tag) }
     val tagDeleteWithNotes get() = s(R.string.tag_delete_with_notes)
-    val tagDeleteWithNotesText: (String, Int) -> String = { tag, n -> s(R.string.tag_delete_with_notes_text, tag, n) }
+    val tagDeleteWithNotesText: (String, Int) -> String = { tag, n -> q(R.plurals.tag_delete_with_notes_text, n, tag, n) }
     val notesNoTitle get() = s(R.string.notes_no_title)
     val notesTagHint get() = s(R.string.notes_tag_hint)
     val sectionNotes get() = s(R.string.section_notes)

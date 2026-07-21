@@ -207,7 +207,7 @@
     <string name="no_lists_yet">Nog geen lijst. Tik op + om er een toe te voegen.</string>
     <string name="delete_note_dialog_title">Notitie verwijderen?</string>
     <string name="delete_note_dialog_text">\"%1$s\" wordt naar de prullenbak verplaatst.</string>
-    <string name="add_content_hint">Inhoud toevoegen...</string>
+    <string name="add_content_hint">Inhoud toevoegen…</string>
     <string name="note_type_note">Notitie</string>
     <string name="note_type_list">Lijst</string>
     <string name="note_type_routine">Routine</string>
@@ -240,7 +240,10 @@
     <string name="notes_no_results">Geen resultaten</string>
     <string name="notes_done">Klaar</string>
     <string name="notes_edit">Bewerken</string>
-    <string name="notes_selected">%1$d geselecteerd</string>
+    <plurals name="notes_selected">
+        <item quantity="one">%d geselecteerd</item>
+        <item quantity="other">%d geselecteerd</item>
+    </plurals>
     <string name="notes_delete_selected">Selectie naar prullenbak</string>
     <string name="notes_pin_action">Vastzetten</string>
     <string name="notes_unpin_action">Losmaken</string>
@@ -254,7 +257,10 @@
     <string name="tag_delete">Tag verwijderen</string>
     <string name="tag_delete_text">“#%1$s” uit alle notities halen. De notities blijven.</string>
     <string name="tag_delete_with_notes">Tag en notities verwijderen</string>
-    <string name="tag_delete_with_notes_text">“#%1$s” en alle %2$d notities ermee verwijderen. Dit kan niet ongedaan worden gemaakt.</string>
+    <plurals name="tag_delete_with_notes_text">
+        <item quantity="one">“#%1$s” en de %2$d notitie ermee verwijderen. Dit kan niet ongedaan worden gemaakt.</item>
+        <item quantity="other">“#%1$s” en alle %2$d notities ermee verwijderen. Dit kan niet ongedaan worden gemaakt.</item>
+    </plurals>
     <string name="notes_no_title">Nog geen titel</string>
     <string name="notes_tag_hint">Tags toevoegen …</string>
     <string name="section_notes">Notities</string>

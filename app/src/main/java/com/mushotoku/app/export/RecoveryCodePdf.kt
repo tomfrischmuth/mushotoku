@@ -30,6 +30,8 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import androidx.core.graphics.PathParser
+import androidx.core.graphics.withSave
+import androidx.core.graphics.withTranslation
 import com.mushotoku.app.R
 import com.mushotoku.app.ui.brand.LetterPaths
 import java.io.File
@@ -109,10 +111,9 @@ object RecoveryCodePdf {
             .setAlignment(Layout.Alignment.ALIGN_NORMAL)
             .setLineSpacing(4f, 1f)
             .build()
-        canvas.save()
-        canvas.translate(MARGIN, 360f)
-        layout.draw(canvas)
-        canvas.restore()
+        canvas.withTranslation(MARGIN, 360f) {
+            layout.draw(this)
+        }
 
         doc.finishPage(page)
 
@@ -124,35 +125,34 @@ object RecoveryCodePdf {
 
     private fun drawWordmark(canvas: Canvas, left: Float, top: Float, width: Float) {
         val s = width / 1960f
-        canvas.save()
-        canvas.translate(left, top)
-        canvas.scale(s, s)
-        val stroke = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            style = Paint.Style.STROKE; strokeWidth = 30f
-            strokeCap = Paint.Cap.ROUND; strokeJoin = Paint.Join.ROUND; color = DARK
+        canvas.withTranslation(left, top) {
+            scale(s, s)
+            val stroke = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                style = Paint.Style.STROKE; strokeWidth = 30f
+                strokeCap = Paint.Cap.ROUND; strokeJoin = Paint.Join.ROUND; color = DARK
+            }
+            LetterPaths.forEach { drawPath(PathParser.createPathFromPathData(it), stroke) }
+            drawEnso(canvas, 1035f, 260f, 75f, 30f, mirrored = false)
+            drawEnso(canvas, 1405f, 260f, 75f, 30f, mirrored = true)
         }
-        LetterPaths.forEach { canvas.drawPath(PathParser.createPathFromPathData(it), stroke) }
-        drawEnso(canvas, 1035f, 260f, 75f, 30f, mirrored = false)
-        drawEnso(canvas, 1405f, 260f, 75f, 30f, mirrored = true)
-        canvas.restore()
     }
 
     private fun drawEnso(canvas: Canvas, cx: Float, cy: Float, r: Float, sw: Float, mirrored: Boolean) {
-        canvas.save()
-        if (mirrored) canvas.scale(-1f, 1f, cx, cy)
-        val oval = RectF(cx - r, cy - r, cx + r, cy + r)
-        val ring = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            style = Paint.Style.STROKE; strokeWidth = sw; strokeCap = Paint.Cap.BUTT; color = DARK
+        canvas.withSave {
+            if (mirrored) scale(-1f, 1f, cx, cy)
+            val oval = RectF(cx - r, cy - r, cx + r, cy + r)
+            val ring = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                style = Paint.Style.STROKE; strokeWidth = sw; strokeCap = Paint.Cap.BUTT; color = DARK
+            }
+            drawArc(oval, -15f, 199.3f, false, ring)
+            val (sx, sy) = pointOnCircle(cx, cy, r, -29.0)
+            val (ex, ey) = pointOnCircle(cx, cy, r, 75.0)
+            val grad = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                style = Paint.Style.STROKE; strokeWidth = sw; strokeCap = Paint.Cap.BUTT
+                shader = LinearGradient(sx, sy, ex, ey, ENSO_COLORS, ENSO_STOPS, Shader.TileMode.CLAMP)
+            }
+            drawArc(oval, -119f, 104f, false, grad)
         }
-        canvas.drawArc(oval, -15f, 199.3f, false, ring)
-        val (sx, sy) = pointOnCircle(cx, cy, r, -29.0)
-        val (ex, ey) = pointOnCircle(cx, cy, r, 75.0)
-        val grad = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            style = Paint.Style.STROKE; strokeWidth = sw; strokeCap = Paint.Cap.BUTT
-            shader = LinearGradient(sx, sy, ex, ey, ENSO_COLORS, ENSO_STOPS, Shader.TileMode.CLAMP)
-        }
-        canvas.drawArc(oval, -119f, 104f, false, grad)
-        canvas.restore()
     }
 
     private fun pointOnCircle(cx: Float, cy: Float, r: Float, deg: Double): Pair<Float, Float> {

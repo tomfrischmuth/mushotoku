@@ -212,8 +212,8 @@ internal fun buildReadView(rawText: String, colors: AppColors, accent: Color = N
 @Composable
 internal fun NoteReadView(
     rawText: String,
-    accent: Color = NoteAccent,
     modifier: Modifier = Modifier,
+    accent: Color = NoteAccent,
     onToggleCheckbox: ((lineIndex: Int) -> Unit)? = null,
     onTapText: ((rawOffset: Int) -> Unit)? = null
 ) {

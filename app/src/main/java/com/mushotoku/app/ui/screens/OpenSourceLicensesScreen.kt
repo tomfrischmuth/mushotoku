@@ -35,7 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -53,18 +53,18 @@ import kotlinx.serialization.json.Json
 @Composable
 internal fun OpenSourceLicensesScreen() {
     val colors = LocalAppColors.current
-    val context = LocalContext.current
+    val resources = LocalResources.current
     val groups = remember {
-        val aboutJson = context.resources.openRawResource(R.raw.aboutlibraries)
+        val aboutJson = resources.openRawResource(R.raw.aboutlibraries)
             .bufferedReader().use { it.readText() }
         val libs = Libs.Builder().withJson(aboutJson).build()
         val notices = runCatching {
-            val raw = context.resources.openRawResource(R.raw.legal_notices)
+            val raw = resources.openRawResource(R.raw.legal_notices)
                 .bufferedReader().use { it.readText() }
             LENIENT_JSON.decodeFromString<LegalNotices>(raw).notices
         }.getOrDefault(emptyMap())
         val years = runCatching {
-            val raw = context.resources.openRawResource(R.raw.copyright_years)
+            val raw = resources.openRawResource(R.raw.copyright_years)
                 .bufferedReader().use { it.readText() }
             LENIENT_JSON.decodeFromString<CopyrightYears>(raw).years
         }.getOrDefault(emptyMap())

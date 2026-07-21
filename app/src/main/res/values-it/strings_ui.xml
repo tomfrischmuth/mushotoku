@@ -146,6 +146,7 @@
     <string name="budget_additional_income_row">+ Entrate aggiuntive</string>
     <plurals name="budget_days_left">
         <item quantity="one">%d giorno rimasto</item>
+        <item quantity="many">%d di giorni rimasti</item>
         <item quantity="other">%d giorni rimasti</item>
     </plurals>
 
@@ -188,15 +189,18 @@
     <string name="trash_restore_confirm_title">Ripristinare?</string>
     <plurals name="trash_restore_confirm_text">
         <item quantity="one">%d nota tornerà tra le tue note.</item>
+        <item quantity="many">%d di note torneranno tra le tue note.</item>
         <item quantity="other">%d note torneranno tra le tue note.</item>
     </plurals>
     <string name="trash_delete_confirm_title">Eliminare definitivamente?</string>
     <plurals name="trash_delete_confirm_text">
         <item quantity="one">%d nota verrà eliminata per sempre. L’operazione è irreversibile.</item>
+        <item quantity="many">%d di note verranno eliminate per sempre. L’operazione è irreversibile.</item>
         <item quantity="other">%d note verranno eliminate per sempre. L’operazione è irreversibile.</item>
     </plurals>
     <plurals name="trash_tag_text">
         <item quantity="one">%d nota nel cestino ha questo tag.</item>
+        <item quantity="many">%d di note nel cestino hanno questo tag.</item>
         <item quantity="other">%d note nel cestino hanno questo tag.</item>
     </plurals>
     <string name="trash_restore_all">Ripristina tutto</string>
@@ -207,7 +211,7 @@
     <string name="no_lists_yet">Ancora nessuna lista. Tocca + per aggiungerne una.</string>
     <string name="delete_note_dialog_title">Eliminare la nota?</string>
     <string name="delete_note_dialog_text">\"%1$s\" sarà spostata nel cestino.</string>
-    <string name="add_content_hint">Aggiungi contenuto...</string>
+    <string name="add_content_hint">Aggiungi contenuto…</string>
     <string name="note_type_note">Nota</string>
     <string name="note_type_list">Lista</string>
     <string name="note_type_routine">Routine</string>
@@ -217,18 +221,22 @@
     <string name="no_notes">Nessuna nota</string>
     <plurals name="notes_count">
         <item quantity="one">%d nota</item>
+        <item quantity="many">%d di note</item>
         <item quantity="other">%d note</item>
     </plurals>
     <plurals name="notes_count_routine">
         <item quantity="one">%d routine</item>
+        <item quantity="many">%d di routine</item>
         <item quantity="other">%d routine</item>
     </plurals>
     <plurals name="notes_count_list">
         <item quantity="one">%d lista</item>
+        <item quantity="many">%d di liste</item>
         <item quantity="other">%d liste</item>
     </plurals>
     <plurals name="notes_count_note">
         <item quantity="one">%d nota</item>
+        <item quantity="many">%d di note</item>
         <item quantity="other">%d note</item>
     </plurals>
     <string name="notes_pinned_section">Fissate</string>
@@ -240,7 +248,11 @@
     <string name="notes_no_results">Nessun risultato</string>
     <string name="notes_done">Fatto</string>
     <string name="notes_edit">Modifica</string>
-    <string name="notes_selected">%1$d selezionate</string>
+    <plurals name="notes_selected">
+        <item quantity="one">%d selezionata</item>
+        <item quantity="many">%d selezionate</item>
+        <item quantity="other">%d selezionate</item>
+    </plurals>
     <string name="notes_delete_selected">Sposta selezione nel cestino</string>
     <string name="notes_pin_action">Fissa</string>
     <string name="notes_unpin_action">Rimuovi</string>
@@ -254,7 +266,11 @@
     <string name="tag_delete">Elimina tag</string>
     <string name="tag_delete_text">Togliere «#%1$s» da tutte le note. Le note restano.</string>
     <string name="tag_delete_with_notes">Elimina tag e note</string>
-    <string name="tag_delete_with_notes_text">Eliminare «#%1$s» e le %2$d note che lo portano. Non è reversibile.</string>
+    <plurals name="tag_delete_with_notes_text">
+        <item quantity="one">Eliminare «#%1$s» e la %2$d nota che lo porta. Non è reversibile.</item>
+        <item quantity="many">Eliminare «#%1$s» e le %2$d di note che lo portano. Non è reversibile.</item>
+        <item quantity="other">Eliminare «#%1$s» e le %2$d note che lo portano. Non è reversibile.</item>
+    </plurals>
     <string name="notes_no_title">Ancora senza titolo</string>
     <string name="notes_tag_hint">Aggiungi tag …</string>
     <string name="section_notes">Note</string>
@@ -342,18 +358,22 @@
     <string name="meditation_month_days">%1$d di 30 giorni</string>
     <plurals name="meditation_minutes">
         <item quantity="one">%d min</item>
+        <item quantity="many">%d di min</item>
         <item quantity="other">%d min</item>
     </plurals>
     <plurals name="meditation_week_entries">
         <item quantity="one">%d voce</item>
+        <item quantity="many">%d di voci</item>
         <item quantity="other">%d voci</item>
     </plurals>
     <plurals name="meditation_streak">
         <item quantity="one">%d giorno di fila</item>
+        <item quantity="many">%d di giorni di fila</item>
         <item quantity="other">%d giorni di fila</item>
     </plurals>
     <plurals name="meditation_best_streak">
         <item quantity="one">Serie migliore: %d giorno</item>
+        <item quantity="many">Serie migliore: %d di giorni</item>
         <item quantity="other">Serie migliore: %d giorni</item>
     </plurals>
     <string name="meditation_avg_mood">Umore medio</string>
@@ -526,10 +546,12 @@
     <string name="reminder_now">Ora · %1$s</string>
     <plurals name="reminder_in_hours">
         <item quantity="one">Tra %1$d ora · %2$s</item>
+        <item quantity="many">Tra %1$d di ore · %2$s</item>
         <item quantity="other">Tra %1$d ore · %2$s</item>
     </plurals>
     <plurals name="reminder_in_minutes">
         <item quantity="one">Tra %1$d minuto · %2$s</item>
+        <item quantity="many">Tra %1$d di minuti · %2$s</item>
         <item quantity="other">Tra %1$d minuti · %2$s</item>
     </plurals>
 

@@ -165,8 +165,8 @@ private fun StatChip(
     glassStyle: HazeStyle,
     glassBorder: Color,
     isDark: Boolean,
-    onClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null
 ) {
     val shape      = RoundedCornerShape(18.dp)
     val valueColor = LocalAppColors.current.onSurface

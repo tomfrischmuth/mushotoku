@@ -42,8 +42,8 @@ enum class AppTab { TODAY, FINANCE, NOTES }
 fun BottomBar(
     currentTab: AppTab,
     onTabChange: (AppTab) -> Unit,
-    showFinance: Boolean = true,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showFinance: Boolean = true
 ) {
     val strings = LocalAppStrings.current
     Box(

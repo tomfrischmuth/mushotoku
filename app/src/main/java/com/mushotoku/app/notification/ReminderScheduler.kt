@@ -18,10 +18,12 @@
 
 package com.mushotoku.app.notification
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import androidx.core.content.edit
 import com.mushotoku.app.R
 import com.mushotoku.app.data.Task
 import java.time.LocalDate
@@ -73,9 +75,13 @@ object ReminderScheduler {
                 am.cancel(buildPendingIntent(context, id, null, null))
             }
         }
-        prefs.edit().putStringSet(KEY_IDS, scheduled).apply()
+        prefs.edit { putStringSet(KEY_IDS, scheduled) }
     }
 
+    // Lint asks for SCHEDULE_EXACT_ALARM, but the app declares the always-granted
+    // USE_EXACT_ALARM instead, and the call is guarded by canScheduleExactAlarms()
+    // either way. Lint does not recognise that combination.
+    @SuppressLint("MissingPermission")
     private fun schedule(
         am: AlarmManager,
         context: Context,

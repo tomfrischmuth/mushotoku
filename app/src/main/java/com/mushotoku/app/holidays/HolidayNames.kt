@@ -18,11 +18,16 @@
 
 package com.mushotoku.app.holidays
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import com.mushotoku.app.R
 import java.util.Locale
 
+// Lint expects Play Core language downloads alongside a locale switch. The app
+// ships every language in the APK and is distributed outside Play, so there is
+// nothing to download.
+@SuppressLint("AppBundleLocaleChanges")
 fun Context.localizedFor(locale: Locale): Context =
     createConfigurationContext(Configuration(resources.configuration).apply { setLocale(locale) })
 

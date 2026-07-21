@@ -30,7 +30,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -92,7 +93,8 @@ internal fun SavingsPotentialDialog(
         onDismissRequest = onDismiss,
         modifier = Modifier.fillMaxWidth(0.95f)
     ) {
-        val maxHeight = (LocalConfiguration.current.screenHeightDp * 0.90f).dp
+        val containerHeight = LocalWindowInfo.current.containerSize.height
+        val maxHeight = with(LocalDensity.current) { (containerHeight * 0.90f).toDp() }
         Column(modifier = Modifier.heightIn(max = maxHeight)) {
 
             Column(

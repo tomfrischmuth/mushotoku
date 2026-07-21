@@ -20,6 +20,7 @@ package com.mushotoku.app.security
 
 import android.content.Context
 import android.util.Base64
+import androidx.core.content.edit
 
 class KeyStorage(context: Context) {
 
@@ -46,15 +47,15 @@ class KeyStorage(context: Context) {
 
     var argonMemoryKiB: Int
         get() = prefs.getInt(KEY_ARGON_MEM, Argon2Kdf.MEMORY_KIB)
-        set(value) = prefs.edit().putInt(KEY_ARGON_MEM, value).apply()
+        set(value) = prefs.edit { putInt(KEY_ARGON_MEM, value) }
 
     var argonIterations: Int
         get() = prefs.getInt(KEY_ARGON_ITER, Argon2Kdf.ITERATIONS)
-        set(value) = prefs.edit().putInt(KEY_ARGON_ITER, value).apply()
+        set(value) = prefs.edit { putInt(KEY_ARGON_ITER, value) }
 
     var argonParallelism: Int
         get() = prefs.getInt(KEY_ARGON_PAR, Argon2Kdf.PARALLELISM)
-        set(value) = prefs.edit().putInt(KEY_ARGON_PAR, value).apply()
+        set(value) = prefs.edit { putInt(KEY_ARGON_PAR, value) }
 
     // Optional recovery slot: the same DEK wrapped a second, independent time with a
     // device-generated recovery code (Argon2 + AES-GCM). Lets a KEYSTORE_LOCK user
@@ -78,14 +79,14 @@ class KeyStorage(context: Context) {
     val isInitialized: Boolean
         get() = mode != null && wrappedDek != null
 
-    fun clear() = prefs.edit().clear().apply()
+    fun clear() = prefs.edit { this.clear() }
 
     private fun getBytes(key: String): ByteArray? =
         prefs.getString(key, null)?.let { Base64.decode(it, Base64.NO_WRAP) }
 
-    private fun setBytes(key: String, value: ByteArray?) = prefs.edit().apply {
+    private fun setBytes(key: String, value: ByteArray?) = prefs.edit {
         if (value == null) remove(key) else putString(key, Base64.encodeToString(value, Base64.NO_WRAP))
-    }.apply()
+    }
 
     companion object {
         private const val PREFS_NAME = "mushotoku_keys"

@@ -146,6 +146,7 @@
     <string name="budget_additional_income_row">+ Ingresos adicionales</string>
     <plurals name="budget_days_left">
         <item quantity="one">Queda %d día</item>
+        <item quantity="many">Quedan %d de días</item>
         <item quantity="other">Quedan %d días</item>
     </plurals>
 
@@ -188,15 +189,18 @@
     <string name="trash_restore_confirm_title">¿Restaurar?</string>
     <plurals name="trash_restore_confirm_text">
         <item quantity="one">%d nota volverá a tus notas.</item>
+        <item quantity="many">%d de notas volverán a tus notas.</item>
         <item quantity="other">%d notas volverán a tus notas.</item>
     </plurals>
     <string name="trash_delete_confirm_title">¿Eliminar definitivamente?</string>
     <plurals name="trash_delete_confirm_text">
         <item quantity="one">%d nota se eliminará para siempre. Esto no se puede deshacer.</item>
+        <item quantity="many">%d de notas se eliminarán para siempre. Esto no se puede deshacer.</item>
         <item quantity="other">%d notas se eliminarán para siempre. Esto no se puede deshacer.</item>
     </plurals>
     <plurals name="trash_tag_text">
         <item quantity="one">%d nota de la papelera lleva esta etiqueta.</item>
+        <item quantity="many">%d de notas de la papelera llevan esta etiqueta.</item>
         <item quantity="other">%d notas de la papelera llevan esta etiqueta.</item>
     </plurals>
     <string name="trash_restore_all">Restaurar todo</string>
@@ -207,7 +211,7 @@
     <string name="no_lists_yet">Aún no hay listas. Toca + para añadir una.</string>
     <string name="delete_note_dialog_title">¿Eliminar nota?</string>
     <string name="delete_note_dialog_text">\"%1$s\" se moverá a la papelera.</string>
-    <string name="add_content_hint">Añadir contenido...</string>
+    <string name="add_content_hint">Añadir contenido…</string>
     <string name="note_type_note">Nota</string>
     <string name="note_type_list">Lista</string>
     <string name="note_type_routine">Rutina</string>
@@ -217,18 +221,22 @@
     <string name="no_notes">Sin notas</string>
     <plurals name="notes_count">
         <item quantity="one">%d nota</item>
+        <item quantity="many">%d de notas</item>
         <item quantity="other">%d notas</item>
     </plurals>
     <plurals name="notes_count_routine">
         <item quantity="one">%d rutina</item>
+        <item quantity="many">%d de rutinas</item>
         <item quantity="other">%d rutinas</item>
     </plurals>
     <plurals name="notes_count_list">
         <item quantity="one">%d lista</item>
+        <item quantity="many">%d de listas</item>
         <item quantity="other">%d listas</item>
     </plurals>
     <plurals name="notes_count_note">
         <item quantity="one">%d nota</item>
+        <item quantity="many">%d de notas</item>
         <item quantity="other">%d notas</item>
     </plurals>
     <string name="notes_pinned_section">Fijadas</string>
@@ -240,7 +248,11 @@
     <string name="notes_no_results">Sin resultados</string>
     <string name="notes_done">Hecho</string>
     <string name="notes_edit">Editar</string>
-    <string name="notes_selected">%1$d seleccionadas</string>
+    <plurals name="notes_selected">
+        <item quantity="one">%d seleccionada</item>
+        <item quantity="many">%d seleccionadas</item>
+        <item quantity="other">%d seleccionadas</item>
+    </plurals>
     <string name="notes_delete_selected">Mover selección a la papelera</string>
     <string name="notes_pin_action">Fijar</string>
     <string name="notes_unpin_action">Desfijar</string>
@@ -254,7 +266,11 @@
     <string name="tag_delete">Eliminar etiqueta</string>
     <string name="tag_delete_text">Quitar «#%1$s» de todas las notas. Las notas se mantienen.</string>
     <string name="tag_delete_with_notes">Eliminar etiqueta y notas</string>
-    <string name="tag_delete_with_notes_text">Eliminar «#%1$s» y las %2$d notas que la llevan. No se puede deshacer.</string>
+    <plurals name="tag_delete_with_notes_text">
+        <item quantity="one">Eliminar «#%1$s» y la %2$d nota que la lleva. No se puede deshacer.</item>
+        <item quantity="many">Eliminar «#%1$s» y las %2$d de notas que la llevan. No se puede deshacer.</item>
+        <item quantity="other">Eliminar «#%1$s» y las %2$d notas que la llevan. No se puede deshacer.</item>
+    </plurals>
     <string name="notes_no_title">Aún sin título</string>
     <string name="notes_tag_hint">Añadir etiquetas …</string>
     <string name="section_notes">Notas</string>
@@ -342,18 +358,22 @@
     <string name="meditation_month_days">%1$d de 30 días</string>
     <plurals name="meditation_minutes">
         <item quantity="one">%d min</item>
+        <item quantity="many">%d de min</item>
         <item quantity="other">%d min</item>
     </plurals>
     <plurals name="meditation_week_entries">
         <item quantity="one">%d entrada</item>
+        <item quantity="many">%d de entradas</item>
         <item quantity="other">%d entradas</item>
     </plurals>
     <plurals name="meditation_streak">
         <item quantity="one">%d día seguido</item>
+        <item quantity="many">%d de días seguidos</item>
         <item quantity="other">%d días seguidos</item>
     </plurals>
     <plurals name="meditation_best_streak">
         <item quantity="one">Mejor racha: %d día</item>
+        <item quantity="many">Mejor racha: %d de días</item>
         <item quantity="other">Mejor racha: %d días</item>
     </plurals>
     <string name="meditation_avg_mood">Ánimo medio</string>
@@ -526,10 +546,12 @@
     <string name="reminder_now">Ahora · %1$s</string>
     <plurals name="reminder_in_hours">
         <item quantity="one">En %1$d hora · %2$s</item>
+        <item quantity="many">En %1$d de horas · %2$s</item>
         <item quantity="other">En %1$d horas · %2$s</item>
     </plurals>
     <plurals name="reminder_in_minutes">
         <item quantity="one">En %1$d minuto · %2$s</item>
+        <item quantity="many">En %1$d de minutos · %2$s</item>
         <item quantity="other">En %1$d minutos · %2$s</item>
     </plurals>
 

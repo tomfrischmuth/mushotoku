@@ -93,7 +93,7 @@ private fun dialogGlassStyle(isDark: Boolean) = HazeStyle(
 private val dialogBorderColor = Color.White.copy(alpha = 0.22f)
 
 @Composable
-private fun dialogSetup(onDismissRequest: () -> Unit, content: @Composable BoxScope.() -> Unit) {
+private fun DialogSetup(onDismissRequest: () -> Unit, content: @Composable BoxScope.() -> Unit) {
     val host = LocalGlassOverlayHost.current
     if (host == null) {
         Box(Modifier.fillMaxSize(), content = content)
@@ -132,8 +132,8 @@ private fun BlurScrim(hazeState: HazeState?, isDark: Boolean, onDismissRequest: 
 fun GlassAlertDialog(
     onDismissRequest: () -> Unit,
     title: @Composable () -> Unit,
-    confirmButton: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier,
+    confirmButton: @Composable (() -> Unit)? = null,
     dismissButton: @Composable (() -> Unit)? = null,
     text: @Composable (() -> Unit)? = null,
 ) {
@@ -142,7 +142,7 @@ fun GlassAlertDialog(
     val isDark    = colors.isDark()
     val cardShape = RoundedCornerShape(28.dp)
 
-    dialogSetup(onDismissRequest) {
+    DialogSetup(onDismissRequest) {
         BlurScrim(hazeState, isDark, onDismissRequest)
 
         Column(
@@ -196,7 +196,7 @@ fun GlassDialog(
     val colors    = LocalAppColors.current
     val isDark    = colors.isDark()
 
-    dialogSetup(onDismissRequest) {
+    DialogSetup(onDismissRequest) {
         BlurScrim(hazeState, isDark, onDismissRequest)
 
         Box(

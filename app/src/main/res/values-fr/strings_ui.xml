@@ -146,6 +146,7 @@
     <string name="budget_additional_income_row">+ Revenus supplémentaires</string>
     <plurals name="budget_days_left">
         <item quantity="one">%d jour restant</item>
+        <item quantity="many">%d de jours restants</item>
         <item quantity="other">%d jours restants</item>
     </plurals>
 
@@ -188,15 +189,18 @@
     <string name="trash_restore_confirm_title">Restaurer ?</string>
     <plurals name="trash_restore_confirm_text">
         <item quantity="one">%d note retournera dans vos notes.</item>
+        <item quantity="many">%d de notes retourneront dans vos notes.</item>
         <item quantity="other">%d notes retourneront dans vos notes.</item>
     </plurals>
     <string name="trash_delete_confirm_title">Supprimer définitivement ?</string>
     <plurals name="trash_delete_confirm_text">
         <item quantity="one">%d note sera supprimée définitivement. Action irréversible.</item>
+        <item quantity="many">%d de notes seront supprimées définitivement. Action irréversible.</item>
         <item quantity="other">%d notes seront supprimées définitivement. Action irréversible.</item>
     </plurals>
     <plurals name="trash_tag_text">
         <item quantity="one">%d note de la corbeille porte cette étiquette.</item>
+        <item quantity="many">%d de notes de la corbeille portent cette étiquette.</item>
         <item quantity="other">%d notes de la corbeille portent cette étiquette.</item>
     </plurals>
     <string name="trash_restore_all">Tout restaurer</string>
@@ -207,7 +211,7 @@
     <string name="no_lists_yet">Aucune liste. Touche + pour en ajouter une.</string>
     <string name="delete_note_dialog_title">Supprimer la note ?</string>
     <string name="delete_note_dialog_text">\"%1$s\" sera déplacée vers la corbeille.</string>
-    <string name="add_content_hint">Ajouter du contenu...</string>
+    <string name="add_content_hint">Ajouter du contenu…</string>
     <string name="note_type_note">Note</string>
     <string name="note_type_list">Liste</string>
     <string name="note_type_routine">Routine</string>
@@ -217,18 +221,22 @@
     <string name="no_notes">Aucune note</string>
     <plurals name="notes_count">
         <item quantity="one">%d note</item>
+        <item quantity="many">%d de notes</item>
         <item quantity="other">%d notes</item>
     </plurals>
     <plurals name="notes_count_routine">
         <item quantity="one">%d routine</item>
+        <item quantity="many">%d de routines</item>
         <item quantity="other">%d routines</item>
     </plurals>
     <plurals name="notes_count_list">
         <item quantity="one">%d liste</item>
+        <item quantity="many">%d de listes</item>
         <item quantity="other">%d listes</item>
     </plurals>
     <plurals name="notes_count_note">
         <item quantity="one">%d note</item>
+        <item quantity="many">%d de notes</item>
         <item quantity="other">%d notes</item>
     </plurals>
     <string name="notes_pinned_section">Épinglées</string>
@@ -240,7 +248,11 @@
     <string name="notes_no_results">Aucun résultat</string>
     <string name="notes_done">Terminé</string>
     <string name="notes_edit">Modifier</string>
-    <string name="notes_selected">%1$d sélectionnées</string>
+    <plurals name="notes_selected">
+        <item quantity="one">%d sélectionnée</item>
+        <item quantity="many">%d sélectionnées</item>
+        <item quantity="other">%d sélectionnées</item>
+    </plurals>
     <string name="notes_delete_selected">Déplacer la sélection vers la corbeille</string>
     <string name="notes_pin_action">Épingler</string>
     <string name="notes_unpin_action">Détacher</string>
@@ -254,7 +266,11 @@
     <string name="tag_delete">Supprimer l’étiquette</string>
     <string name="tag_delete_text">Retirer « #%1$s » de toutes les notes. Les notes sont conservées.</string>
     <string name="tag_delete_with_notes">Supprimer l’étiquette et les notes</string>
-    <string name="tag_delete_with_notes_text">Supprimer « #%1$s » et les %2$d notes concernées. Action irréversible.</string>
+    <plurals name="tag_delete_with_notes_text">
+        <item quantity="one">Supprimer « #%1$s » et la %2$d note concernée. Action irréversible.</item>
+        <item quantity="many">Supprimer « #%1$s » et les %2$d de notes concernées. Action irréversible.</item>
+        <item quantity="other">Supprimer « #%1$s » et les %2$d notes concernées. Action irréversible.</item>
+    </plurals>
     <string name="notes_no_title">Pas encore de titre</string>
     <string name="notes_tag_hint">Ajouter des étiquettes …</string>
     <string name="section_notes">Notes</string>
@@ -342,18 +358,22 @@
     <string name="meditation_month_days">%1$d jours sur 30</string>
     <plurals name="meditation_minutes">
         <item quantity="one">%d min</item>
+        <item quantity="many">%d de min</item>
         <item quantity="other">%d min</item>
     </plurals>
     <plurals name="meditation_week_entries">
         <item quantity="one">%d entrée</item>
+        <item quantity="many">%d d\'entrées</item>
         <item quantity="other">%d entrées</item>
     </plurals>
     <plurals name="meditation_streak">
         <item quantity="one">%d jour d\'affilée</item>
+        <item quantity="many">%d de jours d\'affilée</item>
         <item quantity="other">%d jours d\'affilée</item>
     </plurals>
     <plurals name="meditation_best_streak">
         <item quantity="one">Meilleure série : %d jour</item>
+        <item quantity="many">Meilleure série : %d de jours</item>
         <item quantity="other">Meilleure série : %d jours</item>
     </plurals>
     <string name="meditation_avg_mood">Humeur moy.</string>
@@ -526,10 +546,12 @@
     <string name="reminder_now">Maintenant · %1$s</string>
     <plurals name="reminder_in_hours">
         <item quantity="one">Dans %1$d heure · %2$s</item>
+        <item quantity="many">Dans %1$d d\'heures · %2$s</item>
         <item quantity="other">Dans %1$d heures · %2$s</item>
     </plurals>
     <plurals name="reminder_in_minutes">
         <item quantity="one">Dans %1$d minute · %2$s</item>
+        <item quantity="many">Dans %1$d de minutes · %2$s</item>
         <item quantity="other">Dans %1$d minutes · %2$s</item>
     </plurals>
 

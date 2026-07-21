@@ -215,7 +215,7 @@
     <string name="no_lists_yet">Brak list. Dotknij +, aby dodać.</string>
     <string name="delete_note_dialog_title">Usunąć notatkę?</string>
     <string name="delete_note_dialog_text">\"%1$s\" zostanie przeniesiona do kosza.</string>
-    <string name="add_content_hint">Dodaj treść...</string>
+    <string name="add_content_hint">Dodaj treść…</string>
     <string name="note_type_note">Notatka</string>
     <string name="note_type_list">Lista</string>
     <string name="note_type_routine">Rutyna</string>
@@ -256,7 +256,12 @@
     <string name="notes_no_results">Brak wyników</string>
     <string name="notes_done">Gotowe</string>
     <string name="notes_edit">Edytuj</string>
-    <string name="notes_selected">Zaznaczono: %1$d</string>
+    <plurals name="notes_selected">
+        <item quantity="one">Zaznaczono: %d</item>
+        <item quantity="few">Zaznaczono: %d</item>
+        <item quantity="many">Zaznaczono: %d</item>
+        <item quantity="other">Zaznaczono: %d</item>
+    </plurals>
     <string name="notes_delete_selected">Przenieś zaznaczone do kosza</string>
     <string name="notes_pin_action">Przypnij</string>
     <string name="notes_unpin_action">Odepnij</string>
@@ -270,7 +275,12 @@
     <string name="tag_delete">Usuń tag</string>
     <string name="tag_delete_text">Usunąć „#%1$s” ze wszystkich notatek. Same notatki zostaną.</string>
     <string name="tag_delete_with_notes">Usuń tag i notatki</string>
-    <string name="tag_delete_with_notes_text">Usunąć „#%1$s” i wszystkie %2$d notatki z nim. Tego nie można cofnąć.</string>
+    <plurals name="tag_delete_with_notes_text">
+        <item quantity="one">Usunąć „#%1$s” i %2$d notatkę z nim. Tego nie można cofnąć.</item>
+        <item quantity="few">Usunąć „#%1$s” i wszystkie %2$d notatki z nim. Tego nie można cofnąć.</item>
+        <item quantity="many">Usunąć „#%1$s” i wszystkie %2$d notatek z nim. Tego nie można cofnąć.</item>
+        <item quantity="other">Usunąć „#%1$s” i wszystkie %2$d notatki z nim. Tego nie można cofnąć.</item>
+    </plurals>
     <string name="notes_no_title">Jeszcze bez tytułu</string>
     <string name="notes_tag_hint">Dodaj tagi …</string>
     <string name="section_notes">Notatki</string>
