@@ -223,23 +223,104 @@ internal fun autoContinueList(old: TextFieldValue, new: TextFieldValue): TextFie
 }
 
 /**
- * A backspace anywhere in a check marker takes the whole box away in one go.
- * Deleting a single character would leave "- [ ]", which is no longer a check
- * line — the raw markdown would suddenly show and want five more presses.
+ * A backspace at the end of a finished check item clears its text in one press,
+ * rather than a letter at a time. The box stays: emptying an item and dropping it
+ * are two different things, and the next press takes the box too — see
+ * [deleteCheckMarker].
+ *
+ * "Finished" is the editor's call: it only offers up an item that is not the one
+ * being written in, so a backspace while typing still deletes its one character.
+ * Without that, a typo at the end of an entry would cost the whole entry.
  *
  * Returns null when the edit was something else.
  */
-internal fun deleteCheckMarker(old: TextFieldValue, new: TextFieldValue): TextFieldValue? {
+internal fun deleteCheckItemText(old: TextFieldValue, new: TextFieldValue): TextFieldValue? {
     if (new.text.length != old.text.length - 1) return null
-    val at = new.selection.start
+    if (!old.selection.collapsed) return null
+    val at = old.selection.start
+    if (new.selection.start != at - 1) return null
     if (at < 0 || at > old.text.length) return null
 
     val lineStart = old.text.lastIndexOf('\n', (at - 1).coerceAtLeast(0))
         .let { if (it < 0) 0 else it + 1 }
     val lineEnd = old.text.indexOf('\n', lineStart).let { if (it < 0) old.text.length else it }
     if (checkStateOf(old.text.substring(lineStart, lineEnd)) == null) return null
-    if (at < lineStart || at >= lineStart + ChecklistPrefixLength) return null
 
-    val newText = old.text.removeRange(lineStart, lineStart + ChecklistPrefixLength)
-    return TextFieldValue(newText, TextRange(lineStart))
+    // Only from the very end of the item, and only while it still has text —
+    // an empty box is [deleteCheckMarker]'s business.
+    val textStart = lineStart + ChecklistPrefixLength
+    if (at != lineEnd || lineEnd <= textStart) return null
+
+    return TextFieldValue(old.text.removeRange(textStart, lineEnd), TextRange(textStart))
+}
+
+/**
+ * A backspace in front of a box joins the item to the line above, and the marker
+ * goes with the line break. Carrying "- [ ] " up would drop raw markdown into the
+ * middle of the line above, where it means nothing and reads as damage.
+ *
+ * Returns null when the edit was something else.
+ */
+internal fun joinCheckItemUp(old: TextFieldValue, new: TextFieldValue): TextFieldValue? {
+    if (new.text.length != old.text.length - 1) return null
+    if (!old.selection.collapsed) return null
+    val at = old.selection.start
+    if (new.selection.start != at - 1) return null
+    // Nothing above to join to.
+    if (at <= 0 || at > old.text.length) return null
+
+    val lineStart = lineStartOf(old.text, at)
+    if (at != lineStart) return null
+    val lineEnd = old.text.indexOf('\n', lineStart).let { if (it < 0) old.text.length else it }
+    if (checkStateOf(old.text.substring(lineStart, lineEnd)) == null) return null
+
+    return TextFieldValue(
+        old.text.removeRange(lineStart - 1, lineStart + ChecklistPrefixLength),
+        TextRange(lineStart - 1)
+    )
+}
+
+/**
+ * The item between [lineStart] and [lineEnd] taken out, along with the line break
+ * that carried it, so the caret ends up where the line above stops rather than on
+ * a blank line.
+ */
+private fun removeCheckLine(text: String, lineStart: Int, lineEnd: Int): TextFieldValue =
+    if (lineStart > 0) {
+        TextFieldValue(text.removeRange(lineStart - 1, lineEnd), TextRange(lineStart - 1))
+    } else {
+        // Nothing above to join to: drop the item and pull the rest up.
+        val end = if (lineEnd < text.length) lineEnd + 1 else lineEnd
+        TextFieldValue(text.removeRange(0, end), TextRange(0))
+    }
+
+/**
+ * A backspace out of a check marker takes the whole item with it, in one press:
+ * the box, its text and the line break that carried it, leaving the caret at the
+ * end of the item above. Deleting a single character would leave "- [ ]", which
+ * is no longer a check line — the raw markdown would suddenly show and want five
+ * more presses.
+ *
+ * Only a backspace, and only from inside the marker. The caret is allowed to sit
+ * in front of the box as well, and there a backspace means the ordinary thing:
+ * join this line to the one above, box and all.
+ *
+ * Returns null when the edit was something else.
+ */
+internal fun deleteCheckMarker(old: TextFieldValue, new: TextFieldValue): TextFieldValue? {
+    if (new.text.length != old.text.length - 1) return null
+    if (!old.selection.collapsed) return null
+    // A backspace moves the caret back by one; a forward delete leaves it put.
+    val at = old.selection.start
+    if (new.selection.start != at - 1) return null
+    if (at < 0 || at > old.text.length) return null
+
+    val lineStart = old.text.lastIndexOf('\n', (at - 1).coerceAtLeast(0))
+        .let { if (it < 0) 0 else it + 1 }
+    val lineEnd = old.text.indexOf('\n', lineStart).let { if (it < 0) old.text.length else it }
+    if (checkStateOf(old.text.substring(lineStart, lineEnd)) == null) return null
+    // At lineStart the caret is in front of the box, which is not our case.
+    if (at <= lineStart || at > lineStart + ChecklistPrefixLength) return null
+
+    return removeCheckLine(old.text, lineStart, lineEnd)
 }

@@ -87,15 +87,27 @@ internal fun dropEmptyCheckItems(rawText: String): String =
         .filterNot { checkStateOf(it) != null && it.substring(ChecklistPrefixLength).isBlank() }
         .joinToString("\n")
 
+/** Start of the line [offset] sits in. */
+internal fun lineStartOf(text: String, offset: Int): Int {
+    val at = offset.coerceIn(0, text.length)
+    return text.lastIndexOf('\n', (at - 1).coerceAtLeast(0)).let { if (it < 0) 0 else it + 1 }
+}
+
 /**
- * [offset] moved past the marker of the line it sits in. A caret in front of a
- * box, or in the middle of its markup, is never what a tap was aiming for.
+ * [offset] moved past the marker of the line it sits in. A caret in the middle
+ * of the markup is never what a tap was aiming for.
+ *
+ * With [allowLineStart] the very start of the line is left alone, so the caret
+ * can be put in front of the box. There is nothing to write there, but it is
+ * where a backspace has to land to join the item to the line above. The read
+ * view has no caret to steer, so it keeps the stricter rule.
  */
-internal fun clampOutOfCheckMarker(text: String, offset: Int): Int {
+internal fun clampOutOfCheckMarker(text: String, offset: Int, allowLineStart: Boolean = false): Int {
     val at = offset.coerceIn(0, text.length)
     val lineStart = text.lastIndexOf('\n', (at - 1).coerceAtLeast(0)).let { if (it < 0) 0 else it + 1 }
     val line = text.substring(lineStart, text.indexOf('\n', lineStart).let { if (it < 0) text.length else it })
     if (checkStateOf(line) == null) return at
+    if (allowLineStart && at == lineStart) return at
     val afterMarker = lineStart + ChecklistPrefixLength
     return if (at < afterMarker) afterMarker.coerceAtMost(text.length) else at
 }

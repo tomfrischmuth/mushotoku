@@ -137,6 +137,7 @@ internal fun NoteCard(
         openCheckState(note.title + "\n" + note.content)
     }
     val tinted = noteCardColor(note.color, colors.surface, colors.background.isDarkSurface())
+    val footnote = noteCardFootnoteColor(tinted)
     val background by animateColorAsState(
         targetValue = if (isSelected) NoteAccent.copy(alpha = 0.12f) else tinted,
         label = "noteCardBackground"
@@ -213,7 +214,7 @@ internal fun NoteCard(
                         imageVector = if (displayedNoteType(note) == NoteType.LIST)
                             Icons.AutoMirrored.Filled.List else Icons.Default.Description,
                         contentDescription = null,
-                        tint = colors.onSurfaceTertiary,
+                        tint = footnote,
                         modifier = Modifier.size(15.dp)
                     )
                     if (isLinked) {
@@ -238,7 +239,7 @@ internal fun NoteCard(
                 Text(
                     text     = formatStamp(if (note.updatedAt > 0) note.updatedAt else note.createdAt),
                     fontSize = 11.sp,
-                    color    = colors.onSurfaceTertiary
+                    color    = footnote
                 )
             }
         }

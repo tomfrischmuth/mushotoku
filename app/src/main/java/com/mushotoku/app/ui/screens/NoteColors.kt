@@ -76,6 +76,16 @@ internal fun noteCardColor(index: Int, surface: Color, isDark: Boolean): Color {
 }
 
 /**
+ * Colour for the small print at the foot of a card: the type icon and the date.
+ * Taken from the card's own background rather than from the theme, because a
+ * fixed grey has no way to work on seven different surfaces — the dark theme's
+ * tertiary grey all but disappears once a card is tinted.
+ */
+internal fun noteCardFootnoteColor(cardColor: Color): Color =
+    if (cardColor.isDarkSurface()) Color.White.copy(alpha = 0.55f)
+    else Color.Black.copy(alpha = 0.55f)
+
+/**
  * Colour for the editor's controls: the same hue as the card, but at full
  * strength — as a thin outline or a letter it has to carry, where the card can
  * rely on its whole area. On a dark surface it is lifted towards white, which

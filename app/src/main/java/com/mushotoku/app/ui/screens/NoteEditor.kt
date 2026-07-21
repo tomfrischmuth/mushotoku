@@ -46,6 +46,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -84,6 +85,13 @@ import java.time.format.FormatStyle
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
+
+/**
+ * Below this gap between two deletions the key is being held, not pressed again.
+ * Android repeats at roughly 50 ms once the initial delay is over, while two
+ * deliberate presses are far slower than this.
+ */
+private const val HeldKeyMillis = 250L
 
 @OptIn(FlowPreview::class)
 @Composable
@@ -133,6 +141,15 @@ internal fun NoteEditor(
     }
 
     val canUndo by remember { derivedStateOf { text.selection.start > 0 || !text.selection.collapsed } }
+
+    // Start of the line last written in. Deleting a whole item is meant for
+    // tidying up a list, not for correcting the entry being typed, so the line
+    // the writing is happening in is left out of it until the caret moves away.
+    var typedLineStart by remember(note?.id) { mutableStateOf<Int?>(null) }
+
+    // When the last deletion came in, to tell a held backspace from a pressed
+    // one. Auto-repeat would otherwise clear item after item in one sweep.
+    var lastDeleteAt by remember(note?.id) { mutableLongStateOf(0L) }
 
     // The stamp just written, so tapping again rewrites it instead of adding a
     // second one. It only counts while the cursor still sits right behind it.
@@ -360,17 +377,40 @@ internal fun NoteEditor(
                 accent         = accent,
                 value          = text,
                 onValueChange  = { new ->
+                    // A backspace at the end of an item clears its text in one go
+                    // — but never in the line that is currently being written in,
+                    // and never off a held key, which would run through the whole
+                    // list item by item.
+                    val caretLine = lineStartOf(new.text, new.selection.start)
+                    when {
+                        new.text.length > text.text.length -> typedLineStart = caretLine
+                        typedLineStart != caretLine -> typedLineStart = null
+                    }
+                    val now = System.currentTimeMillis()
+                    val heldDown = now - lastDeleteAt < HeldKeyMillis
+                    if (new.text.length < text.text.length) lastDeleteAt = now
+
+                    val cleared = deleteCheckItemText(text, new)
+                        ?.takeIf { typedLineStart == null && !heldDown }
+
                     val unboxed = deleteCheckMarker(text, new)
+                    val joined  = joinCheckItemUp(text, new)
                     if (new.text != text.text) tickOnly = false
                     val next = when {
+                        cleared != null -> cleared
                         unboxed != null -> unboxed
+                        joined != null -> joined
                         new.text != text.text -> lowercaseTags(autoContinueList(text, new))
                         else -> lowercaseTags(new)
                     }
-                    // A tap on or beside the box would otherwise leave the caret
-                    // in front of the marker, where nothing can be written.
+                    // A tap in the middle of the markup would otherwise leave the
+                    // caret inside the marker, where nothing can be written. The
+                    // start of the line stays reachable: a backspace there joins
+                    // the item to the line above.
                     text = if (next.selection.collapsed && next.text == text.text) {
-                        val moved = clampOutOfCheckMarker(next.text, next.selection.start)
+                        val moved = clampOutOfCheckMarker(
+                            next.text, next.selection.start, allowLineStart = true
+                        )
                         if (moved == next.selection.start) next
                         else next.copy(selection = TextRange(moved))
                     } else next

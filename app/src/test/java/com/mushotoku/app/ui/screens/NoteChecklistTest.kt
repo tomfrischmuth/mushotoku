@@ -94,7 +94,40 @@ class NoteChecklistTest {
         assertNull(openCheckState(""))
     }
 
-    @Test fun `ein Rueckschritt loescht das ganze Kaestchen`() {
+    // The editor withholds this while the line is being written in; the function
+    // itself only says whether the edit is one that qualifies.
+    @Test fun `am Ende des Eintrags faellt der Text, das Kaestchen bleibt`() {
+        val old = TextFieldValue("- [x] Fluege\n- [ ] Ryokan", TextRange(25))
+        val new = TextFieldValue("- [x] Fluege\n- [ ] Ryoka", TextRange(24))
+        val out = deleteCheckItemText(old, new)
+        assertEquals("- [x] Fluege\n- [ ] ", out?.text)
+        assertEquals(TextRange(19), out?.selection)
+    }
+
+    @Test fun `der naechste Druck nimmt dann das leere Kaestchen`() {
+        // What the first press leaves behind is the empty box, and that is the
+        // case deleteCheckMarker already handles.
+        val old = TextFieldValue("a\n- [ ] ", TextRange(8))
+        val new = TextFieldValue("a\n- [ ]", TextRange(7))
+        assertNull(deleteCheckItemText(old, new))
+        val out = deleteCheckMarker(old, new)
+        assertEquals("a", out?.text)
+        assertEquals(TextRange(1), out?.selection)
+    }
+
+    @Test fun `mitten im Eintrag bleibt das Loeschen buchstabenweise`() {
+        val old = TextFieldValue("- [ ] Ryokan in Gion", TextRange(12))
+        val new = TextFieldValue("- [ ] Ryoka in Gion", TextRange(11))
+        assertNull(deleteCheckItemText(old, new))
+    }
+
+    @Test fun `in einer gewoehnlichen Zeile raeumt nichts auf`() {
+        val old = TextFieldValue("Ryokan in Gion", TextRange(14))
+        val new = TextFieldValue("Ryokan in Gio", TextRange(13))
+        assertNull(deleteCheckItemText(old, new))
+    }
+
+    @Test fun `ein Rueckschritt loescht den leeren Eintrag`() {
         // The cursor sits behind the box; one backspace removes "- [ ] " whole.
         val old = TextFieldValue("- [ ] ", TextRange(6))
         val new = TextFieldValue("- [ ]", TextRange(5))
@@ -103,10 +136,47 @@ class NoteChecklistTest {
         assertEquals(TextRange(0), out?.selection)
     }
 
-    @Test fun `der Text des Eintrags bleibt dabei stehen`() {
+    @Test fun `der Eintrag verschwindet samt Text und Zeilenumbruch`() {
         val old = TextFieldValue("a\n- [ ] Milch", TextRange(8))
         val new = TextFieldValue("a\n- [ ]Milch", TextRange(7))
-        assertEquals("a\nMilch", deleteCheckMarker(old, new)?.text)
+        val out = deleteCheckMarker(old, new)
+        assertEquals("a", out?.text)
+        assertEquals(TextRange(1), out?.selection)
+    }
+
+    @Test fun `der erste Eintrag zieht die Zeile darunter hoch`() {
+        val old = TextFieldValue("- [ ] Milch\nBrot", TextRange(6))
+        val new = TextFieldValue("- [ ]Milch\nBrot", TextRange(5))
+        val out = deleteCheckMarker(old, new)
+        assertEquals("Brot", out?.text)
+        assertEquals(TextRange(0), out?.selection)
+    }
+
+    @Test fun `vor dem Kaestchen ist es kein Fall fuer die Kaestchen-Regel`() {
+        val old = TextFieldValue("a\n- [ ] Milch", TextRange(2))
+        val new = TextFieldValue("a- [ ] Milch", TextRange(1))
+        assertNull(deleteCheckMarker(old, new))
+    }
+
+    @Test fun `beim Verbinden nach oben bleibt kein Markdown zurueck`() {
+        val old = TextFieldValue("a\n- [ ] Milch", TextRange(2))
+        val new = TextFieldValue("a- [ ] Milch", TextRange(1))
+        val out = joinCheckItemUp(old, new)
+        assertEquals("aMilch", out?.text)
+        assertEquals(TextRange(1), out?.selection)
+    }
+
+    @Test fun `mitten im Eintrag wird nicht verbunden`() {
+        val old = TextFieldValue("a\n- [ ] Milch", TextRange(10))
+        val new = TextFieldValue("a\n- [ ] Mich", TextRange(9))
+        assertNull(joinCheckItemUp(old, new))
+    }
+
+    @Test fun `vorwaerts loeschen bleibt vorwaerts loeschen`() {
+        // Forward delete leaves the caret where it was — not our case.
+        val old = TextFieldValue("- [ ] Milch", TextRange(6))
+        val new = TextFieldValue("- [ ] ilch", TextRange(6))
+        assertNull(deleteCheckMarker(old, new))
     }
 
     @Test fun `gewoehnliches Loeschen bleibt gewoehnlich`() {
@@ -130,6 +200,13 @@ class NoteChecklistTest {
         val text = "- [ ] Milch"
         assertEquals(6, clampOutOfCheckMarker(text, 0))
         assertEquals(6, clampOutOfCheckMarker(text, 3))
+    }
+
+    @Test fun `im Editor bleibt der Zeilenanfang erreichbar`() {
+        val text = "Einkauf\n- [ ] Milch"
+        assertEquals(8, clampOutOfCheckMarker(text, 8, allowLineStart = true))
+        // Inside the markup the caret is still pushed out.
+        assertEquals(14, clampOutOfCheckMarker(text, 10, allowLineStart = true))
     }
 
     @Test fun `im Text bleibt der Cursor stehen`() {
